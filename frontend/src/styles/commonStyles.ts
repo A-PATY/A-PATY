@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 const commonStyles = css`
   html {
     scroll-behavior: smooth;
+    height: 100%;
   }
   body {
     margin: 0 auto;
@@ -12,9 +13,12 @@ const commonStyles = css`
     height: 100%;
   }
 
-  /* &.slick-slide {
-    max-height: 400px;
-  } */
+  #root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #fbf7f2;
+  }
 `;
 
 export default commonStyles;
