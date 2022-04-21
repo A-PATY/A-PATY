@@ -10,7 +10,7 @@ const MainPage: React.FC = () => {
   return (
     <>
       <MainHeader />
-      <Main></Main>
+      <Main />
     </>
   );
 };

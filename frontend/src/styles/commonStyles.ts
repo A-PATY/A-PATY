@@ -9,7 +9,7 @@ const commonStyles = css`
   body {
     margin: 0 auto;
     max-width: 425px;
-    background-color: #f9f9f9;
+    background-color: #fffdfb;
     height: 100%;
   }
 
