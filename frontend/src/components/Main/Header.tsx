@@ -18,7 +18,7 @@ const MainHeader: React.FC = () => {
 const Container = styled.div``;
 
 const Wrapper = styled.div`
-  background-color: #f9f9f9;
+  background-color: #fffdfb;
   display: flex;
   flex-direction: column;
   height: 100%;
