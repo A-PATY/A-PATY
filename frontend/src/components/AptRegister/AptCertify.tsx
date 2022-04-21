@@ -11,7 +11,7 @@ const AptCertify: React.FC = () => {
 
   const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     let reader = new FileReader();
-    // const image = event.target.files[0];
+    // const image = event.currentTarget.files[0];
     
     // reader.readAsDataURL(image);
     // reader.onloadend = () => {
@@ -28,7 +28,7 @@ const AptCertify: React.FC = () => {
             <Title>고지서 첨부</Title>
             <Label htmlFor="contained-button-file">
               <Input id="contained-button-file" type="file" onChange={changeImage}></Input>
-              <ImageButton>사진 선택</ImageButton>
+              <ImageButton>사진 고르기</ImageButton>
             </Label>
             <SampleImage alt="sample" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRYjtD5S5JEyjfJ_gBphpouen1mgNyOBHe_A&usqp=CAU"></SampleImage>
             {
@@ -37,9 +37,9 @@ const AptCertify: React.FC = () => {
                 <IconBox>
                   <StyledIcon/>
                 </IconBox>
-                <PreviewImage>
+                <ImageWrapper>
                   <Image src="..." alt="picture"></Image>
-                </PreviewImage>
+                </ImageWrapper>
               </PreviewContainer>
             }
             {
@@ -51,17 +51,9 @@ const AptCertify: React.FC = () => {
               </ImageContainer>
             }
           </AddImage>
-          <InputContainer>
-            <StyledTextField variant="outlined" label={"아파트"} id="margin-normal" 
-            >
-            </StyledTextField>
-            <StyledTextField variant="outlined" label={"동"} id="margin-normal" 
-            >
-            </StyledTextField>
-            <StyledTextField variant="outlined" label={"호수"} id="margin-normal" 
-            >
-            </StyledTextField>
-          </InputContainer>
+            <StyledTextField variant="outlined" label={"아파트"}></StyledTextField>
+            <StyledTextField variant="outlined" label={"동"}></StyledTextField>
+            <StyledTextField variant="outlined" label={"호수"}></StyledTextField>
           <ButtonWrapper>
             {
               imageFile ?
@@ -74,19 +66,6 @@ const AptCertify: React.FC = () => {
     </>
   );
 };
-
-const InputContainer = styled.div`
-  margin: 3.2px 0px 0px;
-  font-size: 14px;
-  display: inline-flex;
-  flex-direction: column;
-  position: relative;
-  min-width: 0px;
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
-  vertical-align: top;
-`;
 
 const StyledTextField = styled(TextField)`
   margin: 3.2px 0px 0px;
@@ -126,9 +105,7 @@ const StyledTextField = styled(TextField)`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  -webkit-box-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
   align-items: center;
   height: calc((100% - 70px) - 70px);
   overflow: hidden auto;
@@ -159,8 +136,8 @@ const AddImage = styled.div`
 `;
 
 const Title = styled.p`
-  color: rgb(39, 39, 39);
-  margin: 10px 0px 0px 20px;
+  color: #FFB2A9;
+  margin: 10px 0px 0px 15px;
   align-self: start;
   font-weight: 600;
 `;
@@ -177,32 +154,17 @@ const Input = styled.input`
 
 const ImageButton = styled(Button)`
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  outline: 0px;
-  border: 0px;
-  margin: 0px 0px 10px;
+  margin-bottom: 10px;
   cursor: pointer;
-  user-select: none;
-  vertical-align: middle;
-  appearance: none;
-  text-decoration: none;
   font-weight: 500;
   font-size: 0.8125rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
   min-width: 64px;
   padding: 4px 10px;
   border-radius: 4px;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   background-color: #BAE6E5;
   box-shadow: none;
   color: white;
   &:hover {
-    text-decoration: none;
     background-color: #95c1c1;
     box-shadow: none;
   }
@@ -241,13 +203,6 @@ const StyledIcon = styled(ImageIcon)`
   color: lightgray;
 `;
 
-
-const PreviewImage = styled.div`
-  max-height: 300px;
-  max-width: 300px;
-  box-shadow: rgb(0 0 0 / 5%) 0px 10px 30px;
-`;
-
 const Image = styled.img`
   opacity: 0;
   max-width: 100%;
@@ -257,7 +212,6 @@ const ImageContainer = styled.div`
   margin: 0px 10px;
   min-width: 300px;
   height: 300px;
-  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -276,30 +230,14 @@ const ButtonWrapper = styled.div`
 `;
 
 const NextButton = styled(Button)`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  outline: 0px;
-  border: 0px;
   cursor: pointer;
-  user-select: none;
-  vertical-align: middle;
-  appearance: none;
-  text-decoration: none;
   font-weight: 500;
-  font-size: 0.9375rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
-  min-width: 64px;
   padding: 8px 22px;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   background-color: #BAE6E5;
   box-shadow: none;
   color: white;
   margin: 20px 0px;
+  min-width: 64px;
   width: 300px;
   height: 50px;
   border-radius: 15px;
@@ -316,27 +254,12 @@ const DefaultButton = styled(Button)`
   background-color: rgba(0, 0, 0, 0.12);
   pointer-events: none;
   cursor: default;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  outline: 0px;
-  border: 0px;
-  user-select: none;
-  vertical-align: middle;
-  appearance: none;
-  text-decoration: none;
   font-weight: 500;
-  font-size: 0.9375rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
   width: 300px;
   height: 50px;
   margin-top: 20px;
   padding: 8px 22px;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 15px;
 `;
 
 export default AptCertify;
