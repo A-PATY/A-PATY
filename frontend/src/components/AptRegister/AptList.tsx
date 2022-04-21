@@ -5,12 +5,7 @@ const AptList: React.FC = () => {
   return (
     <>
       <FirstSection>
-        {/* <InfoContainer>
-          <Phrase>아파트 커뮤니티에 가입하면,</Phrase>
-          <Phrase>더 유용한 정보를 주민끼리 공유할 수 있어요.</Phrase>
-          <Phrase>우리 아파트를 찾아 가입해보세요!</Phrase>
-        </InfoContainer>
-        <AptButton variant="contained">우리 아파트 찾기</AptButton> */}
+        
       </FirstSection>
     </>
   );

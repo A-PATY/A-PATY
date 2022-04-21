@@ -1,7 +1,16 @@
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 
 const AptRegister: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
       <FirstSection>
@@ -10,11 +19,46 @@ const AptRegister: React.FC = () => {
           <Phrase>더 유용한 정보를 주민끼리 공유할 수 있어요.</Phrase>
           <Phrase>우리 아파트를 찾아 가입해보세요!</Phrase>
         </InfoContainer>
-        <AptButton variant="contained">우리 아파트 찾기</AptButton>
+        <AptButton variant="contained" onClick={handleOpen}>우리 아파트 찾기</AptButton>
       </FirstSection>
+      <Modal
+        open={open}
+        BackdropProps={{ style: { backgroundColor: "transparent" } }}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <CustomBox>
+          <MenuList>
+            <CustomMenuItem onClick={handleClose}>장미아파트</CustomMenuItem>
+            <CustomMenuItem onClick={handleClose}>장미아파트</CustomMenuItem>
+            <CustomMenuItem onClick={handleClose}>장미아파트</CustomMenuItem>
+          </MenuList>
+        </CustomBox>
+      </Modal>
     </>
   );
 };
+
+const CustomBox = styled(Box)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400;
+  background-color: rgb(255, 255, 255);
+  color: rgb(140, 136, 136);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: rgb(0 0 0 / 20%) 0px 5px 5px -3px, rgb(0 0 0 / 14%) 0px 8px 10px 1px, rgb(0 0 0 / 12%) 0px 3px 14px 2px;
+  max-width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
+  font-size: 1rem;
+`;
+
+const CustomMenuItem = styled(MenuItem)`
+  height: 40px;
+`;
 
 const FirstSection = styled.section`
   background: #fbf7f2;
@@ -31,9 +75,7 @@ const FirstSection = styled.section`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  -webkit-box-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
   align-items: center;
   margin: 0 40px;
 `;
@@ -48,29 +90,11 @@ const Phrase = styled.p`
 `;
 
 const AptButton = styled(Button)`
-  display: inline-flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  outline: 0px;
-  border: 0px;
   cursor: pointer;
-  user-select: none;
-  vertical-align: middle;
-  appearance: none;
-  text-decoration: none;
   font-weight: 500;
-  font-size: 0.9375rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
   min-width: 64px;
   padding: 8px 22px;
   border-radius: 4px;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   background-color: #BAE6E5;
   box-shadow: none;
   color: white;
