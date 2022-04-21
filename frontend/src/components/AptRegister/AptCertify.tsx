@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageIcon from '@mui/icons-material/Image';
 
-
 const AptCertify: React.FC = () => {
   const [imageFile, setImageFile] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
@@ -12,7 +11,7 @@ const AptCertify: React.FC = () => {
   const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     let reader = new FileReader();
     // const image = event.currentTarget.files[0];
-    
+
     // reader.readAsDataURL(image);
     // reader.onloadend = () => {
     //   setPreviewImg(reader.result);
@@ -27,39 +26,47 @@ const AptCertify: React.FC = () => {
           <AddImage>
             <Title>고지서 첨부</Title>
             <Label htmlFor="contained-button-file">
-              <Input id="contained-button-file" type="file" onChange={changeImage}></Input>
+              <Input
+                id="contained-button-file"
+                type="file"
+                onChange={changeImage}
+              ></Input>
               <ImageButton>사진 고르기</ImageButton>
             </Label>
-            <SampleImage alt="sample" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRYjtD5S5JEyjfJ_gBphpouen1mgNyOBHe_A&usqp=CAU"></SampleImage>
-            {
-              !imageFile &&
+            <SampleImage
+              alt="sample"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRYjtD5S5JEyjfJ_gBphpouen1mgNyOBHe_A&usqp=CAU"
+            ></SampleImage>
+            {!imageFile && (
               <PreviewContainer>
                 <IconBox>
-                  <StyledIcon/>
+                  <StyledIcon />
                 </IconBox>
                 <ImageWrapper>
                   <Image src="..." alt="picture"></Image>
                 </ImageWrapper>
               </PreviewContainer>
-            }
-            {
-              imageFile &&
+            )}
+            {imageFile && (
               <ImageContainer>
                 <ImageWrapper>
                   <Image src={previewImg} alt="picture"></Image>
                 </ImageWrapper>
               </ImageContainer>
-            }
+            )}
           </AddImage>
-            <StyledTextField variant="outlined" label={"아파트"}></StyledTextField>
-            <StyledTextField variant="outlined" label={"동"}></StyledTextField>
-            <StyledTextField variant="outlined" label={"호수"}></StyledTextField>
+          <StyledTextField
+            variant="outlined"
+            label={'아파트'}
+          ></StyledTextField>
+          <StyledTextField variant="outlined" label={'동'}></StyledTextField>
+          <StyledTextField variant="outlined" label={'호수'}></StyledTextField>
           <ButtonWrapper>
-            {
-              imageFile ?
-              <NextButton>확 인</NextButton> :
+            {imageFile ? (
+              <NextButton>확 인</NextButton>
+            ) : (
               <DefaultButton>확 인</DefaultButton>
-            }
+            )}
           </ButtonWrapper>
         </Wrapper>
       </Container>
@@ -75,32 +82,11 @@ const StyledTextField = styled(TextField)`
   border: none;
   border-radius: 126px;
   box-shadow: rgb(0 0 0 / 5%) 0px 10px 30px;
-  /* &.MuiOutlinedInput-root: {
-      & fieldset: {
-        border-color: white;
-      };
-  } */
-  /* &.MuiOutlinedInput-root {
-    border-color: yellow;
-    & fieldset {
-      border-color: yellow;
-      color: yellow;
-    };
-  } */
-  & label.Mui-focused {
-    border-color: transparent;
-  }
-  &.MuiOutlinedInput-root fieldset {
-    border-color: transparent;
-    /* & fieldset {
-      border-color: transparent,
-    }
-    &.Mui-focused fieldset {
-      border-color: transparent;
-    } */
+
+  &. MuiOutlinedInput-notchedOutline {
+    border-style: none;
   }
 `;
-
 
 const Container = styled.div`
   display: flex;
@@ -136,7 +122,7 @@ const AddImage = styled.div`
 `;
 
 const Title = styled.p`
-  color: #FFB2A9;
+  color: #ffb2a9;
   margin: 10px 0px 0px 15px;
   align-self: start;
   font-weight: 600;
@@ -161,7 +147,7 @@ const ImageButton = styled(Button)`
   min-width: 64px;
   padding: 4px 10px;
   border-radius: 4px;
-  background-color: #BAE6E5;
+  background-color: #bae6e5;
   box-shadow: none;
   color: white;
   &:hover {
@@ -233,7 +219,7 @@ const NextButton = styled(Button)`
   cursor: pointer;
   font-weight: 500;
   padding: 8px 22px;
-  background-color: #BAE6E5;
+  background-color: #bae6e5;
   box-shadow: none;
   color: white;
   margin: 20px 0px;
