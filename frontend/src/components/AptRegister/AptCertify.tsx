@@ -83,7 +83,7 @@ const StyledTextField = styled(TextField)`
   border-radius: 126px;
   box-shadow: rgb(0 0 0 / 5%) 0px 10px 30px;
 
-  &. MuiOutlinedInput-notchedOutline {
+  & .MuiOutlinedInput-notchedOutline {
     border-style: none;
   }
 `;
