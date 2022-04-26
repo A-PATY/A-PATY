@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
-import ArticleHeader from '../components/Login/LogInHeader';
 import Article from '../components/Article/Article';
+import Footer from '../components/common/Footer';
+import styled from '@emotion/styled';
+import Header from '../components/common/Header';
 
 const ArticlePage: React.FC = () => {
   useEffect(() => {
@@ -9,10 +11,19 @@ const ArticlePage: React.FC = () => {
 
   return (
     <>
-      <ArticleHeader />
-      <Article />
+      <Container>
+        <Header header="게시글" />
+        <Article />
+      </Container>
+      <Footer />
     </>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 70px);
+`;
 
 export default ArticlePage;

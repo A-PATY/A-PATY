@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import Header from '../components/AptRegister/AptCertifyHeader';
 import AptCertify from '../components/AptRegister/AptCertify';
+import Header from '../components/common/Header';
 
 const MainPage: React.FC = () => {
   useEffect(() => {
@@ -9,7 +9,7 @@ const MainPage: React.FC = () => {
 
   return (
     <>
-      <Header/>
+      <Header header="고지서 인증" />
       <AptCertify></AptCertify>
     </>
   );

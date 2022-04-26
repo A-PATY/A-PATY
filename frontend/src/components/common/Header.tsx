@@ -4,7 +4,11 @@ import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 
-const LogInHeader: React.FC = () => {
+interface Props {
+  header: string;
+}
+
+const Header: React.FC<Props> = ({ header }) => {
   return (
     <>
       <Container>
@@ -13,7 +17,7 @@ const LogInHeader: React.FC = () => {
             <ArrowBackIosRoundedIconCustom />
           </GridIcon>
           <GridText item xs={6}>
-            <Text>로그인</Text>
+            <Text>{header}</Text>
           </GridText>
         </Grid>
       </Container>
@@ -51,4 +55,4 @@ const GridText = styled(Grid)`
 `;
 
 const Text = styled.p``;
-export default LogInHeader;
+export default Header;

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
-import LogInHeader from '../components/Login/LogInHeader';
+import Header from '../components/common/Header';
 import LogInMain from '../components/Login/LogInMain';
 
 const LogInPage: React.FC = () => {
@@ -12,7 +12,7 @@ const LogInPage: React.FC = () => {
   return (
     <>
       <Container>
-        <LogInHeader />
+        <Header header="로그인" />
         <LogInMain />
       </Container>
       <Footer />
