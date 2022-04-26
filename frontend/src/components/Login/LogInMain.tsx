@@ -9,8 +9,8 @@ const LogInMain: React.FC = () => {
           <Image src="\img\\main.gif"></Image>
         </BoxCustom>
         <ButtonCustom>카카오 로그인</ButtonCustom>
-        <ButtonCustom>네이버 로그인</ButtonCustom>
-        <ButtonCustom>구글 로그인</ButtonCustom>
+        {/* <ButtonCustom>네이버 로그인</ButtonCustom>
+        <ButtonCustom>구글 로그인</ButtonCustom> */}
       </Container>
     </>
   );

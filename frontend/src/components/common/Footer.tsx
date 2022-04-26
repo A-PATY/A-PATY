@@ -1,9 +1,7 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import ApartmentRoundedIcon from '@mui/icons-material/ApartmentRounded';
-import LocationCityRoundedIcon from '@mui/icons-material/LocationCityRounded';
 import HomeWorkRoundedIcon from '@mui/icons-material/HomeWorkRounded';
 import SentimentSatisfiedAltRoundedIcon from '@mui/icons-material/SentimentSatisfiedAltRounded';
 import PersonSearchRoundedIcon from '@mui/icons-material/PersonSearchRounded';
