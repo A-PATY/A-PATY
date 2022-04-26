@@ -7,22 +7,43 @@ import CategoryChips from './CategoryChips';
 const BoardList: React.FC = () => {
   return (
     <>
-      <Box>
+      <CategoryChipsWrapper>
         <CategoryChips />
-      </Box>
-      <Container>
-        <Board />
-      </Container>
+      </CategoryChipsWrapper>
+      <BoxCustom>
+        <Container>
+          <Board />
+        </Container>
+      </BoxCustom>
     </>
   );
 };
+
+const CategoryChipsWrapper = styled(Box)`
+  height: 50px;
+`;
+
+const BoxCustom = styled(Box)`
+  overflow-y: auto;
+  height: calc((100% - 70px) - 50px);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &.box {
+    -ms-overflow-style: none;
+  }
+  &.box::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc((100% - 70px) - 70px);
+
   flex: 1 1 auto;
   overflow-y: auto;
 `;

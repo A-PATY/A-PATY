@@ -12,8 +12,9 @@ const Board: React.FC = () => {
       {
         articleId: 2,
         category: '일상',
+        title: '점심 다들 뭐 먹었나요',
         contents: '오늘 점심 돈까스였습니다. 너무 더워요',
-        img: `\img\did.png`,
+        img: null,
         contact: null,
         isDone: false,
         views: 13,
@@ -26,6 +27,7 @@ const Board: React.FC = () => {
       {
         articleId: 3,
         category: '나눔장터',
+        title: '달려오세요',
         contents: '인형 나눔해요',
         img: `\img\did.png`,
         contact: '010-1111-2222',
@@ -40,6 +42,7 @@ const Board: React.FC = () => {
       {
         articleId: 4,
         category: '나눔장터',
+        title: '달려오세요',
         contents: '인형 나눔해요',
         img: `\img\did.png`,
         contact: '010-1111-2222',
@@ -54,6 +57,7 @@ const Board: React.FC = () => {
       {
         articleId: 5,
         category: '공구',
+        title: '가지고 싶어요 ㅠㅠㅠ',
         contents: '인형 공구해요',
         img: `\img\did.png`,
         contact: '010-1111-2222',
@@ -68,6 +72,7 @@ const Board: React.FC = () => {
       {
         articleId: 6,
         category: '나눔장터',
+        title: '가지고 싶어요 ㅠㅠㅠ',
         contents: '인형 나눔해요',
         img: `\img\did.png`,
         contact: '010-1111-2222',
@@ -82,6 +87,7 @@ const Board: React.FC = () => {
       {
         articleId: 7,
         category: '나눔장터',
+        title: '가지고 싶어요 ㅠㅠㅠ',
         contents: '인형 나눔해요',
         img: `\img\did.png`,
         contact: '010-1111-2222',
@@ -96,8 +102,9 @@ const Board: React.FC = () => {
       {
         articleId: 8,
         category: '공구',
+        title: '먹고 싶어요 ㅠㅠㅠ',
         contents: '돈까스 공구해요',
-        img: `\img\did.png`,
+        img: null,
         contact: '010-1111-2222',
         isDone: true,
         views: 13,
@@ -130,8 +137,15 @@ const Board: React.FC = () => {
                       <Info className="isNotDone">진행 중</Info>
                     ) : undefined}
                   </Category>
-                  <Contents href="#">{article.contents}</Contents>
-                  {article.img !== null && <ImgWrapper></ImgWrapper>}
+                  <Article>
+                    <Title href={`/board/${article.articleId}`}>
+                      {article.title}
+                    </Title>
+                    <Contents href={`/board/${article.articleId}`}>
+                      {article.contents}
+                      {article.img !== null && <Image src="\img\did.png" />}
+                    </Contents>
+                  </Article>
                   <ArticleInfoWrapper>
                     <ArticleInfo>
                       <Info>{article.createdAt}</Info>
@@ -193,16 +207,28 @@ const Category = styled.span`
   font-size: 12px;
 `;
 
+const Article = styled.div``;
+
+const Title = styled.a`
+  display: block;
+  max-width: 100%;
+  margin-top: 5px;
+  line-height: 20px;
+  font-size: 16px;
+  font-weight: 600;
+`;
+
 const Contents = styled.a`
   display: block;
   max-width: 100%;
   margin-top: 5px;
   line-height: 20px;
-  font-size: 15px;
+  font-size: 14px;
 `;
 
-const ImgWrapper = styled.span`
+const Image = styled.img`
   margin-top: 5px;
+  width: 100%;
 `;
 
 const ArticleInfoWrapper = styled.div`

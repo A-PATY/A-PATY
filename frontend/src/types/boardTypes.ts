@@ -5,6 +5,7 @@ export interface articles {
 export interface article {
   articleId: number;
   category: string;
+  title: string;
   contents: string;
   img: any | null;
   contact: string | null;
