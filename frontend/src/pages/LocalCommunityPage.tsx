@@ -1,19 +1,19 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
-import LogInHeader from '../components/Login/LogInHeader';
-import LogInMain from '../components/Login/LogInMain';
+import BoardList from '../components/Community/Local/BoardList';
+import LocalHeader from '../components/Community/Local/LocalHeader';
 
-const LogInPage: React.FC = () => {
+const LocalCommunityPage: React.FC = () => {
   useEffect(() => {
-    document.title = '로그인';
+    document.title = '지역 커뮤니티';
   }, []);
 
   return (
     <>
       <Container>
-        <LogInHeader />
-        <LogInMain />
+        <LocalHeader />
+        <BoardList />
       </Container>
       <Footer />
     </>
@@ -25,4 +25,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-export default LogInPage;
+export default LocalCommunityPage;

@@ -9,7 +9,9 @@ import LogInPage from './pages/LogInPage';
 import AptRegisterPage from './pages/AptRegisterPage';
 import AptCertifyPage from './pages/AptCertifyPage';
 import MyPage from './pages/MyPage';
+import LocalCommunityPage from './pages/LocalCommunityPage';
 import ArticlePage from './pages/ArticlePage';
+
 
 const App: React.FC = () => {
   return (
@@ -23,7 +25,9 @@ const App: React.FC = () => {
           <Route path="/apt_register" element={<AptRegisterPage />} />
           <Route path="/apt_certify" element={<AptCertifyPage />} />
           <Route path="/my-page" element={<MyPage />} />
+          <Route path="/local_community" element={<LocalCommunityPage />} />
           <Route path="/board/:article_id" element={<ArticlePage />} />
+
         </Routes>
       </BrowserRouter>
     </>
