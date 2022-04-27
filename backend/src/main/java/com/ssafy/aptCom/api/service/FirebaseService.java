@@ -1,8 +1,10 @@
 package com.ssafy.aptCom.api.service;
 
-import com.ssafy.aptCom.api.dto.reponse.UserResponseDto;
+import java.util.Map;
+import java.util.Optional;
 
 public interface FirebaseService {
-    public String insertMember(Member member) throws Exception;
-    public Member getMemberDetail(String id) throws Exception;
+    public Boolean insertFamilyMember(String familyId, String userId) throws Exception;
+    public Map<String, Object> getFamilyDetail(String familyId) throws Exception;
+    public Boolean deleteFamilyMember(String familyId, String userId) throws Exception;
 }
