@@ -33,7 +33,7 @@ public class Article {
     @Column(length = 1000)
     private String contents;
 
-    @Column(columnDefinition = "Varchar(25) default NULL")
+    @Column(columnDefinition = "varchar(25) default NULL")
     private String contact;
 
     @Column(columnDefinition = "boolean default false")
