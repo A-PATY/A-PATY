@@ -16,7 +16,7 @@ const MainPage: React.FC = () => {
         <Header header="아파트 커뮤니티 가입" />
         <AptRegister></AptRegister>
       </Container>
-      <Footer />
+      <Footer footerNumber={2} />
     </>
   );
 };

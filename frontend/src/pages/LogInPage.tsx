@@ -15,7 +15,7 @@ const LogInPage: React.FC = () => {
         <Header header="로그인" />
         <LogInMain />
       </Container>
-      <Footer />
+      <Footer footerNumber={-1} />
     </>
   );
 };

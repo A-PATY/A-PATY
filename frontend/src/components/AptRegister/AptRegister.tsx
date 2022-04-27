@@ -61,7 +61,7 @@ const CustomMenuItem = styled(MenuItem)`
 `;
 
 const FirstSection = styled.section`
-  background: #fbf7f2;
+  background: #fffdfb;
   display: flex;
   flex-direction: column;
   -webkit-box-pack: center;

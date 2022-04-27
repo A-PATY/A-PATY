@@ -4,15 +4,13 @@ import Button from '@mui/material/Button';
 const AptList: React.FC = () => {
   return (
     <>
-      <FirstSection>
-        
-      </FirstSection>
+      <FirstSection></FirstSection>
     </>
   );
 };
 
 const FirstSection = styled.section`
-  background: #fbf7f2;
+  background: #fffdfb;
   display: flex;
   flex-direction: column;
   -webkit-box-pack: center;
@@ -65,8 +63,11 @@ const AptButton = styled(Button)`
   min-width: 64px;
   padding: 8px 22px;
   border-radius: 4px;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: #BAE6E5;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: #bae6e5;
   box-shadow: none;
   color: white;
   margin: 10px 30px 30px;
@@ -76,6 +77,5 @@ const AptButton = styled(Button)`
     box-shadow: none;
   }
 `;
-
 
 export default AptList;

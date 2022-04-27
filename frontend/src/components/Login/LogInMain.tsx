@@ -50,6 +50,7 @@ const ButtonCustom = styled(Button)`
   width: 300px;
   min-height: 56px;
   border-radius: 126px;
+  font-family: 'MinSans-Regular';
 
   &:hover {
     box-shadow: none;

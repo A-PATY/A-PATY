@@ -15,7 +15,7 @@ const MyPage: React.FC = () => {
         <Header header="내 정보" />
         <MyPageMain />
       </Container>
-      <Footer />
+      <Footer footerNumber={4} />
     </>
   );
 };

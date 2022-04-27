@@ -15,7 +15,7 @@ const LocalCommunityPage: React.FC = () => {
         <LocalHeader />
         <BoardList />
       </Container>
-      <Footer />
+      <Footer footerNumber={1} />
     </>
   );
 };

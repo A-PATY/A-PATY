@@ -9,8 +9,12 @@ import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-const Footer: React.FC = () => {
-  const [value, setValue] = React.useState(-1);
+
+interface Props {
+  footerNumber: number;
+}
+const Footer: React.FC<Props> = ({ footerNumber }) => {
+  const [value, setValue] = React.useState(footerNumber);
 
   let navigate = useNavigate();
 
@@ -45,6 +49,7 @@ const Footer: React.FC = () => {
         icon={<HomeWorkRoundedIcon />}
       />
       <BottomNavigationActionCustom
+        className="apt"
         label="아파트"
         icon={<ApartmentRoundedIcon />}
       />
@@ -70,8 +75,16 @@ const BottomNavigationCustom = styled(BottomNavigation)`
 `;
 
 const BottomNavigationActionCustom = styled(BottomNavigationAction)`
+  & .MuiBottomNavigationAction-label {
+    font-family: 'MinSans-Regular';
+  }
+
   &.Mui-selected {
     color: #ffb2a9;
+
+    &.apt {
+      color: #bae6e5;
+    }
   }
 `;
 

@@ -123,7 +123,7 @@ const Board: React.FC = () => {
           <>
             {articleList.articles.map((article) => {
               return (
-                <ArticleWrapper>
+                <ArticleWrapper key={article.articleId}>
                   <Category>
                     {article.category}
                     {(article.category === '나눔장터' ||
