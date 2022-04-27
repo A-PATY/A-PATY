@@ -8,6 +8,8 @@ public class AptComApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AptComApplication.class, args);
+
+
 	}
 
 }
