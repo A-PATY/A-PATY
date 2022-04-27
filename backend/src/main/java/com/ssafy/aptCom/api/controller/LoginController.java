@@ -38,19 +38,22 @@ public class LoginController {
             @RequestParam String accessCode) {
 
         String accessToken = loginService.getAccessToken(accessCode);
+        System.out.println(accessToken);
         HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
+        System.out.println(kakaoInfo);
         String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
+        System.out.println(kakaoNum);
 
         User user = userService.getUserByKakaoUserNumber(kakaoNum);
-
+        System.out.println(user);
         boolean isNew = true;
-        if (user != null) {
-            isNew = false;
+        if (user == null) {
+            user = userService.userNew(kakaoNum);
         } else {
-            // 회원정보 저장
+            isNew = false;
         }
         String[] tokens = userService.createTokens(user);
-
+        System.out.println(tokens);
         return ResponseEntity.status(200).body(LoginResponseDto.of(tokens, user, isNew));
     }
 

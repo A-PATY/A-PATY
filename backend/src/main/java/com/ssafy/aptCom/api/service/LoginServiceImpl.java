@@ -3,6 +3,8 @@ package com.ssafy.aptCom.api.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.net.URL;
 import java.util.HashMap;
 
 @Service("loginService")
+@Slf4j
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
     @Value("${kakao.api}")
@@ -73,7 +77,7 @@ public class LoginServiceImpl implements LoginService {
     public HashMap<String, Object> getUserInfo(String accessToken) {
 
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        String reqURL = "https://kapi.kakao.com/v1/user/access_token_info";
 
         try {
             URL url = new URL(reqURL);
@@ -97,9 +101,10 @@ public class LoginServiceImpl implements LoginService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
 
-            String kakaoUserNumber = properties.getAsJsonObject().get("id").getAsString();
+//            String kakaoUserNumber = properties.getAsJsonObject().get("id").getAsString();
+            String kakaoUserNumber = element.getAsJsonObject().get("id").getAsString();
             userInfo.put("kakaoUserNumber", kakaoUserNumber);
 
         } catch (IOException e) {

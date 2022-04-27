@@ -59,7 +59,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(updatable = false, length = 10, columnDefinition = "Varchar(10) default ROLE_USER")
+    @Column(updatable = false, columnDefinition = "varchar(10) default 'USER'")
     private String roles; // USER, ADMIN
 
     public List<String> getRoleList() {

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -36,20 +37,20 @@ public class UserInfoDto {
     public static UserInfoDto of(User user) {
         UserInfoDto res = new UserInfoDto();
 
-        BaseAddress address = user.getBaseAddress();
-        Apartment apt = user.getApartment();
-        ProfileImg profileImg = user.getProfileImg();
+        Optional<BaseAddress> address = Optional.ofNullable(user.getBaseAddress());
+        Optional<Apartment> apt = Optional.ofNullable(user.getApartment());
+        Optional<ProfileImg> profileImg = Optional.ofNullable(user.getProfileImg());
 
         res.setUserId(user.getId());
         res.setNickname(user.getNickname());
         res.setCommunityList(UserCommunityDto.of(user.getUserCommunities()));
-        res.setSidoName(address.getSidoName());
-        res.setGugunName(address.getGugunName());
-        res.setDongName(address.getDongName());
-        res.setAptName(apt.getAptName());
+        res.setSidoName(address.get().getSidoName());
+        res.setGugunName(address.get().getGugunName());
+        res.setDongName(address.get().getDongName());
+        res.setAptName(apt.get().getAptName());
         res.setDong(user.getDong());
         res.setHo(user.getHo());
-        res.setProfileImgId(profileImg.getId());
+        res.setProfileImgId(profileImg.get().getId());
         res.setFindFamily(user.isFindFamily());
 
         return res;

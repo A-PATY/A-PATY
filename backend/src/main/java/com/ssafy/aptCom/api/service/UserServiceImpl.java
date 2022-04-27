@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
         User user = User.builder()
                 .kakaoUserNumber(kakaoNumber)
+                .roles("ROLE_USER")
                 .build();
 
         return userRepository.save(user);
