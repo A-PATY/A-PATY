@@ -11,6 +11,7 @@ import AptCertifyPage from './pages/AptCertifyPage';
 import MyPage from './pages/MyPage';
 import LocalCommunityPage from './pages/LocalCommunityPage';
 import ArticlePage from './pages/ArticlePage';
+import FindFamilyPage from './pages/FindFamilyPage';
 
 
 const App: React.FC = () => {
@@ -27,7 +28,7 @@ const App: React.FC = () => {
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/local_community" element={<LocalCommunityPage />} />
           <Route path="/board/:article_id" element={<ArticlePage />} />
-
+          <Route path="/find_family" element={<FindFamilyPage />} />
         </Routes>
       </BrowserRouter>
     </>
