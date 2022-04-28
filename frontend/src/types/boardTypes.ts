@@ -7,13 +7,18 @@ export interface article {
   category: string;
   title: string;
   contents: string;
-  img: any | null;
+  imgs: img[] | null;
   contact: string | null;
-  isDone: boolean;
+  isDone: boolean | null;
   views: number;
   likes: number;
   isLike: boolean;
   createdAt: string;
   commentCount: number;
   author: string;
+}
+
+export interface img {
+  imgId: number;
+  src: string;
 }

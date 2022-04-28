@@ -1,127 +1,172 @@
+import React from 'react';
 import styled from '@emotion/styled';
-import { articles } from '../../../types/boardTypes';
+import { article } from '../../../types/boardTypes';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import Chip from '@mui/material/Chip';
+import BoardService from '../../../services/BoardService';
 
 const Board: React.FC = () => {
-  const articleList: articles = {
-    articles: [
-      {
-        articleId: 2,
-        category: '일상',
-        title: '점심 다들 뭐 먹었나요',
-        contents: '오늘 점심 돈까스였습니다. 너무 더워요',
-        img: null,
-        contact: null,
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: true,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 흑장미',
-      },
-      {
-        articleId: 3,
-        category: '나눔장터',
-        title: '달려오세요',
-        contents: '인형 나눔해요',
-        img: `\img\did.png`,
-        contact: '010-1111-2222',
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-      {
-        articleId: 4,
-        category: '나눔장터',
-        title: '달려오세요',
-        contents: '인형 나눔해요',
-        img: `\img\did.png`,
-        contact: '010-1111-2222',
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-      {
-        articleId: 5,
-        category: '공구',
-        title: '가지고 싶어요 ㅠㅠㅠ',
-        contents: '인형 공구해요',
-        img: `\img\did.png`,
-        contact: '010-1111-2222',
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-      {
-        articleId: 6,
-        category: '나눔장터',
-        title: '가지고 싶어요 ㅠㅠㅠ',
-        contents: '인형 나눔해요',
-        img: `\img\did.png`,
-        contact: '010-1111-2222',
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-      {
-        articleId: 7,
-        category: '나눔장터',
-        title: '가지고 싶어요 ㅠㅠㅠ',
-        contents: '인형 나눔해요',
-        img: `\img\did.png`,
-        contact: '010-1111-2222',
-        isDone: false,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-      {
-        articleId: 8,
-        category: '공구',
-        title: '먹고 싶어요 ㅠㅠㅠ',
-        contents: '돈까스 공구해요',
-        img: null,
-        contact: '010-1111-2222',
-        isDone: true,
-        views: 13,
-        likes: 15,
-        isLike: false,
-        createdAt: '2022-04-15 15:03',
-        commentCount: 3,
-        author: '101동 102호 백장미',
-      },
-    ],
+  // const articleList: articles = {
+  //   articles: [
+  //     {
+  //       articleId: 1,
+  //       category: '일상',
+  //       title: '오늘 베란다에 까치가 왔어요',
+  //       contents: '가까이에서 까치를 관찰했어요',
+  //       imgs: null,
+  //       contact: null,
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: true,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 흑장미',
+  //     },
+  //     {
+  //       articleId: 2,
+  //       category: '일상',
+  //       title: '점심 다들 뭐 먹었나요',
+  //       contents: '오늘 점심 돈까스였습니다. 너무 더워요',
+  //       imgs: null,
+  //       contact: null,
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: true,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 흑장미',
+  //     },
+  //     {
+  //       articleId: 3,
+  //       category: '나눔장터',
+  //       title: '달려오세요',
+  //       contents: '인형 나눔해요',
+  //       imgs: [{ imgId: 1, src: `\img\did.png` }],
+  //       contact: '010-1111-2222',
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //     {
+  //       articleId: 4,
+  //       category: '나눔장터',
+  //       title: '달려오세요',
+  //       contents: '인형 나눔해요',
+  //       imgs: [{ imgId: 2, src: `\img\did.png` }],
+  //       contact: '010-1111-2222',
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //     {
+  //       articleId: 5,
+  //       category: '공구',
+  //       title: '가지고 싶어요 ㅠㅠㅠ',
+  //       contents: '인형 공구해요',
+  //       imgs: [{ imgId: 3, src: `\img\did.png` }],
+  //       contact: '010-1111-2222',
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //     {
+  //       articleId: 6,
+  //       category: '나눔장터',
+  //       title: '가지고 싶어요 ㅠㅠㅠ',
+  //       contents: '인형 나눔해요',
+  //       imgs: null,
+  //       contact: '010-1111-2222',
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //     {
+  //       articleId: 7,
+  //       category: '나눔장터',
+  //       title: '가지고 싶어요 ㅠㅠㅠ',
+  //       contents: '인형 나눔해요',
+  //       imgs: null,
+  //       contact: '010-1111-2222',
+  //       isDone: false,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //     {
+  //       articleId: 8,
+  //       category: '공구',
+  //       title: '먹고 싶어요 ㅠㅠㅠ',
+  //       contents: '돈까스 공구해요',
+  //       imgs: null,
+  //       contact: '010-1111-2222',
+  //       isDone: true,
+  //       views: 13,
+  //       likes: 15,
+  //       isLike: false,
+  //       createdAt: '2022-04-15 15:03',
+  //       commentCount: 3,
+  //       author: '101동 102호 백장미',
+  //     },
+  //   ],
+  // };
+
+  const [articles, setArticles] = React.useState<article[]>([]);
+
+  const fetchArticles = async () => {
+    await BoardService.getArticles(367, 0, 10, 1, '')
+      .then(({ articles }) => {
+        setArticles(articles);
+      })
+      .catch((err) => {
+        if (err.response) {
+          const { status, message } = err.response.data;
+
+          switch (status) {
+            case 400:
+              alert(message);
+              break;
+            case 500:
+              alert(message);
+              break;
+          }
+        }
+      });
   };
+
+  React.useEffect(() => {
+    fetchArticles();
+  }, []);
+
   return (
     <>
       <Container>
         <Wrapper>
           <>
-            {articleList.articles.map((article) => {
+            {articles.map((article) => {
               return (
                 <ArticleWrapper key={article.articleId}>
                   <Category>
@@ -143,7 +188,7 @@ const Board: React.FC = () => {
                     </Title>
                     <Contents href={`/board/${article.articleId}`}>
                       {article.contents}
-                      {article.img !== null && <Image src="\img\did.png" />}
+                      {article.imgs !== null && <Image src="\img\did.png" />}
                     </Contents>
                   </Article>
                   <ArticleInfoWrapper>
