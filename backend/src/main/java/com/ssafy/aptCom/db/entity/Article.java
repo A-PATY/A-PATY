@@ -6,6 +6,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -48,5 +50,9 @@ public class Article {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Image> images = new ArrayList<>();
 
 }
