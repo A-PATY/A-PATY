@@ -1,14 +1,40 @@
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import UserService from '../../services/UserService';
 const LogInMain: React.FC = () => {
+  const code = '11111';
+  const handleButtomCustomClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    UserService.getUserKakaoToken(code)
+      .then(({ message }) => {
+        alert(message);
+      })
+      .catch((error) => {
+        if (error.response) {
+          const { status, message } = error.response.data;
+
+          switch (status) {
+            case 400:
+              alert(message);
+              break;
+            case 500:
+              alert(message);
+              break;
+          }
+        }
+      });
+  };
   return (
     <>
       <Container>
         <BoxCustom>
           <Image src="\img\\main.gif"></Image>
         </BoxCustom>
-        <ButtonCustom>카카오 로그인</ButtonCustom>
+        <ButtonCustom onClick={handleButtomCustomClick}>
+          카카오 로그인
+        </ButtonCustom>
         {/* <ButtonCustom>네이버 로그인</ButtonCustom>
         <ButtonCustom>구글 로그인</ButtonCustom> */}
       </Container>
