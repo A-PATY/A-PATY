@@ -175,7 +175,13 @@ export const boardHandlers = [
   rest.get(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/board`,
     async (request: any, response, context) => {
-      console.log(request);
+      // console.log('/////////request: ' + request);
+      // console.log('/////////response: ' + response);
+      // console.log('/////////context: ' + context);
+
+      const communityId = request.url.searchParams.get('communityId');
+      console.log('/////////communityId: ' + communityId);
+
       // const { communityId, lastArticleId, size, params } = request.body;
 
       // if (communityId === null) {
