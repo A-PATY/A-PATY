@@ -11,7 +11,7 @@ import AptCertifyPage from './pages/AptCertifyPage';
 import MyPage from './pages/MyPage';
 import LocalCommunityPage from './pages/LocalCommunityPage';
 import ArticlePage from './pages/ArticlePage';
-
+import SignUpPage from './pages/SignUpPage';
 
 const App: React.FC = () => {
   return (
@@ -27,7 +27,7 @@ const App: React.FC = () => {
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/local_community" element={<LocalCommunityPage />} />
           <Route path="/board/:article_id" element={<ArticlePage />} />
-
+          <Route path="/oauth/callback/kakao" element={<SignUpPage />} />
         </Routes>
       </BrowserRouter>
     </>
