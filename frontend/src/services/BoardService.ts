@@ -10,12 +10,10 @@ class BoardService {
     keyword: string | null,
   ) {
     const response = await axiosInstance.get<articles>('/api/v1/board', {
-      data: {
+      params: {
         communityId: communityId,
         lastArticleId: lastArticleId,
         size: size,
-      },
-      params: {
         category: categoryId,
         keyword: keyword,
       },
