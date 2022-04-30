@@ -1,5 +1,5 @@
 import { axiosInstance } from './../utils/axios';
-import { articles } from '../types/boardTypes';
+import { articles, article } from '../types/boardTypes';
 
 class BoardService {
   public static async getArticles(
@@ -18,6 +18,11 @@ class BoardService {
         keyword: keyword,
       },
     });
+    return response.data;
+  }
+
+  public static async getArticle(articleId: string | undefined) {
+    const response = await axiosInstance.get(`/api/v1/board/${articleId}`);
     return response.data;
   }
 }
