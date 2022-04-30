@@ -14,11 +14,23 @@ export interface article {
   likes: number;
   isLike: boolean;
   createdAt: string;
-  commentCount: number;
   author: string;
+  commentCount: number;
+  profileImgUrl: string;
+  commentsList: comment[];
 }
 
 export interface img {
   imgId: number;
   src: string;
+}
+
+export interface comment {
+  commentId: number;
+  commentWriter: string;
+  commentContent: string;
+  commentCreatedAt: string;
+  secret: boolean;
+  commentAuthor: string;
+  profileImgUrl: string;
 }
