@@ -17,3 +17,8 @@ export interface article {
   commentCount: number;
   author: string;
 }
+
+export interface category {
+  key: number;
+  label: string;
+}
