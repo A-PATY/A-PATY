@@ -13,7 +13,6 @@ const SignUpPage: React.FC = () => {
   return (
     <>
       <Container>
-        <Header header="추가 정보 입력" />
         <SignUpMain />
       </Container>
       <Footer footerNumber={-1} />

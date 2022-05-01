@@ -5,7 +5,6 @@ export const loginHandlers = [
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/log-in`,
     async (request: any, response, context) => {
       const accessCode: string = request.body;
-      const userName = request.url.searchParams.get('userName');
 
       if (accessCode === '11111') {
         return response(
@@ -31,8 +30,9 @@ export const loginHandlers = [
 
       return response(
         context.json({
-          success: true,
-          message: '인증 코드가 맞습니다.',
+          accessToken: 'sdlfkjslkdjflksjflks',
+          refreshToken: 'dkjslkfjdlkjflskdjf',
+          newMember: false,
         }),
       );
     },
