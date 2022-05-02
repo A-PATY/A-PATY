@@ -16,7 +16,7 @@
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "@types/react-router-dom": "^5.3.3",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
@@ -50,6 +50,10 @@
   },
   "devDependencies": {
     "babel-plugin-emotion": "^11.0.0",
+    "msw": "^0.39.2",
     "prettier": "^2.6.2"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
-import Article from '../components/Article/Article';
 import Footer from '../components/common/Footer';
 import styled from '@emotion/styled';
-import Header from '../components/common/Header';
+import ArticleWrite from '../components/Article/ArticleWrite';
+import ArticleWriteHeader from '../components/Article/ArticleWriteHeader';
 
-const ArticlePage: React.FC = () => {
+const ArticleWritePage: React.FC = () => {
   useEffect(() => {
-    document.title = '게시글 상세 조회';
+    document.title = '게시글 작성';
   }, []);
 
   return (
     <>
       <Container>
-        <Header header="게시글" />
-        <Article />
+        <ArticleWriteHeader header="지역/아파트 커뮤니티 작성" />
+        <ArticleWrite />
       </Container>
       <Footer footerNumber={-1} />
     </>
@@ -26,4 +26,4 @@ const Container = styled.div`
   height: calc(100% - 70px);
 `;
 
-export default ArticlePage;
+export default ArticleWritePage;
