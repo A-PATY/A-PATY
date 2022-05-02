@@ -6,6 +6,7 @@ import UserService from '../../services/UserService';
 import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import { axiosInstance } from '../../utils/axios';
+import Swal from 'sweetalert2';
 
 const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
@@ -25,7 +26,12 @@ const KakaoCallbackMain: React.FC = () => {
           if (newMember) {
             navigate('/newMember');
           } else {
-            alert('로그인하였습니다.');
+            Swal.fire({
+              title: '기존 사용자',
+              text: '로그인하였습니다.',
+              icon: 'success',
+              confirmButtonText: 'Cool',
+            });
             navigate('/local_community');
           }
         })
