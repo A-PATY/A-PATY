@@ -14,6 +14,8 @@ import ArticlePage from './pages/ArticlePage';
 import FindFamilyPage from './pages/FindFamilyPage';
 import SignUpPage from './pages/SignUpPage';
 import ArticleWritePage from './pages/ArticleWritePage';
+import KakaoCallbackPage from './pages/KakaoCallbackPage';
+import NewMemberPage from './pages/NewMemberPage';
 
 const App: React.FC = () => {
   return (
@@ -29,9 +31,11 @@ const App: React.FC = () => {
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/local_community" element={<LocalCommunityPage />} />
           <Route path="/board/:article_id" element={<ArticlePage />} />
+          <Route path="/oauth/callback/kakao" element={<KakaoCallbackPage />} />
           <Route path="/find_family" element={<FindFamilyPage />} />
           <Route path="/oauth/callback/kakao" element={<SignUpPage />} />
           <Route path="/board/write" element={<ArticleWritePage />} />
+          <Route path="/newMember" element={<NewMemberPage />} />
         </Routes>
       </BrowserRouter>
     </>
