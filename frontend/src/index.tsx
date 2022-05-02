@@ -1,10 +1,11 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
-
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { axiosInstance } from './utils/axios';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');
@@ -15,9 +16,20 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
+axiosInstance.defaults.withCredentials = true;
+
+const queryClient = new QueryClient();
+
 root.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={true} />
+      <Suspense fallback={<p>loading...</p>}>
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
+      </Suspense>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
 

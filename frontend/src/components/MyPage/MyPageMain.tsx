@@ -22,7 +22,7 @@ const MyPageMain: React.FC = () => {
       <Container>
         <ProfileWrapper>
           <ImageWrapper>
-            <Image src="\img\did.png" />
+            <Image src="\img\image0.svg" />
             <ModifyButton onClick={handleModifyButtonClick}>
               <AutoFixHighIconCustom />
             </ModifyButton>

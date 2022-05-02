@@ -34,3 +34,8 @@ export interface comment {
   commentAuthor: string;
   profileImgUrl: string;
 }
+
+export interface category {
+  key: number;
+  label: string;
+}

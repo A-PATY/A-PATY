@@ -3,8 +3,10 @@ import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
 import LocalHeader from '../components/Community/Local/LocalHeader';
+import { axiosInstance } from '../utils/axios';
 
 const LocalCommunityPage: React.FC = () => {
+  console.log(axiosInstance.defaults.headers);
   useEffect(() => {
     document.title = '지역 커뮤니티';
   }, []);

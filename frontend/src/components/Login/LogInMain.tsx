@@ -1,30 +1,16 @@
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
 const LogInMain: React.FC = () => {
-  const code = '11111';
+  const REST_API_KEY = '9f8212ade1576047ddcf60fd0ab79a2e';
+  const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const handleButtomCustomClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
-    UserService.getUserKakaoToken(code)
-      .then(({ message }) => {
-        alert(message);
-      })
-      .catch((error) => {
-        if (error.response) {
-          const { status, message } = error.response.data;
-
-          switch (status) {
-            case 400:
-              alert(message);
-              break;
-            case 500:
-              alert(message);
-              break;
-          }
-        }
-      });
+    window.location.href = KAKAO_AUTH_URL;
   };
   return (
     <>
@@ -35,8 +21,6 @@ const LogInMain: React.FC = () => {
         <ButtonCustom onClick={handleButtomCustomClick}>
           카카오 로그인
         </ButtonCustom>
-        {/* <ButtonCustom>네이버 로그인</ButtonCustom>
-        <ButtonCustom>구글 로그인</ButtonCustom> */}
       </Container>
     </>
   );
