@@ -1,6 +1,5 @@
 package com.ssafy.aptCom.api.dto.request;
 
-import com.ssafy.aptCom.api.dto.response.CategoryDto;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +14,7 @@ public class ArticleRequestDto {
 
     private int communityId;
 
-    private String categoryId;
+    private int categoryId;
 
     private String title;
 

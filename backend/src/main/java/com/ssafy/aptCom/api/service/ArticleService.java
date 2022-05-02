@@ -8,13 +8,19 @@ import java.util.List;
 
 public interface ArticleService {
 
-    List<String> saveArticleImages(List<MultipartFile> multipartFiles) throws IOException;
+    List<String> saveArticleImages(List<MultipartFile> multipartFiles, Integer articleId) throws IOException;
 
-    String saveArticleImage(MultipartFile multipartFile) throws IOException;
+    String saveArticleImage(MultipartFile multipartFile, Integer articleId) throws IOException;
 
     String createStoreFilename(String originalFilename);
 
     String extractExt(String originalFilename);
 
-    void createArticle(ArticleRequestDto articleRequestDto);
+    Integer createArticle(ArticleRequestDto articleRequestDto);
+
+//    void getArticle(ArticleRequestDto articleRequestDto);
+//
+//    void updateArticle(ArticleRequestDto articleRequestDto);
+//
+//    void deleteArticle(ArticleRequestDto articleRequestDto);
 }

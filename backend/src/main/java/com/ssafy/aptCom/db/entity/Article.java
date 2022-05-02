@@ -55,4 +55,8 @@ public class Article {
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Image> images = new ArrayList<>();
 
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

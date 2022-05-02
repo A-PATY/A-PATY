@@ -28,9 +28,48 @@ public class ArticleController {
 
         List<MultipartFile> multipartFiles = articleRequestDto.getImgFiles();
 
-        articleService.saveArticleImages(multipartFiles);
-        articleService.createArticle(articleRequestDto);
+        try {
+            Integer articleId = articleService.createArticle(articleRequestDto);
+            if (multipartFiles != null) {
+                articleService.saveArticleImages(multipartFiles, articleId) ;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return ResponseEntity.status(201).body("created");
     }
+
+//    @GetMapping
+//    public ResponseEntity<?> getArticle(ArticleRequestDto articleRequestDto) throws IOException {
+//
+//        List<MultipartFile> multipartFiles = articleRequestDto.getImgFiles();
+//
+//        articleService.saveArticleImages(multipartFiles);
+//        articleService.createArticle(articleRequestDto);
+//
+//        return ResponseEntity.status(201).body("created");
+//    }
+//
+//    @PutMapping
+//    public ResponseEntity<?> updateArticle(ArticleRequestDto articleRequestDto) throws IOException {
+//
+//        List<MultipartFile> multipartFiles = articleRequestDto.getImgFiles();
+//
+//        articleService.saveArticleImages(multipartFiles);
+//        articleService.createArticle(articleRequestDto);
+//
+//        return ResponseEntity.status(201).body("created");
+//    }
+//
+//    @DeleteMapping
+//    public ResponseEntity<?> deleteArticle(ArticleRequestDto articleRequestDto) throws IOException {
+//
+//        List<MultipartFile> multipartFiles = articleRequestDto.getImgFiles();
+//
+//        articleService.saveArticleImages(multipartFiles);
+//        articleService.createArticle(articleRequestDto);
+//
+//        return ResponseEntity.status(201).body("created");
+//    }
 }
