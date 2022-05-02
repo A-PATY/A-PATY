@@ -72,6 +72,7 @@ const BottomNavigationCustom = styled(BottomNavigation)`
   bottom: 0px;
   height: 70px;
   background-color: white;
+  z-index: 1;
 `;
 
 const BottomNavigationActionCustom = styled(BottomNavigationAction)`
