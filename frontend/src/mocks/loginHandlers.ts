@@ -32,7 +32,7 @@ export const loginHandlers = [
         context.json({
           accessToken: 'sdlfkjslkdjflksjflks',
           refreshToken: 'dkjslkfjdlkjflskdjf',
-          newMember: false,
+          newMember: true,
         }),
       );
     },

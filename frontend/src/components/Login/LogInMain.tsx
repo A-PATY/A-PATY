@@ -21,8 +21,6 @@ const LogInMain: React.FC = () => {
         <ButtonCustom onClick={handleButtomCustomClick}>
           카카오 로그인
         </ButtonCustom>
-        {/* <ButtonCustom>네이버 로그인</ButtonCustom>
-        <ButtonCustom>구글 로그인</ButtonCustom> */}
       </Container>
     </>
   );

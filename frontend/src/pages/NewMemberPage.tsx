@@ -2,18 +2,18 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
 import Header from '../components/common/Header';
-import SignUpMain from '../components/Login/SignUpMain';
-import MyPageMain from '../components/MyPage/MyPageMain';
+import NewMemberMain from '../components/Login/NewMemberMain';
 
-const SignUpPage: React.FC = () => {
+const MyPage: React.FC = () => {
   useEffect(() => {
-    document.title = '회원가입';
+    document.title = '회원 정보 입력';
   }, []);
 
   return (
     <>
       <Container>
-        <SignUpMain />
+        <Header header="회원 정보 입력" />
+        <NewMemberMain />
       </Container>
       <Footer footerNumber={-1} />
     </>
@@ -25,4 +25,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-export default SignUpPage;
+export default MyPage;
