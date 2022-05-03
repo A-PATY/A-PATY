@@ -16,7 +16,7 @@ public class UserInfoDto {
 
     private String nickname;
 
-    List<UserCommunityDto> CommunityList = new ArrayList<>();
+    List<UserCommunityDto> communityList = new ArrayList<>();
 
     private String sidoName;
 
@@ -35,6 +35,7 @@ public class UserInfoDto {
     private boolean findFamily;
 
     public static UserInfoDto of(User user) {
+
         UserInfoDto res = new UserInfoDto();
 
         Optional<BaseAddress> address = Optional.ofNullable(user.getBaseAddress());
