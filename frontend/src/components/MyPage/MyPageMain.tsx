@@ -8,6 +8,8 @@ import ProfileImageList from './ProfileImageList';
 import { useState } from 'react';
 
 const MyPageMain: React.FC = () => {
+  const [profileImgId, setProfileImgId] = useState<number>(1);
+
   const [open, setOpen] = useState(false);
 
   const handleClose = (value: string) => {
@@ -50,7 +52,11 @@ const MyPageMain: React.FC = () => {
           <ButtonCustom>회원 탈퇴</ButtonCustom>
         </ButtonsWrapper>
       </Container>
-      <ProfileImageList open={open} onClose={handleClose} />
+      <ProfileImageList
+        open={open}
+        onClose={handleClose}
+        setProfileImgId={setProfileImgId}
+      />
     </>
   );
 };

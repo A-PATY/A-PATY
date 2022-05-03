@@ -26,3 +26,12 @@ export interface community {
   communityType: string;
   communityType2: string;
 }
+
+export interface profileImgList {
+  profileImgList: profileImg[];
+}
+
+export interface profileImg {
+  profileImgId: number;
+  profileImgUrl: string;
+}

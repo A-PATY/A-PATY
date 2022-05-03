@@ -3,10 +3,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
+
 import { axiosInstance } from '../../utils/axios';
+
 import Swal from 'sweetalert2';
+import { setCookie } from '../../hooks/Cookie';
 
 const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
@@ -23,14 +24,18 @@ const KakaoCallbackMain: React.FC = () => {
             'Authorization'
           ] = `Bearer ${accessToken}`;
 
+          setCookie('apaty_refresh', refreshToken, {
+            expires: new Date(Date.now() + 100 * 60),
+          });
+
           if (newMember) {
             navigate('/newMember');
           } else {
             Swal.fire({
-              title: '기존 사용자',
-              text: '로그인하였습니다.',
+              title: '로그인하였습니다.',
               icon: 'success',
-              confirmButtonText: 'Cool',
+              showConfirmButton: false,
+              timer: 2000,
             });
             navigate('/local_community');
           }

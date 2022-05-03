@@ -65,14 +65,18 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
   );
 };
 
-const BottomNavigationCustom = styled(BottomNavigation)`
-  display: flex;
+/* display: flex;
   justify-content: center;
   position: sticky;
   bottom: 0px;
   height: 70px;
   background-color: white;
-  z-index: 1;
+  z-index: 1; */
+const BottomNavigationCustom = styled(BottomNavigation)`
+  bottom: 0px;
+  height: 70px;
+  position: sticky;
+  background-color: white;
 `;
 
 const BottomNavigationActionCustom = styled(BottomNavigationAction)`

@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 export interface SimpleDialogProps {
   open: boolean;
   onClose: (value: string) => void;
+  setProfileImgId: (value: number) => void;
 }
 const itemData = [
   {
@@ -61,7 +62,11 @@ const itemData = [
   },
 ];
 
-const ProfileImageList: React.FC<SimpleDialogProps> = ({ open, onClose }) => {
+const ProfileImageList: React.FC<SimpleDialogProps> = ({
+  open,
+  onClose,
+  setProfileImgId,
+}) => {
   const handleClose = () => {};
   return (
     <>
@@ -70,9 +75,13 @@ const ProfileImageList: React.FC<SimpleDialogProps> = ({ open, onClose }) => {
           <DialogTitle>프로필 선택</DialogTitle>
         </DialogTitleWrapper>
         <BoxCustom>
-          <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+          <ImageListCustom
+            sx={{ width: 500, height: 450 }}
+            cols={3}
+            rowHeight={164}
+          >
             {itemData.map((item) => (
-              <ImageListItem key={item.img}>
+              <ImageListItem key={item.title}>
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -81,7 +90,7 @@ const ProfileImageList: React.FC<SimpleDialogProps> = ({ open, onClose }) => {
                 />
               </ImageListItem>
             ))}
-          </ImageList>
+          </ImageListCustom>
         </BoxCustom>
       </DialogCustom>
     </>
@@ -103,5 +112,14 @@ const DialogTitleWrapper = styled.div`
 const BoxCustom = styled(Box)`
   padding: 12px 24px 24px;
   overflow-y: auto;
+`;
+
+const ImageListCustom = styled(ImageList)`
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `;
 export default ProfileImageList;
