@@ -101,9 +101,6 @@ public class LoginServiceImpl implements LoginService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-
-//            String kakaoUserNumber = properties.getAsJsonObject().get("id").getAsString();
             String kakaoUserNumber = element.getAsJsonObject().get("id").getAsString();
             userInfo.put("kakaoUserNumber", kakaoUserNumber);
 
