@@ -19,6 +19,7 @@ public class Category {
     @Column(length = 25)
     private String categoryName;
 
+    @Column
     private boolean adminOnly;
 
 }

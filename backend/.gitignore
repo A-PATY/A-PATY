@@ -5,6 +5,13 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### firebase ###
+testfirestore-1916a-firebase-adminsdk-8wyli-6a8205ed25.json
+
+### Aws ###
+new_user_credentials.csv
+application-aws.yml
+
 ### STS ###
 .apt_generated
 .classpath
