@@ -101,14 +101,35 @@ const Board: React.FC = () => {
   // };
   /////////////
 
-  // React.useEffect(() => {
-  //   fetchArticles();
-  // }, []);
+  const boxRef = React.useRef(null);
+  console.log('boxRef/////////');
+  console.log(boxRef);
+
+  const [ScrollY, setScrollY] = React.useState(0);
+
+  function logit() {
+    setScrollY(boxRef.current.scrollTop);
+    if (boxRef.current.scrollTop > 30) {
+      onscroll();
+    } else {
+      console.log('30 이하');
+    }
+  }
+
+  React.useEffect(() => {
+    function watchScroll() {
+      boxRef.current.addEventListener('scroll', logit);
+    }
+    watchScroll();
+    return () => {
+      boxRef.current.removeEventListener('scroll', logit);
+    };
+  }, []);
 
   return (
     <>
       <Container id="Container">
-        <Wrapper id="Wrapper" onScroll={onscroll}>
+        <Wrapper id="Wrapper" onScroll={onscroll} ref={boxRef}>
           <>
             {data?.pages.map((group, i) => (
               <React.Fragment key={i}>
