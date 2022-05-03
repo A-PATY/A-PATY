@@ -215,7 +215,7 @@ const articles: article[] = [
   {
     articleId: 8,
     category: '공구',
-    title: '먹고 싶어요 ㅠㅠㅠ',
+    title: 'Last Article',
     contents: '돈까스 공구해요',
     imgs: null,
     contact: '010-1111-2222',

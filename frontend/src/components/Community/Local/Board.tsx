@@ -7,166 +7,186 @@ import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import Chip from '@mui/material/Chip';
 import BoardService from '../../../services/BoardService';
+import { useInfiniteQuery } from 'react-query';
+
+interface FetchArticlesReturnTypes {
+  data: any[] | undefined;
+  error: string | undefined | unknown;
+  isFetching: boolean;
+}
 
 const Board: React.FC = () => {
-  // const articleList: articles = {
-  //   articles: [
-  //     {
-  //       articleId: 1,
-  //       category: '일상',
-  //       title: '오늘 베란다에 까치가 왔어요',
-  //       contents: '가까이에서 까치를 관찰했어요',
-  //       imgs: null,
-  //       contact: null,
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: true,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 흑장미',
-  //     },
-  //     {
-  //       articleId: 2,
-  //       category: '일상',
-  //       title: '점심 다들 뭐 먹었나요',
-  //       contents: '오늘 점심 돈까스였습니다. 너무 더워요',
-  //       imgs: null,
-  //       contact: null,
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: true,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 흑장미',
-  //     },
-  //     {
-  //       articleId: 3,
-  //       category: '나눔장터',
-  //       title: '달려오세요',
-  //       contents: '인형 나눔해요',
-  //       imgs: [{ imgId: 1, src: `\img\did.png` }],
-  //       contact: '010-1111-2222',
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //     {
-  //       articleId: 4,
-  //       category: '나눔장터',
-  //       title: '달려오세요',
-  //       contents: '인형 나눔해요',
-  //       imgs: [{ imgId: 2, src: `\img\did.png` }],
-  //       contact: '010-1111-2222',
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //     {
-  //       articleId: 5,
-  //       category: '공구',
-  //       title: '가지고 싶어요 ㅠㅠㅠ',
-  //       contents: '인형 공구해요',
-  //       imgs: [{ imgId: 3, src: `\img\did.png` }],
-  //       contact: '010-1111-2222',
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //     {
-  //       articleId: 6,
-  //       category: '나눔장터',
-  //       title: '가지고 싶어요 ㅠㅠㅠ',
-  //       contents: '인형 나눔해요',
-  //       imgs: null,
-  //       contact: '010-1111-2222',
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //     {
-  //       articleId: 7,
-  //       category: '나눔장터',
-  //       title: '가지고 싶어요 ㅠㅠㅠ',
-  //       contents: '인형 나눔해요',
-  //       imgs: null,
-  //       contact: '010-1111-2222',
-  //       isDone: false,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //     {
-  //       articleId: 8,
-  //       category: '공구',
-  //       title: '먹고 싶어요 ㅠㅠㅠ',
-  //       contents: '돈까스 공구해요',
-  //       imgs: null,
-  //       contact: '010-1111-2222',
-  //       isDone: true,
-  //       views: 13,
-  //       likes: 15,
-  //       isLike: false,
-  //       createdAt: '2022-04-15 15:03',
-  //       commentCount: 3,
-  //       author: '101동 102호 백장미',
-  //     },
-  //   ],
-  // };
-
   const [articles, setArticles] = React.useState<article[]>([]);
+  const [lastArticleId, setLastArticleId] = React.useState<number>(0);
+  const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
+  const communityId = 367;
+  const categoryId = 1;
+  const keyword = '';
 
-  const fetchArticles = async () => {
-    await BoardService.getArticles(367, 0, 10, 1, '')
-      .then(({ articles }) => {
-        setArticles(articles);
-      })
-      .catch((err) => {
-        if (err.response) {
-          const { status, message } = err.response.data;
+  const fetchArticles = async ({ pageParam = 0 }) => {
+    const { articles } = await BoardService.getArticles(
+      communityId,
+      pageParam,
+      defaultPaginationSize,
+      categoryId,
+      keyword,
+    );
+    // const { articles } = await BoardService.getArticles(367, pageParam, 10, 1, '');
+    // .then(({ articles }) => {
+    //   setArticles(articles);
+    // })
+    // .catch((err) => {
+    //   if (err.response) {
+    //     const { status, message } = err.response.data;
 
-          switch (status) {
-            case 400:
-              alert(message);
-              break;
-            case 500:
-              alert(message);
-              break;
-          }
-        }
-      });
+    //     switch (status) {
+    //       case 400:
+    //         alert(message);
+    //         break;
+    //       case 500:
+    //         alert(message);
+    //         break;
+    //     }
+    //   }
+    // });
+    return {
+      result: articles,
+    };
   };
 
-  React.useEffect(() => {
-    fetchArticles();
-  }, []);
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery('localArticles', fetchArticles, {
+    getNextPageParam: (lastPage) =>
+      lastPage.result[lastPage.result.length - 1].articleId,
+  });
+
+  ////////////
+
+  const getScrollTop = () => {
+    return window.pageYOffset !== undefined
+      ? window.pageYOffset
+      : (document.documentElement || document.body.parentNode || document.body)
+          .scrollTop;
+  };
+
+  const getDocumentHeight = () => {
+    const body = document.body;
+    const html = document.documentElement;
+
+    return Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+    );
+  };
+
+  const onscroll = () => {
+    console.log('////////////////onscroll 실행//////////////');
+    if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
+      fetchNextPage(); // Ajax 로직 실행 }
+    }
+  };
+
+  // window.onscroll = function () {
+  //   onscroll();
+  // };
+  /////////////
+
+  // React.useEffect(() => {
+  //   fetchArticles();
+  // }, []);
 
   return (
     <>
-      <Container>
-        <Wrapper>
+      <Container id="Container">
+        <Wrapper id="Wrapper" onScroll={onscroll}>
           <>
-            {articles.map((article) => {
+            {data?.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group.result.map((article) => {
+                  return (
+                    <ArticleWrapper key={article.articleId}>
+                      <Category>
+                        {article.category}
+                        {(article.category === '나눔장터' ||
+                          article.category === '공구') &&
+                        article.isDone === true ? (
+                          <Info className="isDone">완료</Info>
+                        ) : undefined}
+                        {(article.category === '나눔장터' ||
+                          article.category === '공구') &&
+                        article.isDone === false ? (
+                          <Info className="isNotDone">진행 중</Info>
+                        ) : undefined}
+                      </Category>
+                      <Article>
+                        <Title href={`/board/${article.articleId}`}>
+                          {article.title}
+                        </Title>
+                        <Contents href={`/board/${article.articleId}`}>
+                          {article.contents}
+                          {article.imgs !== null && (
+                            <Image src="\img\did.png" />
+                          )}
+                        </Contents>
+                      </Article>
+                      <ArticleInfoWrapper>
+                        <ArticleInfo>
+                          <Info>{article.createdAt}</Info>
+                          <Info>{article.author}</Info>
+                        </ArticleInfo>
+                        <ArticleInfo>
+                          <Info className="icon">
+                            <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
+                          </Info>
+                          <Info>{article.views}</Info>
+                          <Info className="icon">
+                            {article.isLike ? (
+                              <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
+                            ) : (
+                              <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
+                            )}
+                          </Info>
+                          <Info>{article.likes}</Info>
+                          <Info className="icon">
+                            <ChatBubbleOutlineRoundedIcon
+                              sx={{ fontSize: '8px' }}
+                            />
+                          </Info>
+                          <Info>{article.commentCount}</Info>
+                        </ArticleInfo>
+                      </ArticleInfoWrapper>
+                    </ArticleWrapper>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+            <div>
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? 'Loading more...'
+                  : hasNextPage
+                  ? 'Load More'
+                  : 'Nothing more to load'}
+              </button>
+            </div>
+            <div>
+              {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
+            </div>
+
+            {/* {articles.map((article) => {
               return (
                 <ArticleWrapper key={article.articleId}>
                   <Category>
@@ -219,7 +239,7 @@ const Board: React.FC = () => {
                   </ArticleInfoWrapper>
                 </ArticleWrapper>
               );
-            })}
+            })} */}
           </>
         </Wrapper>
       </Container>
