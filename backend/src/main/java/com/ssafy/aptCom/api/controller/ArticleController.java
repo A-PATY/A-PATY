@@ -2,6 +2,7 @@ package com.ssafy.aptCom.api.controller;
 
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
 import com.ssafy.aptCom.api.dto.request.ArticleUpdateRequestDto;
+import com.ssafy.aptCom.api.dto.response.ArticleResponseDto;
 import com.ssafy.aptCom.api.service.ArticleServiceImpl;
 import com.ssafy.aptCom.db.entity.User;
 import com.ssafy.aptCom.db.repository.UserRepository;
@@ -30,10 +31,12 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createArticle(@AuthenticationPrincipal String kakao, ArticleRequestDto articleRequestDto) throws IOException {
+    public ResponseEntity<?> createArticle(ArticleRequestDto articleRequestDto) throws IOException {
 
         List<MultipartFile> multipartFiles = articleRequestDto.getImg();
-        User user = userRepository.findByKakaoUserNumber(kakao).orElseThrow();
+        log.info("multipartFIles {}: ", multipartFiles);
+//        User user = userRepository.findByKakaoUserNumber(kakao).orElseThrow();
+        User user = userRepository.getOne(1);
 
         try {
             Integer articleId = articleService.createArticle(articleRequestDto, user);
@@ -41,10 +44,10 @@ public class ArticleController {
                 articleService.saveArticleImages(multipartFiles, articleId) ;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("exception: {}", e.getClass());
         }
 
-        return ResponseEntity.status(201).body("created");
+        return ResponseEntity.status(201).body(new ArticleResponseDto("글 작성이 완료되었습니다."));
     }
 
     @PutMapping("/{article-id}")
@@ -52,11 +55,16 @@ public class ArticleController {
 
 
         List<MultipartFile> multipartFiles = articleUpdateRequestDto.getImg();
+        try {
+            log.info("게시글 이미지 업데이트 시작");
+            articleService.updateArticleImages(multipartFiles, articleId);
+            log.info("게시글 업데이트 시작");
+            articleService.updateArticle(articleId, articleUpdateRequestDto);
+        } catch (Exception e) {
+            log.info("exception: {}", e.getClass());
+        }
 
-        articleService.updateArticleImages(multipartFiles, articleId);
-        articleService.updateArticle(articleId, articleUpdateRequestDto);
-
-        return ResponseEntity.status(201).body("updated");
+        return ResponseEntity.status(200).body(new ArticleResponseDto("수정이 완료되었습니다."));
     }
 
     @DeleteMapping("/{article-id}")
@@ -68,9 +76,9 @@ public class ArticleController {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
 
-            return ResponseEntity.status(404).body("no article");
+            return ResponseEntity.status(404).body(new ArticleResponseDto("게시글을 찾을 수 없습니다."));
         }
 
-        return ResponseEntity.status(200).body("deleted");
+        return ResponseEntity.status(200).body(new ArticleResponseDto("게시글이 삭제되었습니다."));
     }
 }

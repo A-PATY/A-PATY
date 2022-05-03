@@ -48,16 +48,10 @@ public class Article extends BaseTimeEntity{
     @Column(columnDefinition = "integer default 0")
     private int views;
 
-//    @CreationTimestamp
-//    @Column(updatable = false)
-//    private LocalDateTime createdAt;
-//
-//    @UpdateTimestamp
-//    private LocalDateTime updatedAt;
-
     // 게시글 삭제시 첨부이미지도 삭제
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "article_id", referencedColumnName = "id")
+//    @JoinColumn(name = "article_id", referencedColumnName = "id")
+//    => 쓰면 Referential integrity constraint violation:에러 발생
     List<Image> images = new ArrayList<>();
 
 }

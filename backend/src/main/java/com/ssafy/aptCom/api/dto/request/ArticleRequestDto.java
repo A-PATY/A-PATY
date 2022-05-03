@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@ApiModel("ArticleResponseDto")
+@ApiModel("ArticleRequestDto")
 @Setter
 @Getter
 public class ArticleRequestDto {

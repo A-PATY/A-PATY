@@ -106,7 +106,7 @@ public class ArticleServiceImpl implements ArticleService {
         log.info(articleRequestDto.getTitle());
 
         ArrayList<String> nicks1 = new ArrayList<>(Arrays.asList("춤추는", "잠자는", "겨울잠에서 깨어난",
-                "책읽는", "뛰어다니는", "뒷구르기하는", "앞구르기하는", "티타임을 가지는", "커피를 좋아하는"
+                "책읽는", "뛰어다니는", "뒷구르기하는", "앞구르기하는", "티타임중인", "커피를 좋아하는"
         , "노래하는", "새침한", "버블티를 좋아하는", "산책하는", "씩씩한"));
 
         ArrayList<String> nicks2 = new ArrayList<>(Arrays.asList("친칠라", "치타", "하이에나", "악어",
@@ -115,10 +115,11 @@ public class ArticleServiceImpl implements ArticleService {
 
         int randIdx1 = (int)((Math.random()) * nicks1.size());
         int randIdx2 = (int)((Math.random()) * nicks2.size());
-        String randNick = nicks1.get(randIdx1) + nicks2.get(randIdx2);
+        String randNick = nicks1.get(randIdx1) + " " + nicks2.get(randIdx2);
 
         Community community = communityRepository.getOne(articleRequestDto.getCommunityId());
         Category category = categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory());
+        log.info("카테고리 {}:", category);
         Article article = Article.builder()
                 .user(user)
                 .community(community)
@@ -137,36 +138,45 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void updateArticleImages(List<MultipartFile> multipartFiles, Integer articleId) throws IOException {
         //1. 기존이미지 불러온다.
-        //2. 기존이미지 미존재 및 새 이미지 미존재 -> pass
-        //3. 기존이미지 미존재 및 새 이미지 존재 -> saveArticleImages
-        //4. 기존이미지 존재 및 새 이미지 미존재 -> deleteArticleImages
-        //5. 기존이미지 존재 및 새 이미지 존재 -> 기존이미지 삭제 및 새 이미지 업로드
+        //2. 기존이미지 존재시 모두 삭제, 새 이미지 모두 업로드
+        //3. 기존이미지 미존재시 새 이미지 모두 업로드
+        log.info("updateArticleImages");
+
         Article article = articleRepository.getOne(articleId);
+        log.info("article:{}", article);
         List<String> old_images_url = imageRepository.findAllImgUrlByArticleId(article);
-        if (!old_images_url.isEmpty()) {
-            imageRepository.deleteAllByArticleId(articleId);
+        log.info("multipartfiles:{}", multipartFiles);
+
+        if (old_images_url.size() > 0) {
+            log.info("기존 이미지 존재시");
+            imageRepository.deleteAllImgByArticleId(articleId);
+            log.info("기존 이미지 db 삭제");
             deleteArticleImages(old_images_url);
-            if (!multipartFiles.isEmpty()) {
-                saveArticleImages(multipartFiles, articleId);
-            }
-        }
-        if (old_images_url.isEmpty() && !multipartFiles.isEmpty()) {
+            log.info("기존 이미지 S3 삭제");
+
             saveArticleImages(multipartFiles, articleId);
+            log.info("새 이미지 s3 및 db 저장");
+            }
+
+        if (old_images_url.size() == 0) {
+            saveArticleImages(multipartFiles, articleId);
+            log.info("새 이미지 s3 및 db 저장");
         }
     }
 
     // 게시글 UPDATE
-    @Transactional
     @Override
     public void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) {
         Article old_article = articleRepository.getOne(articleId);
         Category category = categoryRepository.findCategoryByCategoryName(articleUpdateRequestDto.getCategory());
+        log.info("업데이트 카테고리 {}:", category);
         old_article.setCategory(category);
         old_article.setTitle(articleUpdateRequestDto.getTitle());
         old_article.setContents(articleUpdateRequestDto.getTitle());
         old_article.setContact(articleUpdateRequestDto.getContact());
         old_article.setDone(articleUpdateRequestDto.getIsDone());
         articleRepository.save(old_article);
+        log.info("게시글 업데이트 완료");
     }
 
     // 게시글 DELETE

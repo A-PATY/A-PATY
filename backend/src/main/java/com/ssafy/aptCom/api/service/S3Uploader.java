@@ -32,7 +32,6 @@ public class S3Uploader {
         this.amazonS3Client = amazonS3Client;
     }
 
-
     // Multipart file 을 file 로 변환, 로컬에 이미지 업로드
     public String upload(MultipartFile multipartFile, String S3dirName, String storeFileName) throws IOException {
         File uploadFile = convert(multipartFile, storeFileName)
