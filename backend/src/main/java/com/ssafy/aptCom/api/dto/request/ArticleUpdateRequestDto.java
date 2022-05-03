@@ -7,13 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@ApiModel("ArticleResponseDto")
+@ApiModel("ArticleRequestDto")
 @Setter
 @Getter
-public class ArticleRequestDto {
-
-    private int communityId;
-
+public class ArticleUpdateRequestDto {
     private String category;
 
     private String title;
@@ -25,5 +22,4 @@ public class ArticleRequestDto {
     private String contact;
 
     private Boolean isDone;
-
 }

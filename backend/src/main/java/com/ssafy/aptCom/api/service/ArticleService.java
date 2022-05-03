@@ -1,6 +1,8 @@
 package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
+import com.ssafy.aptCom.api.dto.request.ArticleUpdateRequestDto;
+import com.ssafy.aptCom.db.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,15 +14,19 @@ public interface ArticleService {
 
     String saveArticleImage(MultipartFile multipartFile, Integer articleId) throws IOException;
 
+    void deleteArticleImages(List<String> old_images_url) throws IOException;
+
+    void deleteArticleImage(String old_image_url) throws IOException;
+
     String createStoreFilename(String originalFilename);
 
     String extractExt(String originalFilename);
 
-    Integer createArticle(ArticleRequestDto articleRequestDto);
+    Integer createArticle(ArticleRequestDto articleRequestDto, User user);
 
-//    void getArticle(ArticleRequestDto articleRequestDto);
-//
-//    void updateArticle(ArticleRequestDto articleRequestDto);
-//
-//    void deleteArticle(ArticleRequestDto articleRequestDto);
+    void updateArticleImages(List<MultipartFile> multipartFiles, Integer articleId) throws IOException;
+
+    void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto);
+
+    void deleteArticle(Integer articleId);
 }

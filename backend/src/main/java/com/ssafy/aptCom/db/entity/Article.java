@@ -1,11 +1,8 @@
 package com.ssafy.aptCom.db.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +12,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Article {
+public class Article extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
@@ -28,6 +29,9 @@ public class Article {
     @ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(length = 25)
+    private String anonyAuthor;
 
     @Column(length = 80)
     private String title;
@@ -44,19 +48,16 @@ public class Article {
     @Column(columnDefinition = "integer default 0")
     private int views;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+//    @CreationTimestamp
+//    @Column(updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @UpdateTimestamp
+//    private LocalDateTime updatedAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    @OneToMany
+    // 게시글 삭제시 첨부이미지도 삭제
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Image> images = new ArrayList<>();
 
-    @PrePersist
-    public void createdAt() {
-        this.createdAt = LocalDateTime.now();
-    }
 }

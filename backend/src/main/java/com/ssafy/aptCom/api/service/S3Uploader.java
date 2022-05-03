@@ -35,7 +35,6 @@ public class S3Uploader {
 
     // Multipart file 을 file 로 변환, 로컬에 이미지 업로드
     public String upload(MultipartFile multipartFile, String S3dirName, String storeFileName) throws IOException {
-        System.out.println(storeFileName);
         File uploadFile = convert(multipartFile, storeFileName)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         return upload(uploadFile, S3dirName);
@@ -44,7 +43,9 @@ public class S3Uploader {
     // file 을 S3에 업로드 및 로컬 파일 삭제
     public String upload(File uploadFileLocal, String S3dirName) {
         String fileNameDir = S3dirName + "/" + uploadFileLocal.getName();
-        log.info("s3용 디렉터리: {}", fileNameDir);
+        log.info("**********************************");
+        log.info("s3용 디렉터리- fileNameDir: {}", fileNameDir);
+        log.info("**********************************");
         String uploadImageUrl = putS3(uploadFileLocal, fileNameDir);
         removeNewFile(uploadFileLocal);
         return uploadImageUrl;
