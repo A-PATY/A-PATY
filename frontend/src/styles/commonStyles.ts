@@ -27,6 +27,9 @@ const commonStyles = css`
     flex-direction: column;
     height: 100%;
     background-color: #fffdfb;
+    /* ::-webkit-scrollbar {
+      display: none;
+    } */
   }
 `;
 
