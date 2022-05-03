@@ -29,6 +29,8 @@ public class Comment {
     @Column(length = 200)
     private String commentContent;
 
+    private boolean secret;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime commentCreatedAt;
