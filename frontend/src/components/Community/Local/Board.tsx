@@ -8,6 +8,7 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import Chip from '@mui/material/Chip';
 import BoardService from '../../../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
+import { useInView } from 'react-intersection-observer';
 
 interface FetchArticlesReturnTypes {
   data: any[] | undefined;
@@ -67,69 +68,56 @@ const Board: React.FC = () => {
       lastPage.result[lastPage.result.length - 1].articleId,
   });
 
+  const ObservationComponent = (): React.ReactElement => {
+    const [ref, inView] = useInView();
+
+    React.useEffect(() => {
+      if (!data) return;
+      console.log('////////////////fetchNextPage 실행//////////////');
+      fetchNextPage();
+    }, [inView]);
+
+    return <div ref={ref} />;
+  };
+
   ////////////
 
-  const getScrollTop = () => {
-    return window.pageYOffset !== undefined
-      ? window.pageYOffset
-      : (document.documentElement || document.body.parentNode || document.body)
-          .scrollTop;
-  };
+  // const getScrollTop = () => {
+  //   return window.pageYOffset !== undefined
+  //     ? window.pageYOffset
+  //     : (document.documentElement || document.body.parentNode || document.body)
+  //         .scrollTop;
+  // };
 
-  const getDocumentHeight = () => {
-    const body = document.body;
-    const html = document.documentElement;
+  // const getDocumentHeight = () => {
+  //   const body = document.body;
+  //   const html = document.documentElement;
 
-    return Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight,
-    );
-  };
+  //   return Math.max(
+  //     body.scrollHeight,
+  //     body.offsetHeight,
+  //     html.clientHeight,
+  //     html.scrollHeight,
+  //     html.offsetHeight,
+  //   );
+  // };
 
-  const onscroll = () => {
-    console.log('////////////////onscroll 실행//////////////');
-    if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
-      fetchNextPage(); // Ajax 로직 실행 }
-    }
-  };
+  // const onscroll = () => {
+  //   console.log('////////////////onscroll 실행//////////////');
+  //   if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
+  //     fetchNextPage(); // Ajax 로직 실행 }
+  //   }
+  // };
 
   // window.onscroll = function () {
   //   onscroll();
   // };
   /////////////
 
-  const boxRef = React.useRef(null);
-  console.log('boxRef/////////');
-  console.log(boxRef);
-
-  const [ScrollY, setScrollY] = React.useState(0);
-
-  function logit() {
-    setScrollY(boxRef.current.scrollTop);
-    if (boxRef.current.scrollTop > 30) {
-      onscroll();
-    } else {
-      console.log('30 이하');
-    }
-  }
-
-  React.useEffect(() => {
-    function watchScroll() {
-      boxRef.current.addEventListener('scroll', logit);
-    }
-    watchScroll();
-    return () => {
-      boxRef.current.removeEventListener('scroll', logit);
-    };
-  }, []);
-
   return (
     <>
       <Container id="Container">
-        <Wrapper id="Wrapper" onScroll={onscroll} ref={boxRef}>
+        <Wrapper id="Wrapper">
           <>
             {data?.pages.map((group, i) => (
               <React.Fragment key={i}>
@@ -203,6 +191,7 @@ const Board: React.FC = () => {
                   : 'Nothing more to load'}
               </button>
             </div>
+            {/* <ObservationComponent /> */}
             <div>
               {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
             </div>
