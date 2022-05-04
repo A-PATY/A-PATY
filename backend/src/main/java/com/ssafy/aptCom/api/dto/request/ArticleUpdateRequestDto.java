@@ -5,19 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel("ArticleRequestDto")
+@ApiModel("ArticleUpdateRequestDto")
 @Setter
 @Getter
 public class ArticleUpdateRequestDto {
+
     private String category;
 
     private String title;
 
     private String contents;
 
-    List<MultipartFile> img;
+    ArrayList<MultipartFile> img;
 
     private String contact;
 

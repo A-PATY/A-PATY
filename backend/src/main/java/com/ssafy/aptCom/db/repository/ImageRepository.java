@@ -16,5 +16,5 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     void deleteAllImgByArticleId(@Param("articleId") Integer articleId);
 
     @Query(value = "SELECT img_url FROM image AS i WHERE i.article_id = :articleId", nativeQuery = true)
-    List<String> findAllImgUrlByArticleId(@Param("articleId") Article articleId);
+    List<String> findAllImgUrlByArticleId(@Param("articleId") Integer articleId);
 }

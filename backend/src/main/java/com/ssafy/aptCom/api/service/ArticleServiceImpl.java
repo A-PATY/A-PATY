@@ -25,6 +25,13 @@ public class ArticleServiceImpl implements ArticleService {
     private CommunityRepository communityRepository;
     private CategoryRepository categoryRepository;
 
+    static ArrayList<String> nicks1 = new ArrayList<>(Arrays.asList("춤추는", "잠자는", "겨울잠에서 깨어난",
+            "책읽는", "뛰어다니는", "뒷구르기하는", "앞구르기하는", "티타임중인", "커피를 좋아하는"
+            , "노래하는", "새침한", "버블티를 좋아하는", "산책하는", "씩씩한"));
+    static ArrayList<String> nicks2 = new ArrayList<>(Arrays.asList("친칠라", "치타", "하이에나", "악어",
+            "펭귄", "부엉이", "올빼미", "다람쥐", "코알라", "캥거루", "두루미", "우파루파",
+            "너구리", "카멜레온", "돌고레", "알파카", "기린", "코뿔소"));
+
     public ArticleServiceImpl(S3Uploader s3Uploader, ImageRepository imageRepository,
                               ArticleRepository articleRepository, CommunityRepository communityRepository,
                               CategoryRepository categoryRepository) {
@@ -69,6 +76,13 @@ public class ArticleServiceImpl implements ArticleService {
         return imageUrl;
     }
 
+    @Transactional
+    @Override
+    public void deleteArticleImagesDB(Integer articleId) {
+        imageRepository.deleteAllImgByArticleId(articleId);
+    }
+
+    @Transactional
     @Override
     public void deleteArticleImages(List<String> old_images_url) throws IOException {
         for (String oiu : old_images_url) {
@@ -77,11 +91,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void deleteArticleImage(String oiu) throws IOException {
-        log.info("oiu={}", oiu);
-
-        String fileNameDir = "articleImages" + "/" + oiu;
-//        s3Uploader.disload(fileNameDir);
+    public void deleteArticleImage(String oiu) {
+        String fileNameDir = oiu.substring(oiu.indexOf("articleImages"));
+        log.info("fileNameDir {}", fileNameDir);
+        s3Uploader.disload(fileNameDir);
     }
 
     // 랜덤 파일명 생성
@@ -105,21 +118,12 @@ public class ArticleServiceImpl implements ArticleService {
     public Integer createArticle(ArticleRequestDto articleRequestDto, User user) {
         log.info(articleRequestDto.getTitle());
 
-        ArrayList<String> nicks1 = new ArrayList<>(Arrays.asList("춤추는", "잠자는", "겨울잠에서 깨어난",
-                "책읽는", "뛰어다니는", "뒷구르기하는", "앞구르기하는", "티타임중인", "커피를 좋아하는"
-        , "노래하는", "새침한", "버블티를 좋아하는", "산책하는", "씩씩한"));
-
-        ArrayList<String> nicks2 = new ArrayList<>(Arrays.asList("친칠라", "치타", "하이에나", "악어",
-                "펭귄", "부엉이", "올빼미", "다람쥐", "코알라", "캥거루", "두루미", "우파루파",
-                "너구리", "카멜레온", "돌고레", "알파카", "기린", "코뿔소"));
-
         int randIdx1 = (int)((Math.random()) * nicks1.size());
         int randIdx2 = (int)((Math.random()) * nicks2.size());
         String randNick = nicks1.get(randIdx1) + " " + nicks2.get(randIdx2);
 
         Community community = communityRepository.getOne(articleRequestDto.getCommunityId());
         Category category = categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory());
-        log.info("카테고리 {}:", category);
         Article article = Article.builder()
                 .user(user)
                 .community(community)
@@ -134,33 +138,17 @@ public class ArticleServiceImpl implements ArticleService {
         return article.getId();
     }
 
-    // 게시글 이미지 업데이트
+    @Transactional
     @Override
-    public void updateArticleImages(List<MultipartFile> multipartFiles, Integer articleId) throws IOException {
-        //1. 기존이미지 불러온다.
-        //2. 기존이미지 존재시 모두 삭제, 새 이미지 모두 업로드
-        //3. 기존이미지 미존재시 새 이미지 모두 업로드
-        log.info("updateArticleImages");
-
-        Article article = articleRepository.getOne(articleId);
-        log.info("article:{}", article);
-        List<String> old_images_url = imageRepository.findAllImgUrlByArticleId(article);
-        log.info("multipartfiles:{}", multipartFiles);
+    public void deleteArticleImagesS3(Integer articleId) throws IOException {
+        // 기존이미지 불러온 후 삭제
+        log.info("이미지 s3삭제");
+        List<String> old_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
+        log.info("oiu:{}", old_images_url);
 
         if (old_images_url.size() > 0) {
-            log.info("기존 이미지 존재시");
-            imageRepository.deleteAllImgByArticleId(articleId);
-            log.info("기존 이미지 db 삭제");
-            deleteArticleImages(old_images_url);
             log.info("기존 이미지 S3 삭제");
-
-            saveArticleImages(multipartFiles, articleId);
-            log.info("새 이미지 s3 및 db 저장");
-            }
-
-        if (old_images_url.size() == 0) {
-            saveArticleImages(multipartFiles, articleId);
-            log.info("새 이미지 s3 및 db 저장");
+            deleteArticleImages(old_images_url);
         }
     }
 
@@ -169,7 +157,6 @@ public class ArticleServiceImpl implements ArticleService {
     public void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) {
         Article old_article = articleRepository.getOne(articleId);
         Category category = categoryRepository.findCategoryByCategoryName(articleUpdateRequestDto.getCategory());
-        log.info("업데이트 카테고리 {}:", category);
         old_article.setCategory(category);
         old_article.setTitle(articleUpdateRequestDto.getTitle());
         old_article.setContents(articleUpdateRequestDto.getTitle());

@@ -8,8 +8,8 @@ import com.ssafy.aptCom.db.entity.User;
 import com.ssafy.aptCom.db.repository.UserRepository;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,11 +30,11 @@ public class ArticleController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createArticle(ArticleRequestDto articleRequestDto) throws IOException {
 
         List<MultipartFile> multipartFiles = articleRequestDto.getImg();
-        log.info("multipartFIles {}: ", multipartFiles);
+        log.info("multipartFiles : {} ", multipartFiles);
 //        User user = userRepository.findByKakaoUserNumber(kakao).orElseThrow();
         User user = userRepository.getOne(1);
 
@@ -50,15 +50,21 @@ public class ArticleController {
         return ResponseEntity.status(201).body(new ArticleResponseDto("글 작성이 완료되었습니다."));
     }
 
-    @PutMapping("/{article-id}")
+    @PutMapping(value ="/{article-id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateArticle(@PathVariable("article-id") Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) throws IOException {
 
 
         List<MultipartFile> multipartFiles = articleUpdateRequestDto.getImg();
+        log.info("multipartFiles : {} ", multipartFiles);
+
         try {
-            log.info("게시글 이미지 업데이트 시작");
-            articleService.updateArticleImages(multipartFiles, articleId);
-            log.info("게시글 업데이트 시작");
+            articleService.deleteArticleImagesS3(articleId);
+            articleService.deleteArticleImagesDB(articleId);
+
+            if (multipartFiles != null) {
+                articleService.saveArticleImages(multipartFiles, articleId);
+            }
+
             articleService.updateArticle(articleId, articleUpdateRequestDto);
         } catch (Exception e) {
             log.info("exception: {}", e.getClass());

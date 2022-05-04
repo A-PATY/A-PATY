@@ -14,6 +14,8 @@ public interface ArticleService {
 
     String saveArticleImage(MultipartFile multipartFile, Integer articleId) throws IOException;
 
+    void deleteArticleImagesDB(Integer articleId);
+
     void deleteArticleImages(List<String> old_images_url) throws IOException;
 
     void deleteArticleImage(String old_image_url) throws IOException;
@@ -24,7 +26,7 @@ public interface ArticleService {
 
     Integer createArticle(ArticleRequestDto articleRequestDto, User user);
 
-    void updateArticleImages(List<MultipartFile> multipartFiles, Integer articleId) throws IOException;
+    void deleteArticleImagesS3(Integer articleId) throws IOException;
 
     void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto);
 
