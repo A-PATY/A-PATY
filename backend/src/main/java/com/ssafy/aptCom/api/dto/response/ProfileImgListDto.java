@@ -18,6 +18,7 @@ public class ProfileImgListDto {
         res.setProfileImgList(ProfileImgList.of(profileImgList));
 
         return res;
+
     }
 
 }

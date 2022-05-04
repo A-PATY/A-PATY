@@ -19,4 +19,5 @@ public class ProfileImgServiceImpl implements ProfileImgService {
     public List<ProfileImg> getProfileImgList() {
         return profileImgRepository.findAll();
     }
+
 }

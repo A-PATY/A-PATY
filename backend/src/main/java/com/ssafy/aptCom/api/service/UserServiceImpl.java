@@ -1,6 +1,7 @@
 package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
+import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
 import com.ssafy.aptCom.common.jwt.TokenProvider;
 import com.ssafy.aptCom.db.entity.Auth;
 import com.ssafy.aptCom.db.entity.BaseAddress;
@@ -10,6 +11,7 @@ import com.ssafy.aptCom.db.repository.BaseAddressRepository;
 import com.ssafy.aptCom.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,15 +83,38 @@ public class UserServiceImpl implements UserService {
         return authRepository.findByRefreshToken(refreshToken);
     }
 
-    @Override
-    public void logOut(Auth auth) {
-
-    }
-
     public BaseAddress getAddress(String address) {
         return baseAddressRepository.findByAddress(address);
     }
 
+    @Transactional
+    @Override
+    public void deleteAuth(User user) {
+        Optional<Auth> auth = authRepository.findByUserId(user.getId());
 
+        authRepository.delete(auth);
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) {
+
+        if (profileInfo.equals("nickname")) {
+            user.setNickname(userModifyRequestDto.getNickName());
+        } else if (profileInfo.equals("address")) {
+            BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
+            user.setBaseAddress(baseAddress);
+        } else if (profileInfo.equals("profile-img")) {
+            user.setProfileImg(userModifyRequestDto.getProfileImgId());
+        } else if (profileInfo.equals("find-family")) {
+            user.setFindFamily(userModifyRequestDto.isFindFamily());
+        }
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(User user) { userRepository.delete(user); }
 
 }

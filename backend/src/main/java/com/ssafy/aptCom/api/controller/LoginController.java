@@ -1,9 +1,6 @@
 package com.ssafy.aptCom.api.controller;
 
-import com.ssafy.aptCom.api.dto.response.CategoryListDto;
-import com.ssafy.aptCom.api.dto.response.IssueTokenResponseDto;
-import com.ssafy.aptCom.api.dto.response.LoginResponseDto;
-import com.ssafy.aptCom.api.dto.response.UserInfoDto;
+import com.ssafy.aptCom.api.dto.response.*;
 import com.ssafy.aptCom.api.service.CategoryService;
 import com.ssafy.aptCom.api.service.LoginService;
 import com.ssafy.aptCom.api.service.UserService;
@@ -16,15 +13,18 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Api(value = "소셜 로그인 API", tags = {"login"})
 @RestController
 @RequiredArgsConstructor
@@ -51,22 +51,38 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestParam String accessCode) {
+            @RequestParam String accessCode) throws IOException {
 
-        String accessToken = loginService.getAccessToken(accessCode);
-        HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
-        String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
+        boolean isNew;
+        String[] tokens;
 
-        User user = userService.getUserByKakaoUserNumber(kakaoNum);
+        try {
+            String accessToken = loginService.getAccessToken(accessCode);
+            HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
+            String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
 
-        boolean isNew = true;
-        if (user == null) {
-            user = userService.userNew(kakaoNum);
-        } else {
-            isNew = false;
+            User user = userService.getUserByKakaoUserNumber(kakaoNum);
+
+            isNew = true;
+            if (user == null) {
+                user = userService.userNew(kakaoNum);
+            } else {
+                isNew = false;
+            }
+
+            tokens = userService.createTokens(user);
+
+        } catch (IOException e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(400).body(ErrorMessage.of(400, "입력값이 유효하지 않습니다."));
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 소셜 로그인 실패"));
         }
-
-        String[] tokens = userService.createTokens(user);
 
         return ResponseEntity.status(200).body(LoginResponseDto.of(tokens, isNew));
     }
@@ -80,8 +96,17 @@ public class LoginController {
     })
     public ResponseEntity<?> userInfo(
             @AuthenticationPrincipal String loginUser) {
-        System.out.println(loginUser);
-        User user = userService.getUserByKakaoUserNumber(loginUser);
+
+        User user;
+
+        try {
+            user = userService.getUserByKakaoUserNumber(loginUser);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 회원 정보 조회 실패"));
+        }
 
         return ResponseEntity.status(200).body(UserInfoDto.of(user));
 
@@ -96,7 +121,16 @@ public class LoginController {
     })
     public ResponseEntity<?> categoryList() {
 
-        List<Category> categoryList = categoryService.getCategoryList();
+        List<Category> categoryList;
+
+        try {
+            categoryList = categoryService.getCategoryList();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 카테고리 리스트 조회 실패"));
+        }
 
         return ResponseEntity.status(200).body(CategoryListDto.of(categoryList));
 
@@ -112,19 +146,50 @@ public class LoginController {
     public ResponseEntity<?> issueToken(
             @RequestHeader(value = "RefreshToken") String refreshToken) {
 
-        boolean tokenValid = tokenProvider.isTokenValid(refreshToken);
-
         Optional<Auth> auth = userService.getAuthByRefreshToken(refreshToken);
         User user = auth.get().getUser();
 
-        if (tokenValid) {
-            String accessToken = tokenProvider.createJwtAccessToken(user.getKakaoUserNumber(), user.getRoleList());
-            return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, refreshToken));
-        } else {
-            // 강제 로그아웃. auth 삭제
+        try {
+            boolean tokenValid = tokenProvider.isTokenValid(refreshToken);
+
+            if (!tokenValid) {
+                userService.deleteAuth(user);
+
+                return ResponseEntity.status(400).body(ErrorMessage.of(400, "입력값이 유효하지 않습니다."));
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, Access Token 재발급 실패"));
         }
 
-        return ResponseEntity.status(200).body("ok");
+        String accessToken = tokenProvider.createJwtAccessToken(user.getKakaoUserNumber(), user.getRoleList());
+        return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, refreshToken));
+
+    }
+
+    @GetMapping("/log-out")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃하면서 Refresh Token 삭제")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "입력값 오류"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> logOut(
+            @AuthenticationPrincipal String loginUser) {
+
+        try {
+            User user = userService.getUserByKakaoUserNumber(loginUser);
+            userService.deleteAuth(user);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 로그아웃 실패"));
+        }
+
+        return ResponseEntity.status(200).body(SuccessMessage.of("로그아웃이 완료되었습니다."));
 
     }
 

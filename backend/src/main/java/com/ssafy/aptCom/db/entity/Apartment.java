@@ -22,4 +22,8 @@ public class Apartment {
     @Column(length = 25)
     private String aptName;
 
+    @ManyToOne(targetEntity = BaseAddress.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "base_address_id")
+    private BaseAddress baseAddress;
+
 }

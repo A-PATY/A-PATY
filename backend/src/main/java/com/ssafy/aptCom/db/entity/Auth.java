@@ -16,7 +16,7 @@ public class Auth {
 
     private String refreshToken;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 

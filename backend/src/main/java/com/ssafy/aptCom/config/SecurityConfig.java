@@ -1,6 +1,8 @@
 package com.ssafy.aptCom.config;
 
 import com.ssafy.aptCom.common.jwt.AuthenticationFilter;
+import com.ssafy.aptCom.common.jwt.JwtAccessDeniedHandler;
+import com.ssafy.aptCom.common.jwt.JwtAuthenticationEntryPoint;
 import com.ssafy.aptCom.common.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,8 +25,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
-    public SecurityConfig(TokenProvider tokenProvider) {
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    public SecurityConfig(TokenProvider tokenProvider, JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+
         this.tokenProvider = tokenProvider;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+
     }
 
     @Override
@@ -38,9 +46,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
                     .formLogin().disable()
                     .authorizeRequests()
                     .anyRequest().permitAll()
+//                .and()
+//                    .logout()
+//                    .logoutSuccessUrl("/")
+//                    .invalidateHttpSession(true)
                 .and()
                     .addFilterBefore(new AuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
