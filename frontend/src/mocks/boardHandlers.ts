@@ -240,7 +240,7 @@ export const boardHandlers = [
       // console.log('/////////context: ' + context);
 
       const communityId = request.url.searchParams.get('communityId');
-      console.log('/////////communityId: ' + communityId);
+      // console.log('/////////communityId: ' + communityId);
 
       // const { communityId, lastArticleId, size, params } = request.body;
 

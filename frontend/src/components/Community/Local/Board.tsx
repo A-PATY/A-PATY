@@ -10,15 +10,8 @@ import BoardService from '../../../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
 
-interface FetchArticlesReturnTypes {
-  data: any[] | undefined;
-  error: string | undefined | unknown;
-  isFetching: boolean;
-}
-
 const Board: React.FC = () => {
-  const [articles, setArticles] = React.useState<article[]>([]);
-  const [lastArticleId, setLastArticleId] = React.useState<number>(0);
+  // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
   const communityId = 367;
   const categoryId = 1;
@@ -32,24 +25,6 @@ const Board: React.FC = () => {
       categoryId,
       keyword,
     );
-    // const { articles } = await BoardService.getArticles(367, pageParam, 10, 1, '');
-    // .then(({ articles }) => {
-    //   setArticles(articles);
-    // })
-    // .catch((err) => {
-    //   if (err.response) {
-    //     const { status, message } = err.response.data;
-
-    //     switch (status) {
-    //       case 400:
-    //         alert(message);
-    //         break;
-    //       case 500:
-    //         alert(message);
-    //         break;
-    //     }
-    //   }
-    // });
     return {
       result: articles,
     };
@@ -63,9 +38,9 @@ const Board: React.FC = () => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery('localArticles', fetchArticles, {
+  } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
     getNextPageParam: (lastPage) =>
-      lastPage.result[lastPage.result.length - 1].articleId,
+      lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
   });
 
   const ObservationComponent = (): React.ReactElement => {
@@ -73,46 +48,15 @@ const Board: React.FC = () => {
 
     React.useEffect(() => {
       if (!data) return;
-      console.log('////////////////fetchNextPage 실행//////////////');
-      fetchNextPage();
+      if (inView) {
+        console.log('////////////////fetchNextPage 실행//////////////');
+        console.log('inView: ' + inView);
+        fetchNextPage(); // 다음 페이지 fetch
+      }
     }, [inView]);
 
     return <div ref={ref} />;
   };
-
-  ////////////
-
-  // const getScrollTop = () => {
-  //   return window.pageYOffset !== undefined
-  //     ? window.pageYOffset
-  //     : (document.documentElement || document.body.parentNode || document.body)
-  //         .scrollTop;
-  // };
-
-  // const getDocumentHeight = () => {
-  //   const body = document.body;
-  //   const html = document.documentElement;
-
-  //   return Math.max(
-  //     body.scrollHeight,
-  //     body.offsetHeight,
-  //     html.clientHeight,
-  //     html.scrollHeight,
-  //     html.offsetHeight,
-  //   );
-  // };
-
-  // const onscroll = () => {
-  //   console.log('////////////////onscroll 실행//////////////');
-  //   if (getScrollTop() === getDocumentHeight() - window.innerHeight) {
-  //     fetchNextPage(); // Ajax 로직 실행 }
-  //   }
-  // };
-
-  // window.onscroll = function () {
-  //   onscroll();
-  // };
-  /////////////
 
   return (
     <>
@@ -144,7 +88,7 @@ const Board: React.FC = () => {
                         <Contents href={`/board/${article.articleId}`}>
                           {article.contents}
                           {article.imgs !== null && (
-                            <Image src="\img\did.png" />
+                            <Image src={article.imgs[0].src} />
                           )}
                         </Contents>
                       </Article>
@@ -179,7 +123,7 @@ const Board: React.FC = () => {
                 })}
               </React.Fragment>
             ))}
-            <div>
+            {/* <div>
               <button
                 onClick={() => fetchNextPage()}
                 disabled={!hasNextPage || isFetchingNextPage}
@@ -190,66 +134,11 @@ const Board: React.FC = () => {
                   ? 'Load More'
                   : 'Nothing more to load'}
               </button>
-            </div>
-            {/* <ObservationComponent /> */}
+            </div> */}
+            <ObservationComponent />
             <div>
               {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
             </div>
-
-            {/* {articles.map((article) => {
-              return (
-                <ArticleWrapper key={article.articleId}>
-                  <Category>
-                    {article.category}
-                    {(article.category === '나눔장터' ||
-                      article.category === '공구') &&
-                    article.isDone === true ? (
-                      <Info className="isDone">완료</Info>
-                    ) : undefined}
-                    {(article.category === '나눔장터' ||
-                      article.category === '공구') &&
-                    article.isDone === false ? (
-                      <Info className="isNotDone">진행 중</Info>
-                    ) : undefined}
-                  </Category>
-                  <Article>
-                    <Title href={`/board/${article.articleId}`}>
-                      {article.title}
-                    </Title>
-                    <Contents href={`/board/${article.articleId}`}>
-                      {article.contents}
-                      {article.imgs !== null && <Image src="\img\did.png" />}
-                    </Contents>
-                  </Article>
-                  <ArticleInfoWrapper>
-                    <ArticleInfo>
-                      <Info>{article.createdAt}</Info>
-                      <Info>{article.author}</Info>
-                    </ArticleInfo>
-                    <ArticleInfo>
-                      <Info className="icon">
-                        <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
-                      </Info>
-                      <Info>{article.views}</Info>
-                      <Info className="icon">
-                        {article.isLike ? (
-                          <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
-                        ) : (
-                          <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
-                        )}
-                      </Info>
-                      <Info>{article.likes}</Info>
-                      <Info className="icon">
-                        <ChatBubbleOutlineRoundedIcon
-                          sx={{ fontSize: '8px' }}
-                        />
-                      </Info>
-                      <Info>{article.commentCount}</Info>
-                    </ArticleInfo>
-                  </ArticleInfoWrapper>
-                </ArticleWrapper>
-              );
-            })} */}
           </>
         </Wrapper>
       </Container>
