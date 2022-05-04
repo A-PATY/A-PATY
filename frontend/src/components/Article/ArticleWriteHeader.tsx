@@ -8,21 +8,22 @@ interface Props {
   header: string;
 }
 
-const Header: React.FC<Props> = ({ header }) => {
+const ArticleWriteHeader: React.FC<Props> = ({ header }) => {
   return (
     <>
       <Container>
-        <GridCustom container spacing={0}>
-          <GridIcon item xs={1}>
+        <Grid container spacing={0}>
+          <GridIcon item xs={3}>
             <ArrowBackIosRoundedIconCustom />
           </GridIcon>
-          <GridText item xs={7}>
+          <GridText item xs={6}>
             <Text>{header}</Text>
           </GridText>
-          <GridButtonWrapper item xs={3}>
+
+          <GridButtonWrapper item xs={2.5}>
             <ButtonCustom>완료</ButtonCustom>
           </GridButtonWrapper>
-        </GridCustom>
+        </Grid>
       </Container>
     </>
   );
@@ -39,14 +40,9 @@ const Container = styled.div`
   z-index: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
 `;
 
-const GridCustom = styled(Grid)`
-  align-items: center;
-  justify-content: center;
-`;
 const GridIcon = styled(Grid)`
   text-align: left;
 `;
@@ -62,6 +58,8 @@ const GridText = styled(Grid)`
   align-items: center;
 `;
 
+const Text = styled.p``;
+
 const GridButtonWrapper = styled(Grid)`
   text-align: left;
   display: flex;
@@ -69,11 +67,10 @@ const GridButtonWrapper = styled(Grid)`
   align-items: center;
 `;
 
-const Text = styled.p``;
-
 const ButtonCustom = styled(Button)`
+  padding: 0;
   font-family: 'MinSans-Regular';
-  font-size: 17px;
+  font-size: 18px;
   color: #bae6e5;
 `;
-export default Header;
+export default ArticleWriteHeader;
