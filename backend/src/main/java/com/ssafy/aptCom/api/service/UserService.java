@@ -1,5 +1,7 @@
 package com.ssafy.aptCom.api.service;
 
+import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
+import com.ssafy.aptCom.db.entity.Auth;
 import com.ssafy.aptCom.db.entity.User;
 
 import java.util.Optional;
@@ -13,4 +15,9 @@ public interface UserService {
 
     User userNew(String kakaoNumber);
 
+    User userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber);
+
+    Optional<Auth> getAuthByRefreshToken(String refreshToken);
+
+    void logOut(Auth auth);
 }
