@@ -3,11 +3,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
-
+// import userInfoState from '../'
 import { axiosInstance } from '../../utils/axios';
 
 import Swal from 'sweetalert2';
 import { setCookie } from '../../hooks/Cookie';
+import { useSetRecoilState } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
@@ -15,6 +17,7 @@ const KakaoCallbackMain: React.FC = () => {
   let params = new URL(href).searchParams;
   let code = params.get('code');
   let navigate = useNavigate();
+  const setUserInfo = useSetRecoilState(userInfoState);
 
   useEffect(() => {
     if (code !== null) {
@@ -24,6 +27,10 @@ const KakaoCallbackMain: React.FC = () => {
             'Authorization'
           ] = `Bearer ${accessToken}`;
 
+          axiosInstance.defaults.headers.common[
+            'RefreshToken'
+          ] = `Bearer ${accessToken}`;
+
           setCookie('apaty_refresh', refreshToken, {
             expires: new Date(Date.now() + 100 * 60),
           });
@@ -31,6 +38,9 @@ const KakaoCallbackMain: React.FC = () => {
           if (newMember) {
             navigate('/newMember');
           } else {
+            UserService.getUserInfo().then(({ userInfo }) => {
+              setUserInfo(userInfo);
+            });
             Swal.fire({
               title: '로그인하였습니다.',
               icon: 'success',

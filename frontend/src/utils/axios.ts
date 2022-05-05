@@ -1,5 +1,19 @@
-import { getCookie } from './../hooks/Cookie';
+import { getCookie, setCookie } from './../hooks/Cookie';
 import axios from 'axios';
+import UserService from '../services/UserService';
+
+const createKakaoAxiosInstance = () => {
+  const kakaoAxiosInstance = axios.create({
+    baseURL: 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json',
+    headers: {
+      Authorization: `KakaoAK 9f8212ade1576047ddcf60fd0ab79a2e`,
+    },
+  });
+
+  return kakaoAxiosInstance;
+};
+
+export const kakaoAxiosInstance = createKakaoAxiosInstance();
 
 const createAxiosInstance = () => {
   const axiosInstance = axios.create({
@@ -23,21 +37,30 @@ axiosInstance.interceptors.response.use(
 
     const originalRequest = config;
 
-    if (status === 401) {
+    if (status === 401 || status === 403) {
       const refreshToken = getCookie('apaty_refresh');
-      axios({
-        method: 'post',
-        url: `${baseURL}/api/auth/refresh`,
-        data: { refreshToken },
-      }).then((response) => {
-        const accessTokens = response.data.data.accessToken;
-        const accessToken = `${accessTokens.header}.${accessTokens.payload}.${accessTokens.signature}`;
 
-        sessionStorage.setItem('access-token', accessToken);
+      const accessToken =
+        axiosInstance.defaults.headers.common['Authorization'];
 
-        originalRequest.headers = { 'X-AUTH-TOKEN': accessToken };
-        return axios(originalRequest);
-      });
+      if (accessToken !== null) {
+        axiosInstance.defaults.headers.common[
+          'RefreshToken'
+        ] = `Bearer ${refreshToken}`;
+
+        UserService.getNewToken().then(({ accessToken, refreshToken }) => {
+          axiosInstance.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${accessToken}`;
+
+          setCookie('apaty_refresh', refreshToken, {
+            expires: new Date(Date.now() + 100 * 60),
+          });
+
+          // return axios(originalRequest);
+          return axiosInstance(originalRequest);
+        });
+      }
     }
     return Promise.reject(error);
   },

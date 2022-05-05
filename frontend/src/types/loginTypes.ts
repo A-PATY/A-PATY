@@ -3,10 +3,19 @@ export interface LoginResponse {
   refreshToken: string;
   newMember: boolean;
   status: number | null;
-  success: boolean;
   message: string;
 }
 
+export interface IssueTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  status: number | null;
+  message: string;
+}
+
+export interface LogInResponse {
+  userInfo: UserInfo;
+}
 export interface UserInfo {
   userId: number;
   nickName: string;
@@ -34,4 +43,16 @@ export interface profileImgList {
 export interface profileImg {
   profileImgId: number;
   profileImgUrl: string;
+}
+
+export interface xy {
+  x: number;
+  y: number;
+}
+
+export interface signUpRequest {
+  nickName: string;
+  profileImgId: number;
+  address: string;
+  name: string;
 }

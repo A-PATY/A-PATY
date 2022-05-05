@@ -3,42 +3,86 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import BorderColorRoundedIcon from '@mui/icons-material/BorderColorRounded';
 import Button from '@mui/material/Button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfileImageList from '../MyPage/ProfileImageList';
 import TextField from '@mui/material/TextField';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
 import InputAdornment from '@mui/material/InputAdornment';
+import UserService from '../../services/UserService';
+import UserLocation from '../../hooks/useUserLocation';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { setMaxListeners } from 'process';
 
 const NewMemberMain: React.FC = () => {
+  const [showError, setShowError] = useState<boolean>(false);
   const [profileImgId, setProfileImgId] = useState<number>(1);
+  const [profileImgUrl, setProfileImgUrl] =
+    useState<string>('\\img\\image0.svg');
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [nicknameError, setNicknameError] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>('4113510900');
-  const [addressError, setAddressError] = useState<boolean>(false);
-
+  const [address, setAddress] = useState<string>('');
+  const [addressName, setAddressName] = useState<string>('');
+  const [addressError, setAddressError] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
+  let navigate = useNavigate();
+  let { x, y } = UserLocation();
+
+  useEffect(() => {
+    if (name === '') {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+    if (nickname === '') {
+      setNicknameError(true);
+    } else {
+      setNicknameError(false);
+    }
+    if (address === '') {
+      setAddressError(true);
+    } else {
+      setAddressError(false);
+    }
+  }, [address, name, nickname]);
 
   const handleNameInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setName(event.target.value);
+    if (event.target.value === '') {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
   };
 
   const handleNicknameInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNickname(event.target.value);
+    if (event.target.value === '') {
+      setNicknameError(true);
+    } else {
+      setNicknameError(false);
+    }
   };
 
   const handleGpsIconClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    //지도 띄워서 위치 받기
+    UserService.getUserAddress({ x, y })
+      .then((response) => {
+        setAddress(response.documents[0].code);
+        setAddressName(response.documents[0].address_name);
+        setAddressError(false);
+      })
+      .catch((error) => {});
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -49,17 +93,26 @@ const NewMemberMain: React.FC = () => {
   const handleSignUpButtonClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
-    if (name === '') {
-      setNameError(true);
-    }
-    if (nickname === '') {
-      setNicknameError(true);
-    }
-    if (address === '') {
-      setAddressError(true);
-    }
-
     if (!nameError && !nicknameError && !addressError) {
+      UserService.signUpRequest({
+        address: address,
+        nickName: nickname,
+        name: name,
+        profileImgId: profileImgId,
+      })
+        .then(() => {
+          navigate('/');
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: error.response.data.message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        });
+    } else {
+      setShowError(true);
     }
   };
 
@@ -69,7 +122,7 @@ const NewMemberMain: React.FC = () => {
         <FormWrapper>
           <Wrapper>
             <ImageWrapper>
-              <Image src="\img\image0.svg" />
+              <Image src={profileImgUrl} />
               <ModifyButton onClick={handleModifyButtonClick}>
                 <AutoFixHighIconCustom />
               </ModifyButton>
@@ -79,8 +132,10 @@ const NewMemberMain: React.FC = () => {
                 value={name}
                 variant="outlined"
                 label={'이름'}
-                error={nameError}
-                helperText={nameError ? '이름을 입력해주세요.' : ''}
+                error={showError && nameError}
+                helperText={
+                  showError && nameError ? '이름을 입력해주세요.' : ''
+                }
                 onChange={handleNameInputChange}
               ></StyledTextField>
             </StyledTextFieldWrapper>
@@ -89,18 +144,24 @@ const NewMemberMain: React.FC = () => {
                 value={nickname}
                 variant="outlined"
                 label={'닉네임'}
-                error={nicknameError}
-                helperText={nicknameError ? '닉네임을 입력해주세요.' : ''}
+                error={showError && nicknameError}
+                helperText={
+                  showError && nicknameError ? '닉네임을 입력해주세요.' : ''
+                }
                 onChange={handleNicknameInputChange}
               ></StyledTextField>
             </StyledTextFieldWrapper>
             <StyledTextFieldWrapper>
               <StyledTextField
-                defaultValue=""
+                value={addressName}
                 variant="outlined"
                 label={'주소'}
-                error={addressError}
-                helperText={addressError ? '주소를 인증해주세요.' : ''}
+                error={showError && addressError}
+                helperText={
+                  showError && addressError
+                    ? '우측 아이콘을 눌러 주소를 인증해주세요.'
+                    : ''
+                }
                 InputProps={{
                   readOnly: true,
                   endAdornment: (
@@ -126,6 +187,7 @@ const NewMemberMain: React.FC = () => {
         open={open}
         onClose={handleClose}
         setProfileImgId={setProfileImgId}
+        setProfileImgUrl={setProfileImgUrl}
       />
     </>
   );
@@ -230,11 +292,12 @@ const StyledTextField = styled(TextField)`
 const GpsIconWrapper = styled.div`
   height: auto;
   width: auto;
-
+  display: flex;
   &:hover {
     cursor: pointer;
   }
 `;
+
 const SignUpButton = styled(Button)`
   background-color: #ffd0b6;
   color: white;

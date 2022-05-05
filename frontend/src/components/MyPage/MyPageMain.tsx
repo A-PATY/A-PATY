@@ -9,10 +9,11 @@ import { useState } from 'react';
 
 const MyPageMain: React.FC = () => {
   const [profileImgId, setProfileImgId] = useState<number>(1);
-
+  const [profileImgUrl, setProfileImgUrl] =
+    useState<string>('\\img\\image0.svg');
   const [open, setOpen] = useState(false);
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -56,6 +57,7 @@ const MyPageMain: React.FC = () => {
         open={open}
         onClose={handleClose}
         setProfileImgId={setProfileImgId}
+        setProfileImgUrl={setProfileImgUrl}
       />
     </>
   );
