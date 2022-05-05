@@ -1,6 +1,5 @@
-import { UserInfo } from './../types/loginTypes';
 import { rest } from 'msw';
-import { ProfileImageList, userInfo } from '../hooks/database/UserInfoDatabase';
+import { ProfileImageList, userInfo } from './database/UserInfoDatabase';
 
 export const loginHandlers = [
   rest.post(
@@ -92,16 +91,16 @@ export const loginHandlers = [
   rest.post(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/sign-up`,
     async (request, response, context) => {
-      context.status(200);
+      context.status(401);
 
-      // return response(
-      //   context.status(400),
-      //   context.json({
-      //     status: 400,
-      //     success: false,
-      //     message: '입력값이 유효하지 않습니다.',
-      //   }),
-      // );
+      return response(
+        context.status(401),
+        context.json({
+          status: 400,
+          success: false,
+          message: '입력값이 유효하지 않습니다.',
+        }),
+      );
 
       // return response(
       //   context.status(400),
@@ -112,11 +111,11 @@ export const loginHandlers = [
       //   }),
       // );
 
-      return response(
-        context.json({
-          message: '회원가입이 완료되었습니다.',
-        }),
-      );
+      // return response(
+      //   context.json({
+      //     message: '회원가입이 완료되었습니다.',
+      //   }),
+      // );
     },
   ),
 

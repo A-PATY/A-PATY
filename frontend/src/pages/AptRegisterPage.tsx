@@ -1,20 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import AptRegister from '../components/AptRegister/AptRegister';
 import styled from '@emotion/styled';
 import Footer from '../components/common/Footer';
 import Header from '../components/common/Header';
+import AptCertify from '../components/AptRegister/AptCertify';
 
-const MainPage: React.FC = () => {
+const AptRegisterPage: React.FC = () => {
   useEffect(() => {
     document.title = '아파트 커뮤니티';
   }, []);
 
+  const [aptId, setAptId] = useState<number>(-1);
+  const [aptName, setAptName] = useState<string>('');
+
   return (
     <>
       <Container>
-        <Header header="아파트 커뮤니티 가입" />
-        <AptRegister></AptRegister>
+        {aptId === -1 ? (
+          <>
+            <Header header="아파트 커뮤니티 가입" />
+            <AptRegister setAptId={setAptId} setAptName={setAptName} />
+          </>
+        ) : (
+          <>
+            <Header header="고지서 인증" />
+            <AptCertify aptId={aptId} aptName={aptName} />
+          </>
+        )}
       </Container>
       <Footer footerNumber={2} />
     </>
@@ -26,4 +39,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-export default MainPage;
+export default AptRegisterPage;

@@ -27,10 +27,6 @@ const KakaoCallbackMain: React.FC = () => {
             'Authorization'
           ] = `Bearer ${accessToken}`;
 
-          axiosInstance.defaults.headers.common[
-            'RefreshToken'
-          ] = `Bearer ${accessToken}`;
-
           setCookie('apaty_refresh', refreshToken, {
             expires: new Date(Date.now() + 100 * 60),
           });
@@ -40,14 +36,16 @@ const KakaoCallbackMain: React.FC = () => {
           } else {
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
+
+              Swal.fire({
+                title: '로그인하였습니다.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+              });
+
+              navigate('/local_community');
             });
-            Swal.fire({
-              title: '로그인하였습니다.',
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 2000,
-            });
-            navigate('/local_community');
           }
         })
         .catch((error) => {

@@ -30,6 +30,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log('인터셉터 작동');
     const {
       config,
       response: { status },

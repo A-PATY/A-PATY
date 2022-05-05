@@ -4,7 +4,11 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageIcon from '@mui/icons-material/Image';
 
-const AptCertify: React.FC = () => {
+interface Props {
+  aptId: number;
+  aptName: string;
+}
+const AptCertify: React.FC<Props> = ({ aptId, aptName }) => {
   const [imageFile, setImageFile] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
 
@@ -31,12 +35,13 @@ const AptCertify: React.FC = () => {
                 type="file"
                 onChange={changeImage}
               ></Input>
-              <ImageButton>사진 고르기</ImageButton>
             </Label>
+
             <SampleImage
               alt="sample"
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRYjtD5S5JEyjfJ_gBphpouen1mgNyOBHe_A&usqp=CAU"
             ></SampleImage>
+            <ImageButton>사진 고르기</ImageButton>
             {!imageFile && (
               <PreviewContainer>
                 <IconBox>
