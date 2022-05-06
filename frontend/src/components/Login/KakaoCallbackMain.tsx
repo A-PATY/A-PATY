@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
 import Alert from '@mui/material/Alert';
-import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { axiosInstance } from '../../utils/axios';
+import Swal from 'sweetalert2';
 
-const SignUpMain: React.FC = () => {
+const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
   const href = window.location.href;
   let params = new URL(href).searchParams;
@@ -24,9 +24,14 @@ const SignUpMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           if (newMember) {
-            navigate('/new');
+            navigate('/newMember');
           } else {
-            alert('로그인하였습니다.');
+            Swal.fire({
+              title: '기존 사용자',
+              text: '로그인하였습니다.',
+              icon: 'success',
+              confirmButtonText: 'Cool',
+            });
             navigate('/local_community');
           }
         })
@@ -39,7 +44,6 @@ const SignUpMain: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={open}
@@ -50,4 +54,4 @@ const SignUpMain: React.FC = () => {
   );
 };
 
-export default SignUpMain;
+export default KakaoCallbackMain;

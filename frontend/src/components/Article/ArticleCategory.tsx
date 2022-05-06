@@ -6,7 +6,11 @@ import styled from '@emotion/styled';
 import FormControl from '@mui/material/FormControl';
 import { category } from '../../types/boardTypes';
 
-const ArticleCategory = () => {
+interface Props {
+  setCategory: (value: string) => void;
+}
+
+const ArticleCategory: React.FC<Props> = ({ setCategory }) => {
   const categories: category[] = [
     { key: 0, label: '전체' },
     { key: 1, label: '일상' },
@@ -18,8 +22,10 @@ const ArticleCategory = () => {
     { key: 7, label: '후기' },
   ];
   const [label, setLabel] = React.useState('');
+
   const handleChange = (event: SelectChangeEvent) => {
     setLabel(event.target.value);
+    setCategory(event.target.value);
   };
 
   return (
@@ -37,7 +43,7 @@ const ArticleCategory = () => {
           </MenuItem>
           {categories.map((category) => {
             return (
-              <MenuItem key={category.key} value={category.key}>
+              <MenuItem key={category.key} value={category.label}>
                 {category.label}
               </MenuItem>
             );

@@ -1,21 +1,21 @@
-import { useEffect } from 'react';
-import Article from '../components/Article/Article';
-import Footer from '../components/common/Footer';
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
+import Footer from '../components/common/Footer';
 import Header from '../components/common/Header';
+import KakaoCallbackMain from '../components/Login/KakaoCallbackMain';
+import SignUpMain from '../components/Login/KakaoCallbackMain';
+import MyPageMain from '../components/MyPage/MyPageMain';
 
-const ArticlePage: React.FC = () => {
+const KakaoCallbackPage: React.FC = () => {
   useEffect(() => {
-    document.title = '게시글 상세 조회';
+    document.title = '카카오';
   }, []);
 
   return (
     <>
       <Container>
-        <Header header="게시글" />
-        <Article />
+        <KakaoCallbackMain />
       </Container>
-      {/* <Footer footerNumber={1} /> */}
       <Footer footerNumber={-1} />
     </>
   );
@@ -26,5 +26,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-
-export default ArticlePage;
+export default KakaoCallbackPage;

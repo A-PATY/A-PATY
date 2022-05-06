@@ -7,15 +7,32 @@ export interface article {
   category: string;
   title: string;
   contents: string;
-  img: any | null;
+  imgs: img[] | null;
   contact: string | null;
-  isDone: boolean;
+  isDone: boolean | null;
   views: number;
   likes: number;
   isLike: boolean;
   createdAt: string;
-  commentCount: number;
   author: string;
+  commentCount: number;
+  profileImgUrl: string;
+  commentsList: comment[];
+}
+
+export interface img {
+  imgId: number;
+  src: string;
+}
+
+export interface comment {
+  commentId: number;
+  commentWriter: string;
+  commentContent: string;
+  commentCreatedAt: string;
+  secret: boolean;
+  commentAuthor: string;
+  profileImgUrl: string;
 }
 
 export interface category {
