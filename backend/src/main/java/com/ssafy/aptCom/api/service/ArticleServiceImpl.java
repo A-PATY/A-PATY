@@ -1,18 +1,15 @@
 package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
-import com.ssafy.aptCom.db.entity.Article;
-import com.ssafy.aptCom.db.entity.Category;
-import com.ssafy.aptCom.db.entity.Community;
-import com.ssafy.aptCom.db.entity.Image;
-import com.ssafy.aptCom.db.repository.ArticleRepository;
-import com.ssafy.aptCom.db.repository.CategoryRepository;
-import com.ssafy.aptCom.db.repository.CommunityRepository;
-import com.ssafy.aptCom.db.repository.ImageRepository;
+import com.ssafy.aptCom.api.dto.response.ArticleDto;
+import com.ssafy.aptCom.db.entity.*;
+import com.ssafy.aptCom.db.repository.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +21,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     final S3Uploader s3Uploader;
     private ImageRepository imageRepository;
+
+    @Autowired
     private ArticleRepository articleRepository;
     private CommunityRepository communityRepository;
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
 
     public ArticleServiceImpl(S3Uploader s3Uploader, ImageRepository imageRepository,
                               ArticleRepository articleRepository, CommunityRepository communityRepository,
@@ -130,4 +132,41 @@ public class ArticleServiceImpl implements ArticleService {
 //    public void deleteArticle(ArticleRequestDto articleRequestDto) {
 //
 //    }
+
+
+    public Article getArticle(Integer articleId) {
+
+        return  articleRepository.findById(articleId).orElse(null);
+    }
+
+    public List<ArticleDto> getArticles(
+            User user, int communityId, int lastArticleId, int size,
+            int categoryId, String keyword
+    ) {
+
+        List<Article> articleList =
+                articleRepository.findByIdIsLessThanOrderByCreatedAtDesc(
+                        communityId, lastArticleId, categoryId, keyword, size);
+        //List<Article> articleList = articleRepository.findAll();
+
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        Boolean likeYn = false;
+
+        for(Article article : articleList){
+
+            Likes likes = likesRepository.findLikesByArticleAndUser(article, user).orElse(null);
+            if(likes != null) likeYn = true;
+            else likeYn =  false;
+
+            articleDtoList.add(ArticleDto.of(article, likeYn));
+        }
+        return articleDtoList;
+    }
+
+    @Transactional
+    public boolean updateArticleViews(Article article) {
+
+        articleRepository.save(article);
+        return  true;
+    }
 }

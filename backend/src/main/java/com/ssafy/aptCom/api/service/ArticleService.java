@@ -1,6 +1,9 @@
 package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
+import com.ssafy.aptCom.api.dto.response.ArticleDto;
+import com.ssafy.aptCom.db.entity.Article;
+import com.ssafy.aptCom.db.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,4 +26,13 @@ public interface ArticleService {
 //    void updateArticle(ArticleRequestDto articleRequestDto);
 //
 //    void deleteArticle(ArticleRequestDto articleRequestDto);
+
+    Article getArticle(Integer articleId);
+
+    List<ArticleDto> getArticles(
+            User user, int communityId, int lastArticleId, int size,
+            int categoryId, String keyword
+    );
+
+    boolean updateArticleViews(Article article);
 }

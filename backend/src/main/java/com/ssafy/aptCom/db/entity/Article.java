@@ -29,6 +29,9 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(length = 25)
+    private String anonyAuthor;
+
     @Column(length = 80)
     private String title;
 
@@ -54,6 +57,18 @@ public class Article {
     @OneToMany
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Image> images = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Comment> comments = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Likes> likes = new ArrayList<>();
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     public void createdAt() {
