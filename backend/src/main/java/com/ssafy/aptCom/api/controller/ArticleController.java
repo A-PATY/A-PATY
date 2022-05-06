@@ -1,5 +1,6 @@
 package com.ssafy.aptCom.api.controller;
 
+import com.google.firebase.database.annotations.Nullable;
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
 import com.ssafy.aptCom.api.dto.request.ArticleUpdateRequestDto;
 import com.ssafy.aptCom.api.dto.response.ArticleResponseDto;
@@ -44,6 +45,7 @@ public class ArticleController {
                 articleService.saveArticleImages(multipartFiles, articleId) ;
             }
         } catch (Exception e) {
+            log.info("exception: {}", e);
             log.info("exception: {}", e.getClass());
         }
 

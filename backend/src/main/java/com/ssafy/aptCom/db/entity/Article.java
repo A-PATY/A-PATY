@@ -2,7 +2,9 @@ package com.ssafy.aptCom.db.entity;
 
 import lombok.*;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,17 +35,21 @@ public class Article extends BaseTimeEntity{
     @Column(length = 25)
     private String anonyAuthor;
 
+    @Nullable
     @Column(length = 80)
     private String title;
 
+    @Nullable
     @Column(length = 1000)
     private String contents;
 
+    @Nullable
     @Column(columnDefinition = "varchar(25) default NULL")
     private String contact;
 
+    @Nullable
     @Column(columnDefinition = "boolean default false")
-    private boolean isDone;
+    private Boolean isDone;
 
     @Column(columnDefinition = "integer default 0")
     private int views;
@@ -61,10 +67,6 @@ public class Article extends BaseTimeEntity{
     @OneToMany
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Likes> likes = new ArrayList<>();
-
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @PrePersist
     public void createdAt() {

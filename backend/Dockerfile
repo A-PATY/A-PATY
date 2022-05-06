@@ -1,13 +1,20 @@
-FROM openjdk:11-jdk
+FROM openjdk:11 AS builder
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
 
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJar
+RUN chmod +x ./gradle
+RUN ./gradlew init
+RUN ./gradlew clean
+RUN ./gradlew build
 
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
-
-ENV TZ=Asia/Seoul
-RUN apt-get install -y tzdata
+FROM openjdk:11
+ARG JAR_FILE=build/libs/.jar
+COPY --from=builder build/libs/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

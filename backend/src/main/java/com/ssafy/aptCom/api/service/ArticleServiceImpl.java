@@ -179,7 +179,8 @@ public class ArticleServiceImpl implements ArticleService {
     public boolean updateArticleViews(Article article) {
 
         articleRepository.save(article);
-        return  true;
+        return true;
+    }
 
     @Transactional
     @Override
@@ -204,7 +205,7 @@ public class ArticleServiceImpl implements ArticleService {
         old_article.setTitle(articleUpdateRequestDto.getTitle());
         old_article.setContents(articleUpdateRequestDto.getTitle());
         old_article.setContact(articleUpdateRequestDto.getContact());
-        old_article.setDone(articleUpdateRequestDto.getIsDone());
+        old_article.setIsDone(articleUpdateRequestDto.getIsDone());
         articleRepository.save(old_article);
         log.info("게시글 업데이트 완료");
     }

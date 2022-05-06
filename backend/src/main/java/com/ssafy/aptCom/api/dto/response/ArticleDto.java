@@ -56,7 +56,7 @@ public class ArticleDto {
         res.setImgs(ImageDto.of(article.getImages()));
 
         res.setContact(article.getContact());
-        res.setDoneyn(article.isDone());
+        res.setDoneyn(article.getIsDone());
         res.setViews(article.getViews());
         res.setLikes(article.getLikes().size());
         res.setLikeyn(likeYn);
