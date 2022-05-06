@@ -1,5 +1,6 @@
 import { axiosInstance } from './../utils/axios';
 import { articles, article } from '../types/boardTypes';
+import React from 'react';
 
 class BoardService {
   public static async getArticles(
@@ -25,6 +26,11 @@ class BoardService {
     const response = await axiosInstance.get(`/api/v1/board/${articleId}`);
     return response.data;
   }
+
+  // public static async createNewArticle(formData) {
+  //   const response = await axiosInstance.post('/api/v1/board', formData);
+  //   return response.data;
+  // }
 }
 
 export default BoardService;
