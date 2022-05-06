@@ -10,6 +10,8 @@ import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
 import Switch from '@mui/material/Switch';
 import PhoneNumber from './PhoneNumber';
 import Swal from 'sweetalert2';
+import BoardService from '../../services/BoardService';
+import { useNavigate } from 'react-router-dom';
 
 const ariaLabel = { 'aria-label': 'description' };
 
@@ -17,30 +19,16 @@ const ariaLabel = { 'aria-label': 'description' };
 //   [index: string]: string;
 // }
 
-interface State {
-  textmask: string;
-  numberformat: string;
-}
-
 const ArticleWrite: React.FC = () => {
+  const navigate = useNavigate();
+
   const communityId = 367;
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
-  // const [contact, setContact] = useState<string | null>(null);
-  // const [contact, setContact] = useState<State>({
-  //   textmask: '',
-  //   numberformat: '1320',
-  // });
   const [isDone, setIsDone] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  // const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setContact({
-  //     ...contact,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
 
   console.log(phoneNumber);
 
@@ -74,11 +62,13 @@ const ArticleWrite: React.FC = () => {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIsDoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsDone(event.target.checked);
   };
 
-  const onSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onSubmit = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     event.preventDefault();
     const formData = new FormData();
     // formData.append(
@@ -117,13 +107,24 @@ const ArticleWrite: React.FC = () => {
     formData.append('category', category);
     formData.append('title', title);
     formData.append('contents', content);
-    // formData.append('contact', contact);
-    // formData.append('isDone', isDone);
+
+    if (category === '나눔장터' || category === '공구' || category === '헬프') {
+      formData.append('contact', phoneNumber);
+      formData.append('isDone', String(isDone));
+    }
 
     console.log(formData.get('communityId'));
     console.log(formData.get('category'));
     console.log(typeof formData.get('communityId'));
     console.log(formData.getAll('img'));
+    console.log(formData.get('isDone'));
+
+    await BoardService.createNewArticle(formData)
+      .then(() => {
+        // 게시판 목록으로 이동
+        navigate(`/local_community`);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -203,7 +204,9 @@ const ArticleWrite: React.FC = () => {
             onChange={changeImage}
           />
         </Box>
-        {category === '나눔장터' || category === '공구' ? (
+        {category === '나눔장터' ||
+        category === '공구' ||
+        category === '헬프' ? (
           <>
             <Box
               display="flex"
@@ -226,7 +229,7 @@ const ArticleWrite: React.FC = () => {
                   마감여부
                   <Switch
                     checked={isDone}
-                    onChange={handleChange}
+                    onChange={handleIsDoneChange}
                     inputProps={{ 'aria-label': 'controlled' }}
                   />
                 </ButtonCustom>
@@ -235,7 +238,7 @@ const ArticleWrite: React.FC = () => {
           </>
         ) : undefined}
 
-        <button onClick={onSubmit}>Submit</button>
+        <SubmitButtonCustom onClick={onSubmit}>Submit</SubmitButtonCustom>
       </Container>
     </>
   );
@@ -275,6 +278,19 @@ const ButtonCustom = styled(Button)`
 
   &.MuiButtonGroup-grouped:not(:last-of-type) {
     border-color: #fff;
+  }
+`;
+
+const SubmitButtonCustom = styled(Button)`
+  background-color: #bae6e5;
+  margin: 0px 20px
+  color: #ffb2a9;
+  font-family: 'MinSans-Regular';
+  font-size: 18px;
+  padding: 0;
+  &:hover {
+    background-color: #ffb2a9;
+    color: #bae6e5;
   }
 `;
 export default ArticleWrite;

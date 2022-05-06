@@ -27,10 +27,14 @@ class BoardService {
     return response.data;
   }
 
-  // public static async createNewArticle(formData) {
-  //   const response = await axiosInstance.post('/api/v1/board', formData);
-  //   return response.data;
-  // }
+  public static async createNewArticle(formData: FormData) {
+    const response = await axiosInstance.post('/api/v1/board', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
 }
 
 export default BoardService;

@@ -21,7 +21,7 @@ const ArticleWriteHeader: React.FC<Props> = ({ header }) => {
           </GridText>
 
           <GridButtonWrapper item xs={2.5}>
-            <ButtonCustom>완료</ButtonCustom>
+            {/* <ButtonCustom>완료</ButtonCustom> */}
           </GridButtonWrapper>
         </Grid>
       </Container>
@@ -67,10 +67,10 @@ const GridButtonWrapper = styled(Grid)`
   align-items: center;
 `;
 
-const ButtonCustom = styled(Button)`
-  padding: 0;
-  font-family: 'MinSans-Regular';
-  font-size: 18px;
-  color: #bae6e5;
-`;
+// const ButtonCustom = styled(Button)`
+//   padding: 0;
+//   font-family: 'MinSans-Regular';
+//   font-size: 18px;
+//   color: #bae6e5;
+// `;
 export default ArticleWriteHeader;
