@@ -5,8 +5,13 @@ import Grid from '@mui/material/Grid';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
+import { useNavigate } from 'react-router-dom';
 
 const LocalHeader: React.FC = () => {
+  const navigate = useNavigate();
+  const writeArticle = () => {
+    navigate('/board/write');
+  };
   return (
     <>
       <Container>
@@ -16,9 +21,15 @@ const LocalHeader: React.FC = () => {
           </GridText>
           <Grid item xs={5.5}></Grid>
           <GridCustom item xs={3}>
-            <SearchRoundedIcon />
-            <CreateRoundedIcon />
-            <NotificationsActiveRoundedIcon />
+            <TransparentBtn>
+              <SearchRoundedIcon />
+            </TransparentBtn>
+            <TransparentBtn onClick={writeArticle}>
+              <CreateRoundedIcon />
+            </TransparentBtn>
+            <TransparentBtn>
+              <NotificationsActiveRoundedIcon />
+            </TransparentBtn>
           </GridCustom>
         </Grid>
       </Container>
@@ -57,4 +68,10 @@ const GridCustom = styled(Grid)`
   }
 `;
 const Text = styled.p``;
+
+const TransparentBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+`;
 export default LocalHeader;
