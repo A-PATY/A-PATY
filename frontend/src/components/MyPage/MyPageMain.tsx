@@ -70,6 +70,10 @@ const Container = styled.div`
   flex: 1 1 auto;
   height: calc((100% - 70px) - 70px);
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ProfileWrapper = styled.div`

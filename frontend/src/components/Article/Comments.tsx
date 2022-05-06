@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import SendIcon from '@mui/icons-material/Send';
+import { comment } from '../../types/boardTypes';
 
 interface CommentProps {
   comment: {
@@ -11,61 +12,70 @@ interface CommentProps {
     commentAuthor: string;
     commentContent: string;
     commentCreatedAt: string;
-  }
-};
+  };
+}
+
+interface CommentsProps {
+  comments: comment[];
+  commentCount: number;
+}
 
 // 개별 댓글
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   return (
     <CommentSection>
       <Author>
-        <AvatarCustom src={comment.profileImgUrl} alt="profile"/>
+        <AvatarCustom src={comment.profileImgUrl} alt="profile" />
         <AuthorName>{comment.commentAuthor}</AuthorName>
         <Delete>삭제</Delete>
       </Author>
       <Content>{comment.commentContent}</Content>
       <Time>{comment.commentCreatedAt}</Time>
     </CommentSection>
-  )
+  );
 };
 
-
-const Comments: React.FC = () => {
-  const [checked, setChecked] = useState(true);  // 비밀댓글 여부
+const Comments: React.FC<CommentsProps> = ({ comments, commentCount }) => {
+  const [checked, setChecked] = useState(true); // 비밀댓글 여부
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
-  
+
   // 임시 댓글
-  const comments = [
-    {
-      commentId: 1,
-      commentContent: '댓글 내용',
-      commentCreatedAt: "2022-04-15 15:03",
-      secret: false,  
-      commentAuthor: "101동 102호 흑장미",
-      profileImgUrl: "https://...askalfi21k333kejf"
-    }
-  ];
+  // const comments = [
+  //   {
+  //     commentId: 1,
+  //     commentContent: '댓글 내용',
+  //     commentCreatedAt: "2022-04-15 15:03",
+  //     secret: false,
+  //     commentAuthor: "101동 102호 흑장미",
+  //     profileImgUrl: "https://...askalfi21k333kejf"
+  //   }
+  // ];
 
   return (
     <>
       <Container>
-        <CommentsHead>댓글 20</CommentsHead>
-        {
-          comments.map((comment) => (
-            <Comment key={comment.commentId} comment={comment}/>
-          ))
-        }
+        <CommentsHead>댓글 {commentCount}</CommentsHead>
+        {comments.map((comment) => (
+          <Comment key={comment.commentId} comment={comment} />
+        ))}
         <WriteComment>
-          <FormControlLabelCustom 
-            control={<Checkbox defaultChecked size="small" color="default" onChange={handleChange}/>} 
-            label="비밀" 
-            sx={{fontSize: "13px"}}
+          <FormControlLabelCustom
+            control={
+              <Checkbox
+                defaultChecked
+                size="small"
+                color="default"
+                onChange={handleChange}
+              />
+            }
+            label="비밀"
+            sx={{ fontSize: '13px' }}
           />
           <Input type="text" placeholder="댓글을 남겨주세요"></Input>
-          <IconCustom/>
+          <IconCustom />
         </WriteComment>
       </Container>
     </>
@@ -159,10 +169,10 @@ const FormControlLabelCustom = styled(FormControlLabel)`
     padding: 5px 0;
     font-size: 13px;
     color: #f88e83;
-  };
+  }
   & .MuiTypography-root {
     padding: 0 4px;
-  };
+  }
 `;
 
 const Input = styled.input`
@@ -179,8 +189,8 @@ const Input = styled.input`
 `;
 
 const IconCustom = styled(SendIcon)`
-  color: #FFB2A9;
+  color: #ffb2a9;
   cursor: pointer;
-`
+`;
 
 export default Comments;

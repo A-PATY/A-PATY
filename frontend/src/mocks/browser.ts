@@ -2,6 +2,8 @@
 import { setupWorker } from 'msw';
 import { aptRegisterHandlers } from './aptRegisterHandlers';
 import { loginHandlers } from './loginHandlers';
+import { boardHandlers } from './boardHandlers';
+import { familyHandlers } from './familyHandlers';
 
-// This configures a Service Worker with the given request handlers.
-export const worker = setupWorker(...loginHandlers, ...aptRegisterHandlers);
+export const worker = setupWorker(...loginHandlers, ...boardHandlers, ...familyHandlers, ...aptRegisterHandlers);
+

@@ -15,6 +15,7 @@ const ArticlePage: React.FC = () => {
         <Header header="게시글" />
         <Article />
       </Container>
+      {/* <Footer footerNumber={1} /> */}
       <Footer footerNumber={-1} />
     </>
   );

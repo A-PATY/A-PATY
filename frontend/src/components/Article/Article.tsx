@@ -1,3 +1,6 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { article } from '../../types/boardTypes';
 import styled from '@emotion/styled';
 import { Box, Avatar } from '@mui/material';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
@@ -8,8 +11,56 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ArticleComments from './Comments';
+import BoardService from '../../services/BoardService';
 
 const LogInMain: React.FC = () => {
+  // const [articleId, setArticleId] = React.useState(0)
+  const [article, setArticle] = React.useState<article>({
+    articleId: 0,
+    category: '',
+    title: '',
+    contents: '',
+    imgs: null,
+    contact: null,
+    isDone: false,
+    views: 0,
+    likes: 0,
+    isLike: true,
+    createdAt: '',
+    commentCount: 0,
+    author: '',
+    profileImgUrl: '',
+    commentsList: [],
+  });
+  const { article_id } = useParams<{ article_id: string }>();
+  // console.log(useParams());
+
+  const fetchArticle = React.useCallback(async () => {
+    await BoardService.getArticle(article_id)
+      .then((res) => {
+        console.log(res);
+        setArticle(res.data);
+      })
+      .catch((err) => {
+        if (err.response) {
+          const { status, message } = err.response.data;
+
+          switch (status) {
+            case 400:
+              alert(message);
+              break;
+            case 500:
+              alert(message);
+              break;
+          }
+        }
+      });
+  }, [article_id]);
+
+  React.useEffect(() => {
+    fetchArticle();
+  }, [fetchArticle]);
+
   return (
     <>
       <Section>
@@ -18,35 +69,55 @@ const LogInMain: React.FC = () => {
             <Category>
               <Link href="">지역</Link>
               <ArrowBackIosRoundedIconCustom></ArrowBackIosRoundedIconCustom>
-              <Link href="">일상</Link>
+              <Link href="">{article?.category}</Link>
             </Category>
-            <Title>이런거 받을 때 뿌듯</Title>
+            <Title>{article?.title}</Title>
             <AuthorBox>
               <AvatarCustom alt="profile" src="" />
-              <Name>리치몬드</Name>
+              <Name>{article?.author}</Name>
             </AuthorBox>
             <WrapInfo>
-              <InfoSpan><AccessTimeIcon/>작성일</InfoSpan>
-              <InfoSpan><VisibilityOutlinedIcon/>600</InfoSpan>
-              <InfoSpan><ChatBubbleOutlineIcon/>23</InfoSpan>
+              <InfoSpan>
+                <AccessTimeIcon />
+                {article?.createdAt}
+              </InfoSpan>
+              <InfoSpan>
+                <VisibilityOutlinedIcon />
+                {article?.views}
+              </InfoSpan>
+              <InfoSpan>
+                <ChatBubbleOutlineIcon />
+                {article?.commentCount}
+              </InfoSpan>
               <InfoFunction>
-                <EditOutlinedIcon/>
-                <DeleteOutlinedIcon/>
+                <EditOutlinedIcon />
+                <DeleteOutlinedIcon />
               </InfoFunction>
             </WrapInfo>
           </ArticleHead>
           <ArticleContent>
-            <ContentArea>작성 내용 들어가는 부분</ContentArea>
+            <ContentArea>{article?.contents}</ContentArea>
             <ImageContainer>
               {/* 추후 map 사용 */}
-              <Image src="https://t1.daumcdn.net/cfile/blog/991625335E6089F302" alt="image"></Image>
+              {article?.imgs?.map((img) => (
+                <Image key={img.imgId} src={img.src} alt="image"></Image>
+              ))}
             </ImageContainer>
             <ArticleInfo>
-              <Buttons><ThumbUpOutlinedIcon/>1</Buttons>
-              <Buttons><ChatBubbleOutlineIcon/>30</Buttons>
+              <Buttons>
+                <ThumbUpOutlinedIcon />
+                {article?.likes}
+              </Buttons>
+              <Buttons>
+                <ChatBubbleOutlineIcon />
+                {article?.commentCount}
+              </Buttons>
             </ArticleInfo>
           </ArticleContent>
-          <ArticleComments/>
+          <ArticleComments
+            comments={article?.commentsList}
+            commentCount={article?.commentCount}
+          />
         </Wrapper>
       </Section>
     </>
