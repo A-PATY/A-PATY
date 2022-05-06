@@ -1,26 +1,31 @@
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
-import UserService from '../../services/UserService';
+
 const LogInMain: React.FC = () => {
   const REST_API_KEY = '9f8212ade1576047ddcf60fd0ab79a2e';
   const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
   const handleButtomCustomClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLImageElement>,
   ) => {
     window.location.href = KAKAO_AUTH_URL;
   };
+
   return (
     <>
       <Container>
         <BoxCustom>
           <Image src="\img\\main.gif"></Image>
         </BoxCustom>
-        <ButtonCustom onClick={handleButtomCustomClick}>
-          카카오 로그인
-        </ButtonCustom>
+        <KakaoImage
+          onClick={handleButtomCustomClick}
+          src="\img\kakao_login_medium_wide.png"
+        ></KakaoImage>
+        {/* <ButtonCustom >
+          카카오로 시작하기
+        </ButtonCustom> */}
       </Container>
     </>
   );
@@ -48,20 +53,27 @@ const Image = styled.img`
   margin: 10px auto;
 `;
 
+const KakaoImage = styled.img`
+  width: 300px;
+  height: 45px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
 const ButtomWrapper = styled(Box)`
   margin: 0.8px 0px 0px;
 `;
 
 const ButtonCustom = styled(Button)`
-  background-color: #ffd0b6;
+  background-color: #fee500;
   margin: 10px 0px 0px;
   box-shadow: none;
-  color: white;
+  color: #000000 85%;
   width: 300px;
   min-height: 56px;
-  border-radius: 126px;
+  border-radius: 12px;
   font-family: 'MinSans-Regular';
-
   &:hover {
     box-shadow: none;
     text-decoration: none;

@@ -1,10 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
-import Header from '../components/common/Header';
 import KakaoCallbackMain from '../components/Login/KakaoCallbackMain';
-import SignUpMain from '../components/Login/KakaoCallbackMain';
-import MyPageMain from '../components/MyPage/MyPageMain';
 
 const KakaoCallbackPage: React.FC = () => {
   useEffect(() => {
