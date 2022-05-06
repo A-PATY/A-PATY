@@ -1,6 +1,8 @@
 FROM openjdk:11-jdk
 
-CMD ["./gradlew", "clean", "build"]
+RUN chmod +x ./gradlew
+RUN ./gradlew bootJar
+
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
