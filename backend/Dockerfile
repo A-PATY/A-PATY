@@ -6,9 +6,10 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 
+RUN ./gradlew init
 RUN chmod +x ./gradlew
 RUN chmod +x ./gradle
-RUN ./gradlew init
+
 RUN ./gradlew clean
 RUN ./gradlew build
 
