@@ -30,24 +30,28 @@ const TextMaskCustom = React.forwardRef<HTMLElement, CustomProps>(
   },
 );
 
-// interface State {
-//   textmask: string;
-//   numberformat: string;
-// }
+interface State {
+  textmask: string;
+  numberformat: string;
+}
 
-export default function FormattedInputs(changeContact: any, textmask: string) {
-  const [values, setValues] = React.useState<State>({
-    textmask: '',
-    numberformat: '1320',
-  });
+interface Props {
+  phoneNumber: string;
+  setPhoneNumber: (phoneNumber: string) => void;
+}
 
-  console.log(values.textmask);
+const FormattedInputs: React.FC<Props> = ({ setPhoneNumber, phoneNumber }) => {
+  // const [values, setValues] = React.useState<State>({
+  //   textmask: '',
+  //   numberformat: '1320',
+  // });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value,
-    });
+    // setValues({
+    //   ...values,
+    //   [event.target.name]: event.target.value,
+    // });
+    setPhoneNumber(event.target.value);
   };
 
   return (
@@ -63,9 +67,8 @@ export default function FormattedInputs(changeContact: any, textmask: string) {
         <InputLabel htmlFor="formatted-text-mask-input">휴대폰 번호</InputLabel>
         <Input
           placeholder="(010) 1234-5678"
-          // value={values.textmask}
-          value={textmask}
-          onChange={changeContact}
+          value={phoneNumber}
+          onChange={handleChange}
           name="textmask"
           id="formatted-text-mask-input"
           inputComponent={TextMaskCustom as any}
@@ -73,4 +76,6 @@ export default function FormattedInputs(changeContact: any, textmask: string) {
       </FormControl>
     </Box>
   );
-}
+};
+
+export default FormattedInputs;

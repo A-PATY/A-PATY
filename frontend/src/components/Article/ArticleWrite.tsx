@@ -29,18 +29,20 @@ const ArticleWrite: React.FC = () => {
   const [content, setContent] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
   // const [contact, setContact] = useState<string | null>(null);
-  const [contact, setContact] = useState<State>({
-    textmask: '',
-    numberformat: '1320',
-  });
+  // const [contact, setContact] = useState<State>({
+  //   textmask: '',
+  //   numberformat: '1320',
+  // });
   const [isDone, setIsDone] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  // const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setContact({
+  //     ...contact,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
 
-  const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContact({
-      ...contact,
-      [event.target.name]: event.target.value,
-    });
-  };
+  console.log(phoneNumber);
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -217,9 +219,9 @@ const ArticleWrite: React.FC = () => {
               >
                 <ButtonCustom>전화번호</ButtonCustom>
                 <PhoneNumber
-                  changeContact={changeContact}
-                  textmask={contact.textmask}
-                ></PhoneNumber>
+                  phoneNumber={phoneNumber}
+                  setPhoneNumber={setPhoneNumber}
+                />
                 <ButtonCustom>
                   마감여부
                   <Switch
