@@ -24,10 +24,13 @@ public class TokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private final long ACCESS_TOKEN_VALID_TIME = 1 * 60 * 1000L;   // 1분
-    private final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L;   // 1주
+//    private final long ACCESS_TOKEN_VALID_TIME = 1 * 60 * 1000L;   // 1분
+//    private final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L;   // 1주
 
-    private final UserDetailsService userDetailsService;
+    private final long ACCESS_TOKEN_VALID_TIME = 3 * 60 * 1000L;   // 3분
+    private final long REFRESH_TOKEN_VALID_TIME = 5 * 60 * 1000L;   // 5분
+
+    private final CustomUserDetailsService userDetailsService;
     
     // 의존성 주입 이후 초기화를 수행하는 어노테이션
     @PostConstruct
@@ -68,12 +71,12 @@ public class TokenProvider {
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
-        return request.getHeader("REFRESH_TOKEN");
+        return request.getHeader("RefreshToken");
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     public String getUserId(String token) {
@@ -82,8 +85,7 @@ public class TokenProvider {
 
     public boolean isTokenValid(String jwtToken) {
         try {
-            String subToken = jwtToken.substring(7);
-            Jws<Claims> claims = getClaimsFromJwtToken(subToken);
+            Jws<Claims> claims = getClaimsFromJwtToken(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;

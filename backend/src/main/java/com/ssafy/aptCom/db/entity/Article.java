@@ -1,11 +1,8 @@
 package com.ssafy.aptCom.db.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +12,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Article {
+public class Article extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
@@ -47,15 +48,10 @@ public class Article {
     @Column(columnDefinition = "integer default 0")
     private int views;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    @OneToMany
-    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    // 게시글 삭제시 첨부이미지도 삭제
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    @JoinColumn(name = "article_id", referencedColumnName = "id")
+//    => 쓰면 Referential integrity constraint violation:에러 발생
     List<Image> images = new ArrayList<>();
 
     @OneToMany
@@ -74,4 +70,5 @@ public class Article {
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
     }
+
 }
