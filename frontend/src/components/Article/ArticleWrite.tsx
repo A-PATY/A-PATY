@@ -17,14 +17,30 @@ const ariaLabel = { 'aria-label': 'description' };
 //   [index: string]: string;
 // }
 
+interface State {
+  textmask: string;
+  numberformat: string;
+}
+
 const ArticleWrite: React.FC = () => {
   const communityId = 367;
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
-  const [contact, setContact] = useState<string | null>(null);
+  // const [contact, setContact] = useState<string | null>(null);
+  const [contact, setContact] = useState<State>({
+    textmask: '',
+    numberformat: '1320',
+  });
   const [isDone, setIsDone] = useState(true);
+
+  const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContact({
+      ...contact,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -54,10 +70,6 @@ const ArticleWrite: React.FC = () => {
       }
       setImageFiles([...imageFiles, files[0]]);
     }
-  };
-
-  const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContact(event.target.value);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -204,7 +216,10 @@ const ArticleWrite: React.FC = () => {
                 aria-label="outlined primary button group"
               >
                 <ButtonCustom>전화번호</ButtonCustom>
-                <PhoneNumber></PhoneNumber>
+                <PhoneNumber
+                  changeContact={changeContact}
+                  textmask={contact.textmask}
+                ></PhoneNumber>
                 <ButtonCustom>
                   마감여부
                   <Switch

@@ -36,19 +36,19 @@ const TextMaskCustom = React.forwardRef<HTMLElement, CustomProps>(
 // }
 
 export default function FormattedInputs(changeContact: any, textmask: string) {
-  // const [values, setValues] = React.useState<State>({
-  //   textmask: '',
-  //   numberformat: '1320',
-  // });
+  const [values, setValues] = React.useState<State>({
+    textmask: '',
+    numberformat: '1320',
+  });
 
-  // console.log(values.textmask);
+  console.log(values.textmask);
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setValues({
-  //     ...values,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <Box
