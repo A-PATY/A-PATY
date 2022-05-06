@@ -2,7 +2,11 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import FamilyList from './FamilyMember';
 import Slider from '@mui/material/Slider';
-import { css, keyframes } from '@emotion/react'
+import { css, keyframes } from '@emotion/react';
+import { db } from '../../firebase';
+import { collection, getDocs, updateDoc, doc, onSnapshot } from "firebase/firestore";
+import FamilyService from '../../services/FamilyService';
+import { familyList, location } from '../../types/familyTypes';
 
 const marks = [
   {
@@ -23,40 +27,137 @@ function valueLabelFormat(value: number) {
   return marks.findIndex((mark) => mark.value === value) + 1;
 };
 
+
 const FindFamily: React.FC = () => {
-  // const [familyList, setFamilyList] = useState([]); 
-  const familyAddress = ""; 
-  const familyId = "";  
-  const [isSlided, setIsSlided] = useState(false);
+  const [isSlided, setIsSlided] = useState<boolean>(false);
+
+  const [familyList, setFamilyList] = useState<familyList[]>([]); 
+  const [familyAddress, setFamilyAddress] = useState<string>("") 
+  const [familyId, setFamilyId] = useState<string>("");
   
-  // 더미 데이터 
-  const familyList = [
-    {
-      userId: 1,
-      userName: "장미",
-      findFamily: true,
-      userProfileImgUrl: "https://...askalfi21k333kejf",
-    },
-    {
-      userId: 2,
-      userName: "선민",
-      findFamily : true,
-      userProfileImgUrl: "https://...askalfi21k333kejf",
-    },
-  ];
+  const [selectedMember, setSelectedMember] = useState<familyList>({
+    userId: 0,
+    userName: "장미",
+    profileImgUrl: "",
+    findFamily: false
+  });
+  const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 })
+  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
+  
+  const userId = '5'; // 임시 데이터 => recoil 사용하기 
 
   const { kakao } = window as any;
   
   useEffect(() => {
-    const container = document.getElementById('map');  //지도를 담을 영역의 DOM 레퍼런스
-    const options = {  //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(33.450701, 126.570667),  //지도의 중심좌표.
-      level: 3  //지도의 레벨(확대, 축소 정도)
+    FamilyService.getFamilyList()
+      .then((data) => {
+        setFamilyId(data.familyId);
+        setFamilyAddress(data.familyAddress);
+        setFamilyList(data.familyList);
+        setSelectedMember({  // 초기값 recoil
+          userId: 5,
+          userName: "장미",
+          profileImgUrl: "https://images.unsplash.com/photo-1496062031456-07b8f162a322?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cm9zZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+          findFamily: false
+        })
+        
+        // firebase
+        // getMemberData(data.familyId);
+      })
+      .then(() => {
+        getMemberData();
+      })
+      .catch(err => console.log(err));
+    
+  }, []);
+
+  useEffect(() => {
+    const { geolocation } = navigator;
+    // console.log('location 확인')
+    geolocation.watchPosition(success);
+  }, [familyId]);
+
+  // 선택한 가족 바뀔 때 
+  useEffect(() => {
+    getMemberData();
+  }, [selectedMember]);
+
+  // 지도상의 좌표 변화
+  useEffect(() => {
+    changeLocation();
+  }, [memberLocation]);  
+  
+
+  // firebase 불러오기 
+  const getMemberData = async () => {
+    if (familyId) {
+      const docRef = doc(db, "families", familyId);
+      const member = selectedMember.userId
+      const unsub = onSnapshot(docRef, (document) => { 
+        // console.log('firebase에서 가져온 값', document.get(member.toString()));
+  
+        const user = document.get(member.toString());
+        if (memberLocation.lat !== user.lat || memberLocation.lng !== user.lng) {
+          setMemberLocation({ 
+            lat: user.lat, 
+            lng: user.lng 
+          });
+        }
+      });
+    }
+  };
+  
+  // geolocation 콜백함수 + firebase에 나의 좌표 등록하기 
+  const success = (position: any) => {
+    const { latitude, longitude } = position.coords;
+    console.log('나의 위치: ', latitude, longitude);
+    
+    if (familyId) {
+      const docRef = doc(db, "families", familyId);
+      console.log('업데이트 진행!!')
+      updateDoc(docRef, {
+        [userId]: {  
+          lat: latitude,
+          lng: longitude
+        }
+      });
+    }
+  };
+
+  // 지도상 좌표 변화 
+  const changeLocation = () => {
+    const container = document.getElementById('map');
+    const options = {  // 지도 생성 기본 옵션
+      center: new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng),
+      level: 3 
     };
 
     const map = new kakao.maps.Map(container, options); 
-  }, []);
 
+    const imageSrc = selectedMember.profileImgUrl; // 마커이미지의 주소입니다    
+    const imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+    const imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+    // 마커 표시 위치 
+    let markerPosition  = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng); 
+    
+    const marker = new kakao.maps.Marker({
+      position: markerPosition,
+      // image: markerImage
+    });
+
+    marker.setMap(map);
+    map.panTo(markerPosition);
+  };
+
+  // 가족 변화
+  const changeMember = (member: familyList) => {
+    setSelectedMember(member);
+  };
+
+  // 가족 목록 slider 처리
   const slide = () => {
     setIsSlided(!isSlided);
   };
@@ -64,7 +165,7 @@ const FindFamily: React.FC = () => {
   return (
     <>
       <MapContainer id="map">
-        
+
       </MapContainer>
       <FamilyListContainer>
         <Tab onClick={slide}/>
@@ -81,7 +182,7 @@ const FindFamily: React.FC = () => {
         {
           familyList.map((member) => {
             return (
-              <FamilyList key={member.userId} member={member}/>
+              <FamilyList key={member.userId} member={member} changeMember={changeMember}/>
             )
           })
         }

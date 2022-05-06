@@ -3,18 +3,17 @@ import styled from '@emotion/styled';
 import Avatar from '@mui/material/Avatar';
 import { memberProps } from '../../types/familyTypes';
 
-const FamilyMember: React.FC<memberProps> = ({ member }) => {
-  const [checked, setChecked] = useState(true);  // 비밀댓글 여부
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
+const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
   
   return (
     <>
       <Container>
-        <AvatarCustom src={member.userProfileImgUrl} alt={member.userName}/>
-        <AuthorName>{member.userName}</AuthorName>
+        <AvatarCustom 
+          src={member.profileImgUrl} 
+          alt={member.userName} 
+          onClick={() => {changeMember(member)}}
+        />
+        <AuthorName onClick={() => {changeMember(member)}}>{member.userName}</AuthorName>
       </Container>
     </>
   );
