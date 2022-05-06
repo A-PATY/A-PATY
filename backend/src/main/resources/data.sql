@@ -12,5 +12,5 @@ INSERT INTO BASE_ADDRESS(id, address, dong_name, gugun_name, lat, lng, sido_name
 
 INSERT INTO PROFILE_IMG(id, profile_img_url) VALUES(1, 'https://www.naver.com');
 
-INSERT INTO CATEGORY(id, category_name, admin_only) VALUES(1, '공지', true);
+-- INSERT INTO CATEGORY(id, category_name, admin_only) VALUES(1, '공지', true);
 INSERT INTO CATEGORY(id, category_name, admin_only) VALUES(2, '나눔', false);
