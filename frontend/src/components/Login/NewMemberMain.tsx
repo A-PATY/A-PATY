@@ -75,6 +75,7 @@ const NewMemberMain: React.FC = () => {
   ) => {
     UserService.getUserAddress({ x, y })
       .then((response) => {
+        console.log(response);
         setAddress(response.documents[0].code);
         setAddressName(response.documents[0].address_name);
         setAddressError(false);
