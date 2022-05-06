@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
         return true;
     }
 
-    @Override
+    @Transactional
     public boolean deleteComment(int commentId) {
 
         commentRepository.deleteById(commentId);

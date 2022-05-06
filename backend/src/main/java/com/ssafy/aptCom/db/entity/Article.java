@@ -54,4 +54,21 @@ public class Article extends BaseTimeEntity{
 //    => 쓰면 Referential integrity constraint violation:에러 발생
     List<Image> images = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Comment> comments = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Likes> likes = new ArrayList<>();
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = LocalDateTime.now();
+    }
+
 }
