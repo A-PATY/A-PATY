@@ -51,6 +51,32 @@ class BoardService {
     );
     return response.data;
   }
+
+  public static async deleteArticle(articleId: string | undefined) {
+    const response = await axiosInstance.delete(`/api/v1/board/${articleId}`);
+    return response.data;
+  }
+
+  public static async createComment(
+    articleId: string | undefined,
+    comment: { contents: string; secret: boolean },
+  ) {
+    const response = await axiosInstance.post(
+      `/api/v1/board/${articleId}/comments`,
+      comment,
+    );
+    return response.data;
+  }
+
+  public static async deleteComment(
+    articleId: string | undefined,
+    commentId: string | undefined,
+  ) {
+    const response = await axiosInstance.delete(
+      `/api/v1/board/${articleId}/comments/${commentId}`,
+    );
+    return response.data;
+  }
 }
 
 export default BoardService;
