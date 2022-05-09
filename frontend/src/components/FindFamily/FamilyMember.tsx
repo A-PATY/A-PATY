@@ -22,7 +22,7 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
           <MemberName>{member.userName}</MemberName>
           {
             member.findFamily ?
-            <LocationOnIcon/> :
+            <LocationOnIcon style={{ color: "#ffb2a9" }}/> :
             <Tooltip 
               title="위치찾기 미허용" 
               placement="top"
@@ -37,7 +37,7 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
                 }
               }}
             >
-              <LocationOffIcon/>
+              <LocationOffIcon style={{ color: "#9e9d9d" }}/>
             </Tooltip>
           }
         </MemberInfo>
@@ -74,7 +74,7 @@ const MemberInfo = styled.div`
   align-items: center;
   & .MuiSvgIcon-root {
     font-size: 20px;
-    color: #9e9d9d;
+    /* color: #9e9d9d; */
     margin-left: 5px;
   }
 `;
