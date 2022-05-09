@@ -1,3 +1,5 @@
+import { TramRounded } from '@mui/icons-material';
+import { truncate } from 'fs';
 import { rest } from 'msw';
 
 export const familyHandlers = [
@@ -14,7 +16,7 @@ export const familyHandlers = [
                 userId: 5,
                 userName: "장미",
                 profileImgUrl: "../img/image0.svg",
-                findFamily: false
+                findFamily: true
               },
               {
                 userId: 6,
