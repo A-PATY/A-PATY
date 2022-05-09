@@ -137,7 +137,9 @@ const Board: React.FC = () => {
             </div> */}
             <ObservationComponent />
             <div>
-              {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
+              {isFetching && !isFetchingNextPage
+                ? '글을 가져오는 중입니다..'
+                : null}
             </div>
           </>
         </Wrapper>

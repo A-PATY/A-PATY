@@ -12,6 +12,7 @@ import LocalCommunityPage from './pages/LocalCommunityPage';
 import ArticlePage from './pages/ArticlePage';
 import FindFamilyPage from './pages/FindFamilyPage';
 import ArticleWritePage from './pages/ArticleWritePage';
+import ArticleEditPage from './pages/ArticleEditPage';
 import KakaoCallbackPage from './pages/KakaoCallbackPage';
 import NewMemberPage from './pages/NewMemberPage';
 
@@ -31,6 +32,7 @@ const App: React.FC = () => {
           <Route path="/oauth/callback/kakao" element={<KakaoCallbackPage />} />
           <Route path="/find_family" element={<FindFamilyPage />} />
           <Route path="/board/write" element={<ArticleWritePage />} />
+          <Route path="/board/:article_id/edit" element={<ArticleEditPage />} />
           <Route path="/newMember" element={<NewMemberPage />} />
         </Routes>
       </BrowserRouter>

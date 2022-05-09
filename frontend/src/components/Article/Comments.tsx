@@ -5,6 +5,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import SendIcon from '@mui/icons-material/Send';
 import { comment } from '../../types/boardTypes';
+import BoardService from '../../services/BoardService';
+import { useNavigate } from 'react-router-dom';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 interface CommentProps {
   comment: {
@@ -12,22 +15,26 @@ interface CommentProps {
     commentAuthor: string;
     commentContent: string;
     commentCreatedAt: string;
+    commentId: number;
   };
+  deleteComment: (commentId: number) => void;
 }
 
 interface CommentsProps {
+  artielcId: string;
   comments: comment[];
   commentCount: number;
 }
 
 // 개별 댓글
-const Comment: React.FC<CommentProps> = ({ comment }) => {
+const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
   return (
     <CommentSection>
       <Author>
         <AvatarCustom src={comment.profileImgUrl} alt="profile" />
         <AuthorName>{comment.commentAuthor}</AuthorName>
-        <Delete>삭제</Delete>
+        <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
+        {/* <DeleteOutlinedIcon onClick={deleteComment} /> */}
       </Author>
       <Content>{comment.commentContent}</Content>
       <Time>{comment.commentCreatedAt}</Time>
@@ -35,31 +42,60 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   );
 };
 
-const Comments: React.FC<CommentsProps> = ({ comments, commentCount }) => {
-  const [checked, setChecked] = useState(true); // 비밀댓글 여부
+const Comments: React.FC<CommentsProps> = ({
+  artielcId,
+  comments,
+  commentCount,
+}) => {
+  const navigate = useNavigate();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const [isSecret, setIsSecret] = useState(false); // 비밀댓글 여부
+  const [content, setContent] = useState('');
+
+  const handleSecretChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.checked);
+    setIsSecret(event.target.checked);
   };
 
-  // 임시 댓글
-  // const comments = [
-  //   {
-  //     commentId: 1,
-  //     commentContent: '댓글 내용',
-  //     commentCreatedAt: "2022-04-15 15:03",
-  //     secret: false,
-  //     commentAuthor: "101동 102호 흑장미",
-  //     profileImgUrl: "https://...askalfi21k333kejf"
-  //   }
-  // ];
+  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    setContent(event.target.value);
+  };
+
+  const onSubmit = () => {
+    const comment = {
+      contents: content,
+      secret: isSecret,
+    };
+    BoardService.createComment(artielcId, comment)
+      .then(() => {
+        // 현재 글 상세페이지 업데이트
+        navigate(`/board/${artielcId}`);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteComment = (commentId: number) => {
+    console.log('삭제');
+    console.log(commentId);
+    // BoardService.deleteComment(artielcId, String(commentId))
+    //   .then(() => {
+    //     // 현재 글 상세페이지 업데이트
+    //     navigate(`/board/${artielcId}`);
+    //   })
+    //   .catch((err) => console.log(err));
+  };
 
   return (
     <>
       <Container>
         <CommentsHead>댓글 {commentCount}</CommentsHead>
         {comments.map((comment) => (
-          <Comment key={comment.commentId} comment={comment} />
+          <Comment
+            key={comment.commentId}
+            comment={comment}
+            deleteComment={deleteComment}
+          />
         ))}
         <WriteComment>
           <FormControlLabelCustom
@@ -68,14 +104,20 @@ const Comments: React.FC<CommentsProps> = ({ comments, commentCount }) => {
                 defaultChecked
                 size="small"
                 color="default"
-                onChange={handleChange}
+                checked={isSecret}
+                onChange={handleSecretChange}
               />
             }
             label="비밀"
             sx={{ fontSize: '13px' }}
           />
-          <Input type="text" placeholder="댓글을 남겨주세요"></Input>
-          <IconCustom />
+          <Input
+            type="text"
+            placeholder="댓글을 남겨주세요"
+            maxLength={100}
+            onChange={handleContentChange}
+          ></Input>
+          <IconCustom onClick={onSubmit} />
         </WriteComment>
       </Container>
     </>
@@ -142,14 +184,14 @@ const Time = styled.p`
   letter-spacing: 0;
 `;
 
-const Delete = styled.a`
+const Delete = styled(DeleteOutlinedIcon)`
   position: absolute;
   right: 0;
   padding: 0 2px;
   height: 20px;
   line-height: 20px;
   color: #a6a6a6;
-  font-size: 12px;
+  font-size: 18px;
   cursor: pointer;
 `;
 

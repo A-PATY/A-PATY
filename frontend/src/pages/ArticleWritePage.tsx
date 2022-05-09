@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
 import styled from '@emotion/styled';
 import ArticleWrite from '../components/Article/ArticleWrite';
-import ArticleWriteHeader from '../components/Article/ArticleWriteHeader';
+import ArticleHeader from '../components/Article/ArticleHeader';
 
 const ArticleWritePage: React.FC = () => {
   useEffect(() => {
@@ -12,7 +12,7 @@ const ArticleWritePage: React.FC = () => {
   return (
     <>
       <Container>
-        <ArticleWriteHeader header="지역/아파트 커뮤니티 작성" />
+        <ArticleHeader header="지역/아파트 커뮤니티 작성" />
         <ArticleWrite />
       </Container>
       <Footer footerNumber={-1} />

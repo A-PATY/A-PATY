@@ -7,10 +7,11 @@ import FormControl from '@mui/material/FormControl';
 import { category } from '../../types/boardTypes';
 
 interface Props {
+  category: string;
   setCategory: (value: string) => void;
 }
 
-const ArticleCategory: React.FC<Props> = ({ setCategory }) => {
+const ArticleCategory: React.FC<Props> = ({ category, setCategory }) => {
   const categories: category[] = [
     { key: 0, label: '전체' },
     { key: 1, label: '일상' },
@@ -21,7 +22,7 @@ const ArticleCategory: React.FC<Props> = ({ setCategory }) => {
     { key: 6, label: '공구' },
     { key: 7, label: '후기' },
   ];
-  const [label, setLabel] = React.useState('');
+  const [label, setLabel] = React.useState(category);
 
   const handleChange = (event: SelectChangeEvent) => {
     setLabel(event.target.value);
