@@ -35,6 +35,22 @@ class BoardService {
     });
     return response.data;
   }
+
+  public static async editArticle(
+    articleId: string | undefined,
+    formData: FormData,
+  ) {
+    const response = await axiosInstance.put(
+      `/api/v1/board/${articleId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  }
 }
 
 export default BoardService;

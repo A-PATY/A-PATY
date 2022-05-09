@@ -119,18 +119,18 @@ const ArticleWrite: React.FC = () => {
     console.log(formData.getAll('img'));
     console.log(formData.get('isDone'));
 
-    await BoardService.createNewArticle(formData)
-      .then(() => {
-        // 게시판 목록으로 이동
-        navigate(`/local_community`);
-      })
-      .catch((err) => console.log(err));
+    // await BoardService.createNewArticle(formData)
+    //   .then(() => {
+    //     // 게시판 목록으로 이동
+    //     navigate(`/local_community`);
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   return (
     <>
       <Container>
-        <ArticleCategory setCategory={setCategory} />
+        <ArticleCategory category={category} setCategory={setCategory} />
         <Box
           component="form"
           sx={{

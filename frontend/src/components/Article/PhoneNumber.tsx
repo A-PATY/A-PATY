@@ -36,7 +36,7 @@ interface State {
 }
 
 interface Props {
-  phoneNumber: string;
+  phoneNumber: string | null;
   setPhoneNumber: (phoneNumber: string) => void;
 }
 
