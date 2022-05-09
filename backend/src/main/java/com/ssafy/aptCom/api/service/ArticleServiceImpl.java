@@ -198,6 +198,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     // 게시글 UPDATE
     @Override
+    @Transactional
     public void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) {
         Article old_article = articleRepository.getOne(articleId);
         Category category = categoryRepository.findCategoryByCategoryName(articleUpdateRequestDto.getCategory());
