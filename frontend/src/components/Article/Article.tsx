@@ -12,9 +12,12 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
+import { useNavigate } from 'react-router-dom';
 
 const LogInMain: React.FC = () => {
   // const [articleId, setArticleId] = React.useState(0)
+  const navigate = useNavigate();
+
   const [article, setArticle] = React.useState<article>({
     articleId: 0,
     category: '',
@@ -61,6 +64,12 @@ const LogInMain: React.FC = () => {
     fetchArticle();
   }, [fetchArticle]);
 
+  const editArticle = () => {
+    navigate(`/board/${article.articleId}/edit`, {
+      state: { article: article },
+    });
+  };
+
   return (
     <>
       <Section>
@@ -90,7 +99,7 @@ const LogInMain: React.FC = () => {
                 {article?.commentCount}
               </InfoSpan>
               <InfoFunction>
-                <EditOutlinedIcon />
+                <EditOutlinedIcon onClick={editArticle} />
                 <DeleteOutlinedIcon />
               </InfoFunction>
             </WrapInfo>

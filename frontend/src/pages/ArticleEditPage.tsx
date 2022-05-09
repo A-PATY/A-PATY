@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import Footer from '../components/common/Footer';
 import styled from '@emotion/styled';
-import ArticleWrite from '../components/Article/ArticleWrite';
+import ArticleEdit from '../components/Article/ArticleEdit';
 import ArticleHeader from '../components/Article/ArticleHeader';
 
-const ArticleWritePage: React.FC = () => {
+const ArticleEditPage: React.FC = () => {
   useEffect(() => {
     document.title = '게시글 작성';
   }, []);
@@ -12,8 +12,8 @@ const ArticleWritePage: React.FC = () => {
   return (
     <>
       <Container>
-        <ArticleHeader header="지역/아파트 커뮤니티 작성" />
-        <ArticleWrite />
+        <ArticleHeader header="지역/아파트 커뮤니티 수정" />
+        <ArticleEdit />
       </Container>
       <Footer footerNumber={-1} />
     </>
@@ -26,4 +26,4 @@ const Container = styled.div`
   height: calc(100% - 70px);
 `;
 
-export default ArticleWritePage;
+export default ArticleEditPage;

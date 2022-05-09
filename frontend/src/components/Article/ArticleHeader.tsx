@@ -8,7 +8,7 @@ interface Props {
   header: string;
 }
 
-const ArticleWriteHeader: React.FC<Props> = ({ header }) => {
+const ArticleHeader: React.FC<Props> = ({ header }) => {
   return (
     <>
       <Container>
@@ -73,4 +73,4 @@ const GridButtonWrapper = styled(Grid)`
 //   font-size: 18px;
 //   color: #bae6e5;
 // `;
-export default ArticleWriteHeader;
+export default ArticleHeader;
