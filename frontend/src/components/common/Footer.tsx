@@ -81,7 +81,7 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
   bottom: 0px;
   height: 70px;
   background-color: white;
-  z-index: 1; */
+  z-index: 2; */
 const BottomNavigationCustom = styled(BottomNavigation)`
   bottom: 0px;
   height: 70px;
