@@ -43,4 +43,6 @@ export const userInfo = {
   ho: '101',
   profileImgId: 1,
   findFamily: true,
+  role: 'ROLE_USER',
+  billStatus: '미제출',
 };

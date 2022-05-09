@@ -28,6 +28,8 @@ export interface UserInfo {
   ho: string | null;
   profileImgId: number;
   findFamily: boolean;
+  role: 'ROLE_USER' | 'ROLE_ADMIN';
+  billStatus: '미제출' | '승인 대기중' | '반려' | '승인';
 }
 
 export interface community {
