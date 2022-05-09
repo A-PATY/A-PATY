@@ -13,19 +13,24 @@ const AptRegisterPage: React.FC = () => {
 
   const [aptId, setAptId] = useState<number>(-1);
   const [aptName, setAptName] = useState<string>('');
+  const [doroJuso, setDoroJuso] = useState<string>('');
 
   return (
     <>
       <Container>
-        {aptId === -1 ? (
+        {doroJuso === '' ? (
           <>
             <Header header="아파트 커뮤니티 가입" />
-            <AptRegister setAptId={setAptId} setAptName={setAptName} />
+            <AptRegister
+              setAptId={setAptId}
+              setAptName={setAptName}
+              setDoroJuso={setDoroJuso}
+            />
           </>
         ) : (
           <>
             <Header header="고지서 인증" />
-            <AptCertify aptId={aptId} aptName={aptName} />
+            <AptCertify aptId={aptId} doroJuso={doroJuso} />
           </>
         )}
       </Container>

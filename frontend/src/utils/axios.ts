@@ -2,6 +2,22 @@ import { getCookie, setCookie } from './../hooks/Cookie';
 import axios from 'axios';
 import UserService from '../services/UserService';
 
+const createDataAxsioInstance = () => {
+  const dataAxsioInstance = axios.create({
+    baseURL: 'https://www.juso.go.kr/addrlink/addrLinkApi.do',
+    params: {
+      confmKey: process.env.REACT_APT_DATA_KEY,
+      currentPage: 1,
+      countPerPage: 10,
+      resultType: 'json',
+    },
+  });
+
+  return dataAxsioInstance;
+};
+
+export const dataAxsioInstance = createDataAxsioInstance();
+
 const createKakaoAxiosInstance = () => {
   const kakaoAxiosInstance = axios.create({
     baseURL: 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json',
@@ -30,6 +46,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error);
     console.log('인터셉터 작동');
     const {
       config,
