@@ -6,9 +6,10 @@ import ImageIcon from '@mui/icons-material/Image';
 
 interface Props {
   aptId: number;
-  aptName: string;
+  doroJuso: string;
 }
-const AptCertify: React.FC<Props> = ({ aptId, aptName }) => {
+
+const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
   const [imageFile, setImageFile] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
 
@@ -69,9 +70,7 @@ const AptCertify: React.FC<Props> = ({ aptId, aptName }) => {
               <>
                 <FileInputLabel htmlFor="bill-image-file">
                   <PreviewContainer>
-                    <button>
-                      <StyledIcon />
-                    </button>
+                    <StyledIcon />
                   </PreviewContainer>
                 </FileInputLabel>
                 <Input

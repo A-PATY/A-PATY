@@ -6,23 +6,68 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import useAptList from '../../hooks/useAptList';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import AptRegisterService from '../../services/AptRegisterService';
+import Swal from 'sweetalert2';
+import { doroJuso } from '../../types/aptRegisterTypes';
 
 interface Props {
   setAptId: (aptId: number) => void;
   setAptName: (aptName: string) => void;
+  setDoroJuso: (aptName: string) => void;
 }
-const AptRegister: React.FC<Props> = ({ setAptId, setAptName }) => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+
+const AptRegister: React.FC<Props> = ({
+  setAptId,
+  setAptName,
+  setDoroJuso,
+}) => {
+  const userInfo = useRecoilValue(userInfoState);
+  const aptList = useAptList();
+  const [aptOpen, setAptOpen] = useState<boolean>(false);
+  const [doroJusoList, setDoroJusoList] = useState<doroJuso[] | null>(null);
+
+  const handleOpen = () => setAptOpen(true);
+
   const handleCustomMenuItemClick =
     (aptId: number) =>
     (aptName: string) =>
     (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
       setAptId(aptId);
       setAptName(aptName);
-      setOpen(false);
+      setAptOpen(false);
+
+      AptRegisterService.getDoroJusoList({
+        confmKey: `${process.env.REACT_APP_DOROJUSO_KEY}`,
+        countPerPage: 10,
+        currentPage: 1,
+        keyword: `${userInfo?.sidoName}${userInfo?.gugunName}${userInfo?.dongName}${aptName}`,
+        resultType: 'json',
+      }).then(({ results }) => {
+        if (results.common.errorCode !== '0') {
+          Swal.fire({
+            title: results.common.errorMessage,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } else {
+          setDoroJusoList(results.juso);
+        }
+      });
     };
-  const aptList = useAptList();
+
+  const handleListItemClick =
+    (doroJuso: string) =>
+    (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+      setDoroJuso(doroJuso);
+    };
 
   return (
     <>
@@ -35,9 +80,28 @@ const AptRegister: React.FC<Props> = ({ setAptId, setAptName }) => {
         <AptButton variant="contained" onClick={handleOpen}>
           우리 아파트 찾기
         </AptButton>
+        <List>
+          {doroJusoList !== null &&
+            doroJusoList.length !== 0 &&
+            doroJusoList.map((doroJuso) => {
+              return (
+                <ListItem
+                  disablePadding
+                  key={doroJuso.bdMgtSn}
+                  onClick={(event) =>
+                    handleListItemClick(doroJuso.roadAddr)(event)
+                  }
+                >
+                  <ListItemButton>
+                    <ListItemTextCustom>{doroJuso.roadAddr}</ListItemTextCustom>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+        </List>
       </FirstSection>
       <Modal
-        open={open}
+        open={aptOpen}
         BackdropProps={{ style: { backgroundColor: 'transparent' } }}
         onClose={handleCustomMenuItemClick}
         aria-labelledby="modal-modal-title"
@@ -134,4 +198,10 @@ const AptButton = styled(Button)`
   }
 `;
 
+const ListItemTextCustom = styled(ListItemText)`
+  & .MuiTypography-root {
+    font-family: 'MinSans-Regular';
+    font-size: 14px;
+  }
+`;
 export default AptRegister;
