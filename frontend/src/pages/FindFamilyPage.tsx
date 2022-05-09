@@ -25,6 +25,7 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
   position: relative;
+  overflow: hidden;
 `;
 
 export default FindFamilyPage;
