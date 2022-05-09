@@ -23,9 +23,9 @@ export interface UserInfo {
   sidoName: string;
   gugunName: string;
   dongName: string;
-  aptName: string;
-  dong: string;
-  ho: string;
+  aptName: string | null;
+  dong: string | null;
+  ho: string | null;
   profileImgId: number;
   findFamily: boolean;
 }

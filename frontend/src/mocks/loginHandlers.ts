@@ -42,7 +42,6 @@ export const loginHandlers = [
   rest.post(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/issue-token`,
     async (request, response, context) => {
-      console.log(request);
       // const token: string | null =
       //   request.headers['_headers'].authorization.split(' ')[1];
 

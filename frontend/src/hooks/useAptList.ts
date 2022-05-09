@@ -9,7 +9,6 @@ const useAptList = () => {
     async function fetchAptList() {
       await AptRegisterService.getAptList()
         .then(({ aptList }) => {
-          //  console.log(response.aptList);
           setAptList(aptList);
         })
         .catch((error) => {
