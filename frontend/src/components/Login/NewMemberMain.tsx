@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import BorderColorRoundedIcon from '@mui/icons-material/BorderColorRounded';
 import Button from '@mui/material/Button';
@@ -12,7 +11,6 @@ import UserService from '../../services/UserService';
 import UserLocation from '../../hooks/useUserLocation';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { setMaxListeners } from 'process';
 
 const NewMemberMain: React.FC = () => {
   const [showError, setShowError] = useState<boolean>(false);
@@ -305,6 +303,7 @@ const SignUpButton = styled(Button)`
   width: 250px;
   height: 50px;
   border-radius: 126px;
+  font-family: 'MinSans-Regular';
 
   &:hover {
     box-shadow: none;
