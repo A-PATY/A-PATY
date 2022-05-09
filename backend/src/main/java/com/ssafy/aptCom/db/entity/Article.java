@@ -56,8 +56,7 @@ public class Article extends BaseTimeEntity{
 
     // 게시글 삭제시 첨부이미지도 삭제
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-//    @JoinColumn(name = "article_id", referencedColumnName = "id")
-//    => 쓰면 Referential integrity constraint violation:에러 발생
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Image> images = new ArrayList<>();
 
     @OneToMany
