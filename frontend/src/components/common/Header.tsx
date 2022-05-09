@@ -12,7 +12,7 @@ const Header: React.FC<Props> = ({ header }) => {
   return (
     <>
       <Container>
-        <Grid container spacing={0}>
+        <Grid container spacing={0} sx={{ height: "70px", alignContent: "center"}}>
           <GridIcon item xs={3}>
             <ArrowBackIosRoundedIconCustom />
           </GridIcon>
