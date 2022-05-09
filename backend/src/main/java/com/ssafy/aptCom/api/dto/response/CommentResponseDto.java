@@ -25,6 +25,8 @@ public class CommentResponseDto {
 
     private boolean secret;
 
+    private int commentAuthorId;
+
     private String commentAuthor;
 
     private String profileImgUrl;
@@ -49,6 +51,8 @@ public class CommentResponseDto {
             String type1 = comment.getArticle().getCommunity().getCommunityType();
             String type2 = comment.getArticle().getCommunity().getCommunityType2();
             User user = comment.getUser();
+
+            crd.setCommentAuthorId(user.getId());
 
             if(type1.equals("지역")){
                 crd.setCommentAuthor(comment.getUser().getNickname());
