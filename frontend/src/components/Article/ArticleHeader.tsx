@@ -4,24 +4,27 @@ import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
+
 interface Props {
   header: string;
 }
 
-const ArticleWriteHeader: React.FC<Props> = ({ header }) => {
+const ArticleHeader: React.FC<Props> = ({ header }) => {
+  const navigate = useNavigate();
   return (
     <>
       <Container>
         <Grid container spacing={0}>
           <GridIcon item xs={3}>
-            <ArrowBackIosRoundedIconCustom />
+            <ArrowBackIosRoundedIconCustom onClick={() => navigate(-1)} />
           </GridIcon>
           <GridText item xs={6}>
             <Text>{header}</Text>
           </GridText>
 
           <GridButtonWrapper item xs={2.5}>
-            <ButtonCustom>완료</ButtonCustom>
+            {/* <ButtonCustom>완료</ButtonCustom> */}
           </GridButtonWrapper>
         </Grid>
       </Container>
@@ -67,10 +70,10 @@ const GridButtonWrapper = styled(Grid)`
   align-items: center;
 `;
 
-const ButtonCustom = styled(Button)`
-  padding: 0;
-  font-family: 'MinSans-Regular';
-  font-size: 18px;
-  color: #bae6e5;
-`;
-export default ArticleWriteHeader;
+// const ButtonCustom = styled(Button)`
+//   padding: 0;
+//   font-family: 'MinSans-Regular';
+//   font-size: 18px;
+//   color: #bae6e5;
+// `;
+export default ArticleHeader;
