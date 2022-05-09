@@ -37,6 +37,8 @@ public class ArticleDto {
 
     private String createdAt;
 
+    private int authorId;
+
     private String author;
 
     private int commentCount;
@@ -69,6 +71,8 @@ public class ArticleDto {
         String type1 = article.getCommunity().getCommunityType();
         String type2 = article.getCommunity().getCommunityType2();
         User user = article.getUser();
+
+        res.setAuthorId(user.getId());
 
         if(type1.equals("지역")){
             article.setAnonyAuthor(article.getUser().getNickname());
