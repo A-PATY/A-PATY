@@ -64,7 +64,9 @@ const FormattedInputs: React.FC<Props> = ({ setPhoneNumber, phoneNumber }) => {
       }}
     >
       <FormControl variant="standard">
-        <InputLabel htmlFor="formatted-text-mask-input">휴대폰 번호</InputLabel>
+        <InputLabel htmlFor="formatted-text-mask-input">
+          {phoneNumber === '' ? '휴대폰 번호' : ''}
+        </InputLabel>
         <Input
           placeholder="(010) 1234-5678"
           value={phoneNumber}
