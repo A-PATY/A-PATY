@@ -4,7 +4,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageIcon from '@mui/icons-material/Image';
 
-const AptCertify: React.FC = () => {
+interface Props {
+  aptId: number;
+  doroJuso: string;
+}
+
+const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
   const [imageFile, setImageFile] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
 
@@ -19,33 +24,67 @@ const AptCertify: React.FC = () => {
     // setImageFile(image);
   };
 
+  const handleImageContainerWrapperClick = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const {
+      target: { files },
+    }: any = event;
+    const theImgFile = files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      }: any = finishedEvent;
+
+      setPreviewImg(result);
+    };
+
+    reader.readAsDataURL(theImgFile);
+    setImageFile(theImgFile);
+  };
+
   return (
     <>
       <Container>
         <Wrapper>
           <AddImage>
             <Title>고지서 첨부</Title>
-            <Label htmlFor="contained-button-file">
-              <Input
-                id="contained-button-file"
-                type="file"
-                onChange={changeImage}
-              ></Input>
-              <ImageButton>사진 고르기</ImageButton>
-            </Label>
             <SampleImage
               alt="sample"
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRYjtD5S5JEyjfJ_gBphpouen1mgNyOBHe_A&usqp=CAU"
             ></SampleImage>
+
+            {/* <Label htmlFor="contained-button-file">
+              <ImageButton>사진 고르기</ImageButton>
+            </Label>
+            <Input
+              id="contained-button-file"
+              type="file"
+              accept="image/*"
+              onChange={handleImageContainerWrapperClick}
+            /> */}
+
             {!imageFile && (
-              <PreviewContainer>
-                <IconBox>
-                  <StyledIcon />
-                </IconBox>
-                <ImageWrapper>
-                  <Image src="..." alt="picture"></Image>
-                </ImageWrapper>
-              </PreviewContainer>
+              <>
+                <FileInputLabel htmlFor="bill-image-file">
+                  <PreviewContainer>
+                    <StyledIcon />
+                  </PreviewContainer>
+                </FileInputLabel>
+                <Input
+                  id="bill-image-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageContainerWrapperClick}
+                />
+              </>
+
+              //   <ImageWrapper>
+              //     <Image src="..." alt="picture"></Image>
+              //   </ImageWrapper>
+              // </PreviewContainer>
             )}
             {imageFile && (
               <ImageContainer>
@@ -176,11 +215,13 @@ const PreviewContainer = styled.div`
   position: relative;
 `;
 
-const IconBox = styled.div`
-  display: flex;
+const FileInputLabel = styled.label`
+  box-sizing: border-box;
+  cursor: pointer;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
+  position: absolute; */
 `;
 
 const StyledIcon = styled(ImageIcon)`
@@ -190,7 +231,7 @@ const StyledIcon = styled(ImageIcon)`
 `;
 
 const Image = styled.img`
-  opacity: 0;
+  /* opacity: 0; */
   max-width: 100%;
 `;
 
