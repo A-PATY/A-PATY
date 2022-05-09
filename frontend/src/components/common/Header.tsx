@@ -3,18 +3,20 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   header: string;
 }
 
 const Header: React.FC<Props> = ({ header }) => {
+  const navigate = useNavigate();
   return (
     <>
       <Container>
         <Grid container spacing={0} sx={{ height: "70px", alignContent: "center"}}>
           <GridIcon item xs={3}>
-            <ArrowBackIosRoundedIconCustom />
+            <ArrowBackIosRoundedIconCustom onClick={() => navigate(-1)} />
           </GridIcon>
           <GridText item xs={6}>
             <Text>{header}</Text>

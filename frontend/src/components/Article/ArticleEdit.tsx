@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ArticleCategory from './ArticleCategory';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
@@ -12,25 +12,34 @@ import PhoneNumber from './PhoneNumber';
 import Swal from 'sweetalert2';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
+import { article } from '../../types/boardTypes';
 
 const ariaLabel = { 'aria-label': 'description' };
 
-// interface articleData {
-//   [index: string]: string;
-// }
+interface Props {
+  article: article;
+}
 
-const ArticleWrite: React.FC = () => {
+const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
 
   const communityId = 367;
-  const [category, setCategory] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [imageFiles, setImageFiles] = useState<Array<any>>([]);
-  const [isDone, setIsDone] = useState(true);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  // const [category, setCategory] = useState<string>('');
+  // const [title, setTitle] = useState<string>('');
+  // const [content, setContent] = useState<string>('');
+  // const [imageFiles, setImageFiles] = useState<Array<any>>([]);
+  // const [isDone, setIsDone] = useState(true);
+  // const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [category, setCategory] = useState<string>(article.category);
+  const [title, setTitle] = useState<string>(article.title);
+  const [content, setContent] = useState<string>(article.contents);
 
-  console.log(phoneNumber);
+  const [imageFiles, setImageFiles] = useState<Array<any>>([]); // 이미지는 나중에 구현
+
+  const [isDone, setIsDone] = useState(article.isDone);
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(
+    article.contact,
+  );
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -109,7 +118,7 @@ const ArticleWrite: React.FC = () => {
     formData.append('contents', content);
 
     if (category === '나눔장터' || category === '공구' || category === '헬프') {
-      formData.append('contact', phoneNumber);
+      formData.append('contact', String(phoneNumber));
       formData.append('isDone', String(isDone));
     }
 
@@ -119,7 +128,7 @@ const ArticleWrite: React.FC = () => {
     console.log(formData.getAll('img'));
     console.log(formData.get('isDone'));
 
-    // await BoardService.createNewArticle(formData)
+    // await BoardService.editArticle(article.articleId, formData)
     //   .then(() => {
     //     // 게시판 목록으로 이동
     //     navigate(`/local_community`);
@@ -148,7 +157,7 @@ const ArticleWrite: React.FC = () => {
             type="text"
             placeholder="제목을 입력해주세요."
             // inputProps={ariaLabel}
-            // value={value}
+            value={title}
             onChange={changeTitle}
           />
         </Box>
@@ -169,9 +178,10 @@ const ArticleWrite: React.FC = () => {
           <div>
             <TextField
               id="outlined-multiline-static"
-              label="글 내용"
+              placeholder="내용을 입력해주세요."
               multiline
               rows={18}
+              value={content}
               onChange={changeContent}
             />
           </div>
@@ -228,7 +238,7 @@ const ArticleWrite: React.FC = () => {
                 <ButtonCustom>
                   마감여부
                   <Switch
-                    checked={isDone}
+                    checked={isDone !== null ? isDone : false}
                     onChange={handleIsDoneChange}
                     inputProps={{ 'aria-label': 'controlled' }}
                   />
@@ -293,4 +303,4 @@ const SubmitButtonCustom = styled(Button)`
     color: #bae6e5;
   }
 `;
-export default ArticleWrite;
+export default ArticleEdit;

@@ -35,18 +35,23 @@ interface State {
   numberformat: string;
 }
 
-export default function FormattedInputs() {
-  const [values, setValues] = React.useState<State>({
-    textmask: '',
-    numberformat: '1320',
-  });
+interface Props {
+  phoneNumber: string | null;
+  setPhoneNumber: (phoneNumber: string) => void;
+}
 
-  console.log(values.textmask);
+const FormattedInputs: React.FC<Props> = ({ setPhoneNumber, phoneNumber }) => {
+  // const [values, setValues] = React.useState<State>({
+  //   textmask: '',
+  //   numberformat: '1320',
+  // });
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value,
-    });
+    // setValues({
+    //   ...values,
+    //   [event.target.name]: event.target.value,
+    // });
+    setPhoneNumber(event.target.value);
   };
 
   return (
@@ -59,10 +64,12 @@ export default function FormattedInputs() {
       }}
     >
       <FormControl variant="standard">
-        <InputLabel htmlFor="formatted-text-mask-input">휴대폰 번호</InputLabel>
+        <InputLabel htmlFor="formatted-text-mask-input">
+          {phoneNumber === '' ? '휴대폰 번호' : ''}
+        </InputLabel>
         <Input
           placeholder="(010) 1234-5678"
-          value={values.textmask}
+          value={phoneNumber}
           onChange={handleChange}
           name="textmask"
           id="formatted-text-mask-input"
@@ -71,4 +78,6 @@ export default function FormattedInputs() {
       </FormControl>
     </Box>
   );
-}
+};
+
+export default FormattedInputs;

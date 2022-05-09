@@ -9,6 +9,8 @@ import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 interface Props {
   footerNumber: number;
@@ -18,13 +20,21 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
 
   let navigate = useNavigate();
 
+  const userInfo = useRecoilValue(userInfoState);
+
   useEffect(() => {
     if (value === 0) {
       navigate('/');
     } else if (value === 1) {
       navigate('/local_community');
     } else if (value === 2) {
-      navigate('/apt_register');
+      if (userInfo === null) {
+        //로그인 후 접근하도록 알림
+      } else if (userInfo.communityList.length === 1) {
+        navigate('/apt_register');
+      } else {
+        //아파트 커뮤니티 게시판으로 연결
+      }
     } else if (value === 3) {
       navigate('/find_family');
     } else if (value === 4) {
@@ -65,14 +75,18 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
   );
 };
 
-const BottomNavigationCustom = styled(BottomNavigation)`
-  display: flex;
+/* display: flex;
   justify-content: center;
   position: sticky;
   bottom: 0px;
   height: 70px;
   background-color: white;
-  z-index: 2;
+  z-index: 2; */
+const BottomNavigationCustom = styled(BottomNavigation)`
+  bottom: 0px;
+  height: 70px;
+  position: sticky;
+  background-color: white;
 `;
 
 const BottomNavigationActionCustom = styled(BottomNavigationAction)`

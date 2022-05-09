@@ -12,9 +12,13 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const LogInMain: React.FC = () => {
   // const [articleId, setArticleId] = React.useState(0)
+  const navigate = useNavigate();
+
   const [article, setArticle] = React.useState<article>({
     articleId: 0,
     category: '',
@@ -61,6 +65,33 @@ const LogInMain: React.FC = () => {
     fetchArticle();
   }, [fetchArticle]);
 
+  const editArticle = () => {
+    navigate(`/board/${article.articleId}/edit`, {
+      state: { article: article },
+    });
+  };
+
+  const deleteArticle = () => {
+    Swal.fire({
+      title: '정말로 삭제하시겠습니까?',
+      text: '글을 삭제하면 되돌릴 수 없습니다',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        BoardService.deleteArticle(article_id)
+          .then(() => {
+            navigate(`/local_community`);
+          })
+          .catch((err) => console.log(err.response));
+      }
+    });
+  };
+
   return (
     <>
       <Section>
@@ -90,8 +121,8 @@ const LogInMain: React.FC = () => {
                 {article?.commentCount}
               </InfoSpan>
               <InfoFunction>
-                <EditOutlinedIcon />
-                <DeleteOutlinedIcon />
+                <EditOutlinedIcon onClick={editArticle} />
+                <DeleteOutlinedIcon onClick={deleteArticle} />
               </InfoFunction>
             </WrapInfo>
           </ArticleHead>
@@ -115,6 +146,7 @@ const LogInMain: React.FC = () => {
             </ArticleInfo>
           </ArticleContent>
           <ArticleComments
+            artielcId={String(article?.articleId)}
             comments={article?.commentsList}
             commentCount={article?.commentCount}
           />
