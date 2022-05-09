@@ -201,7 +201,7 @@ const FindFamily: React.FC = () => {
       <MapContainer id="map"/>
       <motion.p 
         drag="y"
-        dragConstraints={{ top: 0, bottom: 210 }}
+        dragConstraints={{ top: 0, bottom: 180 }}
         style={{ zIndex: "1", marginTop: "90%" }}
         dragElastic={0}
       >
@@ -239,7 +239,7 @@ const MapContainer = styled.div`
 const FamilyListContainer = styled.div`
   position: relative;
   background-color: #fff;
-  height: 62%;
+  height: 80%;
   width: 100%;
   border-radius: 20px 20px 0 0;
   overflow-y: scroll;
