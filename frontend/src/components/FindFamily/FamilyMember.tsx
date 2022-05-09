@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,24 +9,6 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
   return (
     <>
       <Container>
-        {/* <AvatarCustom 
-          src={member.profileImgUrl} 
-          alt={member.userName} 
-          onClick={() => {changeMember(member)}}
-          style={{ cursor: member.findFamily ? "pointer" : "default" }}
-        />
-        <MemberInfo 
-          onClick={() => {changeMember(member)}} 
-          style={{ cursor: member.findFamily ? "pointer" : "default" }}
-        >
-          <MemberName>{member.userName}</MemberName>
-          {
-            member.findFamily ?
-            <GpsClassify>위치찾기: 허용 <LocationOnIcon/></GpsClassify> :
-            <GpsClassify>위치찾기: 미허용</GpsClassify> 
-          }
-        </MemberInfo> */}
-
         <AvatarCustom 
           src={member.profileImgUrl} 
           alt={member.userName} 
@@ -86,10 +67,6 @@ const MemberName = styled.h3`
   white-space: nowrap;
 `;
 
-// const MemberInfo = styled.div`
-//   margin-left: 20px;
-// `;
-
 const MemberInfo = styled.div`
   margin-left: 20px;
   display: flex;
@@ -100,11 +77,6 @@ const MemberInfo = styled.div`
     color: #9e9d9d;
     margin-left: 5px;
   }
-`;
-
-const GpsClassify = styled.p`
-  margin-top: 3px;
-  font-size: 13px;
 `;
 
 export default FamilyMember;
