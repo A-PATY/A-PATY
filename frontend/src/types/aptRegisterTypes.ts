@@ -47,3 +47,8 @@ export interface doroJuso {
   udrtYn: string;
   zipNo: string;
 }
+
+export interface aptRegisterResponse {
+  status: number | null;
+  message: string;
+}
