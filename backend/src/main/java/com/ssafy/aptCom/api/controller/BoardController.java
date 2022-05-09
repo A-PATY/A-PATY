@@ -6,6 +6,7 @@ import com.ssafy.aptCom.api.dto.response.ArticleDto;
 import com.ssafy.aptCom.api.service.ArticleService;
 import com.ssafy.aptCom.api.service.CommentService;
 import com.ssafy.aptCom.api.service.LikesService;
+import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.common.response.ErrorResponseDto;
 import com.ssafy.aptCom.common.response.SuccessResponseDto;
 import com.ssafy.aptCom.db.entity.Article;
@@ -17,7 +18,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +38,7 @@ public class BoardController {
 
     private final ArticleService articleService;
 
-    //private final UserService userService;
+    private final UserService userService;
 
     @PostMapping("/{article-id}/comments")
     @ApiOperation(value = "댓글 저장", notes = "게시판 댓글을 저장한다.")
@@ -46,11 +49,10 @@ public class BoardController {
     })
     public ResponseEntity<?> saveComment(
             @PathVariable("article-id") Integer articleId,
-            @RequestBody CommentDto commentDto/*,
-            @AuthenticationPrincipal String token*/) {
+            @RequestBody CommentDto commentDto,
+            @AuthenticationPrincipal String loginUser) {
 
-        User user = new User();
-        user.setId(1);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         Article article = new Article();
         article.setId(articleId);
@@ -104,11 +106,11 @@ public class BoardController {
     })
     @PostMapping("/{article-id}/like")
     public ResponseEntity<?> likeArticle(
-        @PathVariable("article-id") Integer articleId
+        @PathVariable("article-id") Integer articleId,
+        @AuthenticationPrincipal String loginUser
     ) {
 
-        User user = new User();
-        user.setId(1);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         Article article = new Article();
         article.setId(articleId);
@@ -143,11 +145,11 @@ public class BoardController {
     })
     @GetMapping("/{article-id}")
     public ResponseEntity<?> getArticle(
-            @PathVariable("article-id") Integer articleId
+            @PathVariable("article-id") Integer articleId,
+            @AuthenticationPrincipal String loginUser
     ) {
 
-        User user = new User();
-        user.setId(1);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         Article article;
         Boolean likeYn;
@@ -184,11 +186,11 @@ public class BoardController {
             @RequestParam(value = "categoryId", required = false) int categoryId,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "lastArticleId", required = true) int lastArticleId,
-            @RequestParam(value = "size", required = true) int size
+            @RequestParam(value = "size", required = true) int size,
+            @AuthenticationPrincipal String loginUser
     ){
 
-        User user = new User();
-        user.setId(1);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         List<ArticleDto> articleDtoList;
 
