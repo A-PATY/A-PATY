@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -52,14 +53,14 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestBody SocialLoginDto socialLoginDto) {
+            @RequestBody SocialLoginDto socialLoginDto, HttpServletRequest request) {
         log.info("access code: {}", socialLoginDto.getAccessCode());
         boolean isNew;
         String[] tokens;
         String accessCode = socialLoginDto.getAccessCode();
 
         try {
-            String accessToken = loginService.getAccessToken(accessCode);
+            String accessToken = loginService.getAccessToken(accessCode, request);
             HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
             String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
 
@@ -111,7 +112,7 @@ public class LoginController {
             return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 회원 정보 조회 실패"));
         }
 
-        return ResponseEntity.status(200).body(UserInfoDto.of(user));
+        return ResponseEntity.status(200).body(UserInfoResponseDto.of(user));
 
     }
 
