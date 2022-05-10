@@ -1,5 +1,6 @@
 package com.ssafy.aptCom.api.controller;
 
+import com.ssafy.aptCom.api.dto.request.SocialLoginDto;
 import com.ssafy.aptCom.api.dto.response.*;
 import com.ssafy.aptCom.api.service.CategoryService;
 import com.ssafy.aptCom.api.service.LoginService;
@@ -51,10 +52,11 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestBody String accessCode) {
+            @RequestBody SocialLoginDto socialLoginDto) {
 
         boolean isNew;
         String[] tokens;
+        String accessCode = socialLoginDto.getAccessCode();
 
         try {
             String accessToken = loginService.getAccessToken(accessCode);
