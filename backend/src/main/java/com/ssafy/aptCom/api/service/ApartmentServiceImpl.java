@@ -120,15 +120,21 @@ public class ApartmentServiceImpl implements ApartmentService {
 
         // 유저커뮤니티 정보 저장
         String aptCode = apartment.get().getAptCode();
-        Community community = communityRepository.findCommunityByCommunityCode(aptCode);
 
-        UserCommunity userCommunity = UserCommunity.builder()
-                .user(user)
-                .community(community)
-                .build();
+        userCommunitySave(aptCode, user);
 
-        userCommunityRepository.save(userCommunity);
+    }
 
+    public void userCommunitySave(String aptCode, User user) {
+        List<Community> communityList = communityRepository.findAllByCommunityCode(aptCode);
+        for (Community communityLis : communityList) {
+            UserCommunity userCommunity = UserCommunity.builder()
+                    .community(communityLis)
+                    .user(user)
+                    .build();
+
+            userCommunityRepository.save(userCommunity);
+        }
     }
 
     @Transactional
