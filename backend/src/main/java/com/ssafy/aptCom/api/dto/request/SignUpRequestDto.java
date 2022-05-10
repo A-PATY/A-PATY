@@ -19,7 +19,7 @@ public class SignUpRequestDto {
     private String nickName;
 
     @ApiModelProperty(value = "프로필 이미지 ID", example = "1")
-    private ProfileImg profileImgId;
+    private int profileImgId;
 
     @ApiModelProperty(value = "주소코드", example = "4113510900")
     private String address;

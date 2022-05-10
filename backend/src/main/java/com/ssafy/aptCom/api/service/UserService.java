@@ -4,6 +4,7 @@ import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
 import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
 import com.ssafy.aptCom.db.entity.Auth;
 import com.ssafy.aptCom.db.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,8 +20,8 @@ public interface UserService {
     User userNew(String kakaoNumber);
     
     // 유저 정보 저장
-    User userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber);
-    
+    void userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber);
+
     // Refresh Token으로 Auth Entity 찾기
     Optional<Auth> getAuthByRefreshToken(String refreshToken);
     

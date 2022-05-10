@@ -122,6 +122,7 @@ public class UserController {
 
         try {
             User user = userService.getUserByKakaoUserNumber(loginUser);
+            userService.deleteAuth(user);
             userService.deleteUser(user);
         } catch (Exception e) {
             log.info(e.getMessage());
