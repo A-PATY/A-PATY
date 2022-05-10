@@ -27,8 +27,8 @@ public class TokenProvider {
 //    private final long ACCESS_TOKEN_VALID_TIME = 1 * 60 * 1000L;   // 1분
 //    private final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L;   // 1주
 
-    private final long ACCESS_TOKEN_VALID_TIME = 3 * 60 * 1000L;   // 3분
-    private final long REFRESH_TOKEN_VALID_TIME = 5 * 60 * 1000L;   // 5분
+    private final long ACCESS_TOKEN_VALID_TIME = 5 * 60 * 1000L;   // 5분
+    private final long REFRESH_TOKEN_VALID_TIME = 10 * 60 * 1000L;   // 10분
 
     private final CustomUserDetailsService userDetailsService;
     

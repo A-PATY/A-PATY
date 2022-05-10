@@ -34,6 +34,10 @@ public class UserInfoDto {
 
     private boolean findFamily;
 
+    private String role;
+
+    private String billStatus;
+
     public static UserInfoDto of(User user) {
 
         UserInfoDto res = new UserInfoDto();
@@ -45,14 +49,16 @@ public class UserInfoDto {
         res.setUserId(user.getId());
         res.setNickname(user.getNickname());
         res.setCommunityList(UserCommunityDto.of(user.getUserCommunities()));
-        res.setSidoName(address.get().getSidoName());
-        res.setGugunName(address.get().getGugunName());
-        res.setDongName(address.get().getDongName());
-        res.setAptName(apt.get().getAptName());
+        res.setSidoName(address.orElse(new BaseAddress(null, null, null)).getSidoName());
+        res.setGugunName(address.orElse(new BaseAddress(null, null, null)).getGugunName());
+        res.setDongName(address.orElse(new BaseAddress(null, null, null)).getDongName());
+        res.setAptName(apt.orElse(new Apartment(null)).getAptName());
         res.setDong(user.getDong());
         res.setHo(user.getHo());
         res.setProfileImgId(profileImg.get().getId());
         res.setFindFamily(user.isFindFamily());
+        res.setRole(user.getRoles());
+        res.setBillStatus(user.getBillStatus());
 
         return res;
     }

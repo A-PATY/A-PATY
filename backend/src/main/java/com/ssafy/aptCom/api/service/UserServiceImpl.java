@@ -1,6 +1,7 @@
 package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
+import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
 import com.ssafy.aptCom.common.jwt.TokenProvider;
 import com.ssafy.aptCom.db.entity.Auth;
 import com.ssafy.aptCom.db.entity.BaseAddress;
@@ -10,6 +11,8 @@ import com.ssafy.aptCom.db.repository.BaseAddressRepository;
 import com.ssafy.aptCom.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +23,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final AuthRepository authRepository;
+    @Autowired
+    private AuthRepository authRepository;
 
-    private final BaseAddressRepository baseAddressRepository;
+    @Autowired
+    private BaseAddressRepository baseAddressRepository;
 
-    private final TokenProvider tokenProvider;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Override
     public User getUserByKakaoUserNumber(String kakaoUserNumber) {
@@ -56,6 +63,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .kakaoUserNumber(kakaoNumber)
                 .roles("ROLE_USER")
+                .billStatus("미제출")
                 .build();
 
         return userRepository.save(user);
@@ -81,15 +89,38 @@ public class UserServiceImpl implements UserService {
         return authRepository.findByRefreshToken(refreshToken);
     }
 
-    @Override
-    public void logOut(Auth auth) {
-
-    }
-
     public BaseAddress getAddress(String address) {
         return baseAddressRepository.findByAddress(address);
     }
 
+    @Transactional
+    @Override
+    public void deleteAuth(User user) {
+        Optional<Auth> auth = authRepository.findByUserId(user.getId());
 
+        authRepository.deleteById(auth.get().getId());
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) {
+
+        if (profileInfo.equals("nickname")) {
+            user.setNickname(userModifyRequestDto.getNickName());
+        } else if (profileInfo.equals("address")) {
+            BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
+            user.setBaseAddress(baseAddress);
+        } else if (profileInfo.equals("profile-img")) {
+            user.setProfileImg(userModifyRequestDto.getProfileImgId());
+        } else if (profileInfo.equals("find-family")) {
+            user.setFindFamily(userModifyRequestDto.isFindFamily());
+        }
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(User user) { userRepository.delete(user); }
 
 }

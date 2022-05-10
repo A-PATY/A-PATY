@@ -1,18 +1,20 @@
 package com.ssafy.aptCom.api.controller;
 
 import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
-import com.ssafy.aptCom.api.dto.response.CategoryListDto;
-import com.ssafy.aptCom.api.dto.response.LoginResponseDto;
+import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
+import com.ssafy.aptCom.api.dto.response.ErrorMessage;
 import com.ssafy.aptCom.api.dto.response.ProfileImgListDto;
 import com.ssafy.aptCom.api.dto.response.SuccessMessage;
 import com.ssafy.aptCom.api.service.ProfileImgService;
 import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.db.entity.ProfileImg;
+import com.ssafy.aptCom.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Api(value = "회원 관리 API", tags = {"user"})
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +43,16 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> signUp(
-            @RequestBody SignUpRequestDto signUpRequestDto, @AuthenticationPrincipal String kakaoUserNumber) {
-        userService.userSave(signUpRequestDto, kakaoUserNumber);
+            @RequestBody SignUpRequestDto signUpRequestDto, @AuthenticationPrincipal String loginUser) {
+
+        try {
+            userService.userSave(signUpRequestDto, loginUser);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 회원가입 실패"));
+        }
 
         return ResponseEntity.status(200).body(SuccessMessage.of("회원가입이 완료되었습니다."));
 
@@ -56,9 +67,70 @@ public class UserController {
     })
     public ResponseEntity<?> profileImg() {
 
-        List<ProfileImg> profileImgList = profileImgService.getProfileImgList();
+        List<ProfileImg> profileImgList;
+
+        try {
+            profileImgList = profileImgService.getProfileImgList();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 프로필 이미지 리스트 조회 실패"));
+        }
 
         return ResponseEntity.status(200).body(ProfileImgListDto.of(profileImgList));
+
+    }
+
+    @PutMapping("/users/{profile-info}")
+    @ApiOperation(value = "회원 정보 수정", notes = "토큰 검증 후 해당 유저 상세 정보 수정")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "입력값 오류"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> userModify(
+            @PathVariable final String profileInfo,
+            UserModifyRequestDto userModifyRequestDto,
+            @AuthenticationPrincipal final String loginUser) {
+
+        try {
+            User user = userService.getUserByKakaoUserNumber(loginUser);
+            userService.userModify(userModifyRequestDto, user, profileInfo);
+
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 회원 정보 수정 실패"));
+
+        }
+
+        return ResponseEntity.status(200).body(SuccessMessage.of("회원 정보가 수정되었습니다."));
+
+    }
+
+    @DeleteMapping("/users")
+    @ApiOperation(value = "회원 탈퇴", notes = "토큰 검증 후 해당 유저 삭제")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "입력값 오류"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> userDelete(
+            @AuthenticationPrincipal final String loginUser) {
+
+        try {
+            User user = userService.getUserByKakaoUserNumber(loginUser);
+            userService.deleteUser(user);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.valueOf(e.getClass()));
+
+            return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 회원 탈퇴 실패"));
+        }
+
+        return ResponseEntity.status(200).body(SuccessMessage.of("회원 탈퇴가 완료되었습니다."));
 
     }
 
