@@ -7,7 +7,11 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import { useNavigate } from 'react-router-dom';
 
-const LocalHeader: React.FC = () => {
+interface Props {
+  communityId: number;
+}
+
+const BoardHeader: React.FC<Props> = ({ communityId }) => {
   const navigate = useNavigate();
   const writeArticle = () => {
     navigate('/board/write');
@@ -74,4 +78,4 @@ const TransparentBtn = styled.button`
   background-color: transparent;
   cursor: pointer;
 `;
-export default LocalHeader;
+export default BoardHeader;

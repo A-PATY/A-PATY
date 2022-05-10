@@ -4,7 +4,11 @@ import Button from '@mui/material/Button';
 import Board from './Board';
 import CategoryChips from './CategoryChips';
 
-const BoardList: React.FC = () => {
+interface Props {
+  communityId: number;
+}
+
+const BoardList: React.FC<Props> = ({ communityId }) => {
   return (
     <>
       <CategoryChipsWrapper>

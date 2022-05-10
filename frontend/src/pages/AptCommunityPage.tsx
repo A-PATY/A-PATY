@@ -6,9 +6,8 @@ import BoardList from '../components/Community/Local/BoardList';
 import BoardHeader from '../components/Community/Local/BoardHeader';
 import { userInfoState } from '../features/Login/atom';
 
-const LocalCommunityPage: React.FC = () => {
+const AptCommunityPage: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo');
   console.log(userInfo);
 
   // communityList를 userInfo에서 가져오는걸로 수정해야함
@@ -30,20 +29,20 @@ const LocalCommunityPage: React.FC = () => {
     },
   ];
 
-  const LocalCommunityId = communityList.filter(
-    (com) => com.communityType === '지역' && com.communityType2 === '전체',
+  const AptCommunityId = communityList.filter(
+    (com) => com.communityType === '아파트' && com.communityType2 === '전체',
   )[0].communityId;
-  console.log(LocalCommunityId);
+  console.log(AptCommunityId);
 
   useEffect(() => {
-    document.title = '지역 커뮤니티';
+    document.title = '아파트 커뮤니티';
   }, []);
 
   return (
     <>
       <Container>
-        <BoardHeader communityId={LocalCommunityId} />
-        <BoardList communityId={LocalCommunityId} />
+        <BoardHeader communityId={AptCommunityId} />
+        <BoardList communityId={AptCommunityId} />
       </Container>
       <Footer footerNumber={1} />
     </>
@@ -55,4 +54,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-export default LocalCommunityPage;
+export default AptCommunityPage;
