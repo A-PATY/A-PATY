@@ -1,9 +1,8 @@
 package com.ssafy.aptCom.db.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,11 +14,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Article {
+public class Article extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
@@ -29,34 +32,44 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(length = 25)
+    private String anonyAuthor;
+
+    @Nullable
     @Column(length = 80)
     private String title;
 
+    @Nullable
     @Column(length = 1000)
     private String contents;
 
+    @Nullable
     @Column(columnDefinition = "varchar(25) default NULL")
     private String contact;
 
+    @Nullable
     @Column(columnDefinition = "boolean default false")
-    private boolean isDone;
+    private Boolean isDone;
 
     @Column(columnDefinition = "integer default 0")
     private int views;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    // 게시글 삭제시 첨부이미지도 삭제
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Image> images = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "article_id", referencedColumnName = "id")
-    List<Image> images = new ArrayList<>();
+    List<Comment> comments = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    List<Likes> likes = new ArrayList<>();
 
     @PrePersist
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
     }
+
 }

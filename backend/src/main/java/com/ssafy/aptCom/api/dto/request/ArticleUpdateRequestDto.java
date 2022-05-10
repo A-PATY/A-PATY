@@ -6,13 +6,12 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
-@ApiModel("ArticleRequestDto")
+@ApiModel("ArticleUpdateRequestDto")
 @Setter
 @Getter
-public class ArticleRequestDto {
-
-    private int communityId;
+public class ArticleUpdateRequestDto {
 
     private String category;
 
@@ -25,5 +24,4 @@ public class ArticleRequestDto {
     private String contact;
 
     private Boolean isDone;
-
 }
