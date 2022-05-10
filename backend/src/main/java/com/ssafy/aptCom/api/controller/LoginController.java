@@ -53,7 +53,7 @@ public class LoginController {
     })
     public ResponseEntity<?> socialLogin(
             @RequestBody SocialLoginDto socialLoginDto) {
-
+        log.info("access code: {}", socialLoginDto.getAccessCode());
         boolean isNew;
         String[] tokens;
         String accessCode = socialLoginDto.getAccessCode();
@@ -77,6 +77,7 @@ public class LoginController {
         } catch (IOException e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
+            log.info("controller 에러남");
 
             return ResponseEntity.status(400).body(ErrorMessage.of(400, "입력값이 유효하지 않습니다."));
         } catch (Exception e) {

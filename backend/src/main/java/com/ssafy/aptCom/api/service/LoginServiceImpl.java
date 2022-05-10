@@ -61,7 +61,7 @@ public class LoginServiceImpl implements LoginService {
             JsonElement element = parser.parse(result);
 
             accessToken = element.getAsJsonObject().get("access_token").getAsString();
-
+            log.info("access token: {}", accessToken);
             br.close();
             bw.close();
 
@@ -103,6 +103,7 @@ public class LoginServiceImpl implements LoginService {
 
             String kakaoUserNumber = element.getAsJsonObject().get("id").getAsString();
             userInfo.put("kakaoUserNumber", kakaoUserNumber);
+            log.info("userInfo: {}", userInfo);
 
         } catch (IOException e) {
             throw new IOException();
