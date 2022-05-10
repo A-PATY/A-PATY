@@ -42,12 +42,13 @@ public class FamilyController {
         User user = userService.getUserByKakaoUserNumber(loginUser);
 
         int userId =  user.getId();
-        int aptId =  user.getApartment().getId();
+        int aptId = 0;
+        if(user.getApartment() != null) aptId = user.getApartment().getId();
         String dong = user.getDong();
         String ho = user.getHo();
 
-        String familyId = aptId + "-" + dong + "-" + ho;
         List<FamilyDto> familyList;
+        String familyId = aptId + "-" + dong + "-" + ho;
 
         try {
             if(aptId == 0 || dong.equals("") || ho.equals("")){
