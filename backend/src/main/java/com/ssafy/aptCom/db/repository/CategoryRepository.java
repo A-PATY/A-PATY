@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 
-
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 

@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
     private String apiKey;
 
     @Override
-    public String getAccessToken(String accessCode) {
+    public String getAccessToken(String accessCode) throws IOException {
 
         String reqURL = "https://kauth.kakao.com/oauth/token";
         String redirectUrl = "http://localhost:3000/oauth/callback/kakao";
@@ -66,7 +66,7 @@ public class LoginServiceImpl implements LoginService {
             bw.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
 
         return accessToken;
@@ -74,7 +74,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public HashMap<String, Object> getUserInfo(String accessToken) {
+    public HashMap<String, Object> getUserInfo(String accessToken) throws IOException {
 
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
         String reqURL = "https://kapi.kakao.com/v1/user/access_token_info";
@@ -105,7 +105,7 @@ public class LoginServiceImpl implements LoginService {
             userInfo.put("kakaoUserNumber", kakaoUserNumber);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
 
         return userInfo;

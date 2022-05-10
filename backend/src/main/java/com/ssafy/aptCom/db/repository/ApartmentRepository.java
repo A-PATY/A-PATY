@@ -1,12 +1,15 @@
 package com.ssafy.aptCom.db.repository;
 
+import com.ssafy.aptCom.db.entity.Apartment;
 import com.ssafy.aptCom.db.entity.BaseAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface BaseAddressRepository extends JpaRepository<BaseAddress, Integer> {
+import java.util.List;
 
-    BaseAddress findByAddress(String address);
+@Repository
+public interface ApartmentRepository extends JpaRepository<Apartment, Integer> {
+
+    List<Apartment> findAllByBaseAddress(BaseAddress baseAddress);
 
 }

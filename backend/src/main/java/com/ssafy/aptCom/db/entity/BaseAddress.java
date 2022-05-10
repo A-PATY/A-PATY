@@ -32,4 +32,11 @@ public class BaseAddress {
 
     private Double lng;
 
+    @Builder
+    public BaseAddress(String sidoName, String gugunName, String dongName) {
+        this.sidoName = sidoName;
+        this.gugunName = gugunName;
+        this.dongName = dongName;
+    }
+
 }
