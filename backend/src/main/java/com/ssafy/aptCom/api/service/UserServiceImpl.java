@@ -3,12 +3,8 @@ package com.ssafy.aptCom.api.service;
 import com.ssafy.aptCom.api.dto.request.SignUpRequestDto;
 import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
 import com.ssafy.aptCom.common.jwt.TokenProvider;
-import com.ssafy.aptCom.db.entity.Auth;
-import com.ssafy.aptCom.db.entity.BaseAddress;
-import com.ssafy.aptCom.db.entity.User;
-import com.ssafy.aptCom.db.repository.AuthRepository;
-import com.ssafy.aptCom.db.repository.BaseAddressRepository;
-import com.ssafy.aptCom.db.repository.UserRepository;
+import com.ssafy.aptCom.db.entity.*;
+import com.ssafy.aptCom.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service("userService")
@@ -34,6 +31,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    private ProfileImgRepository profileImgRepository;
+
+    @Autowired
+    private CommunityRepository communityRepository;
+
+    @Autowired
+    private UserCommunityRepository userCommunityRepository;
 
     @Override
     public User getUserByKakaoUserNumber(String kakaoUserNumber) {
@@ -60,10 +66,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User userNew(String kakaoNumber) {
+        ProfileImg profileImg = profileImgRepository.getOne(1);
+
         User user = User.builder()
                 .kakaoUserNumber(kakaoNumber)
                 .roles("ROLE_USER")
                 .billStatus("미제출")
+                .profileImg(profileImg)
                 .build();
 
         return userRepository.save(user);
@@ -72,15 +81,30 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber) {
+    public void userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber) {
         User user = getUserByKakaoUserNumber(kakaoUserNumber);
         BaseAddress baseAddress = getAddress(signUpRequestDto.getAddress());
+        ProfileImg profileImg = getProfileImg(signUpRequestDto.getProfileImgId());
 
         user.setNickname(signUpRequestDto.getNickName());
-        user.setProfileImg(signUpRequestDto.getProfileImgId());
+        user.setProfileImg(profileImg);
         user.setBaseAddress(baseAddress);
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        userCommunitySave(signUpRequestDto.getAddress(), user);
+
+    }
+
+    public void userCommunitySave(String addressCode, User user) {
+        Community community = communityRepository.findCommunityByCommunityCode(addressCode);
+
+        UserCommunity userCommunity = UserCommunity.builder()
+                .community(community)
+                .user(user)
+                .build();
+
+        userCommunityRepository.save(userCommunity);
 
     }
 
@@ -112,7 +136,8 @@ public class UserServiceImpl implements UserService {
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
         } else if (profileInfo.equals("profile-img")) {
-            user.setProfileImg(userModifyRequestDto.getProfileImgId());
+            ProfileImg profileImg = getProfileImg(userModifyRequestDto.getProfileImgId());
+            user.setProfileImg(profileImg);
         } else if (profileInfo.equals("find-family")) {
             user.setFindFamily(userModifyRequestDto.isFindFamily());
         }
@@ -122,5 +147,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(User user) { userRepository.delete(user); }
+
+    public ProfileImg getProfileImg(int profileImgId) {
+        return profileImgRepository.findById(profileImgId);
+    }
 
 }
