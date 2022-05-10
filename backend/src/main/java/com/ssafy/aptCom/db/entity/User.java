@@ -70,7 +70,7 @@ public class User {
 
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     List<UserCommunity> userCommunities = new ArrayList<>();
 

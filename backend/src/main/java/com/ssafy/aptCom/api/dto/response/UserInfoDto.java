@@ -40,27 +40,32 @@ public class UserInfoDto {
 
     public static UserInfoDto of(User user) {
 
-        UserInfoDto res = new UserInfoDto();
+        if (user.getUserCommunities().size() > 0) {
+            UserInfoDto res = new UserInfoDto();
 
-        Optional<BaseAddress> address = Optional.ofNullable(user.getBaseAddress());
-        Optional<Apartment> apt = Optional.ofNullable(user.getApartment());
-        Optional<ProfileImg> profileImg = Optional.ofNullable(user.getProfileImg());
+            Optional<BaseAddress> address = Optional.ofNullable(user.getBaseAddress());
+            Optional<Apartment> apt = Optional.ofNullable(user.getApartment());
+            Optional<ProfileImg> profileImg = Optional.ofNullable(user.getProfileImg());
 
-        res.setUserId(user.getId());
-        res.setNickname(user.getNickname());
-        res.setCommunityList(UserCommunityDto.of(user.getUserCommunities()));
-        res.setSidoName(address.orElse(new BaseAddress(null, null, null)).getSidoName());
-        res.setGugunName(address.orElse(new BaseAddress(null, null, null)).getGugunName());
-        res.setDongName(address.orElse(new BaseAddress(null, null, null)).getDongName());
-        res.setAptName(apt.orElse(new Apartment(null)).getAptName());
-        res.setDong(user.getDong());
-        res.setHo(user.getHo());
-        res.setProfileImgId(profileImg.get().getId());
-        res.setFindFamily(user.isFindFamily());
-        res.setRole(user.getRoles());
-        res.setBillStatus(user.getBillStatus());
+            res.setUserId(user.getId());
+            res.setNickname(user.getNickname());
+            res.setCommunityList(UserCommunityDto.of(user.getUserCommunities()));
+            res.setSidoName(address.orElse(new BaseAddress(null, null, null)).getSidoName());
+            res.setGugunName(address.orElse(new BaseAddress(null, null, null)).getGugunName());
+            res.setDongName(address.orElse(new BaseAddress(null, null, null)).getDongName());
+            res.setAptName(apt.orElse(new Apartment(null)).getAptName());
+            res.setDong(user.getDong());
+            res.setHo(user.getHo());
+            res.setProfileImgId(profileImg.get().getId());
+            res.setFindFamily(user.isFindFamily());
+            res.setRole(user.getRoles());
+            res.setBillStatus(user.getBillStatus());
 
-        return res;
+            return res;
+
+        } else {
+            return null;
+        }
     }
 
 }
