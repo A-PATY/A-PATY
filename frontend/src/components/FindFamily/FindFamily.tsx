@@ -4,13 +4,19 @@ import FamilyMember from './FamilyMember';
 import { familyList, location } from '../../types/familyTypes';
 import styled from '@emotion/styled';
 import { db } from '../../firebase';
-import { getDocs, updateDoc, setDoc, doc, onSnapshot, getDoc } from "firebase/firestore";
+import {
+  getDocs,
+  updateDoc,
+  setDoc,
+  doc,
+  onSnapshot,
+  getDoc,
+} from 'firebase/firestore';
 import Slider from '@mui/material/Slider';
 import { motion } from 'framer-motion';
 
-import { atom, selector, useRecoilValue, useRecoilState} from 'recoil';
+import { atom, selector, useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
-
 
 const marks = [
   {
@@ -33,35 +39,39 @@ const marks = [
 const FindFamily: React.FC = () => {
   const [range, setRange] = useState<number>(100);
 
-  const [familyList, setFamilyList] = useState<familyList[]>([]); 
-  const [familyAddress, setFamilyAddress] = useState<string>("");
-  const [familyId, setFamilyId] = useState<string>("");
+  const [familyList, setFamilyList] = useState<familyList[]>([]);
+  const [familyAddress, setFamilyAddress] = useState<string>('');
+  const [familyId, setFamilyId] = useState<string>('');
   const [selectedMember, setSelectedMember] = useState<familyList>({
-    userId: 0,  // recoil 
-    userName: "",
-    profileImgUrl: "",
-    findFamily: false
+    userId: 0, // recoil
+    userName: '',
+    profileImgUrl: '',
+    findFamily: false,
   });
-  const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 })
-  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
-  
+  const [memberLocation, setMemberLocation] = useState<location>({
+    lat: 0,
+    lng: 0,
+  });
+  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 }); // 아파트 위치 => 지도 center 위치
+
   const userId = '5'; // 임시 데이터
   const user = useRecoilValue(userInfoState);
 
   const { kakao } = window as any;
-  
+
   useEffect(() => {
     FamilyService.getFamilyList()
       .then((data) => {
         setFamilyId(data.familyId);
         setFamilyAddress(data.familyAddress);
         setFamilyList(data.familyList);
-        setSelectedMember({  // 초기값 recoil
+        setSelectedMember({
+          // 초기값 recoil
           userId: 5,
-          userName: "장미",
-          profileImgUrl: "../img/image0.svg",
-          findFamily: false
-        })
+          userName: '장미',
+          profileImgUrl: '../img/sheep.png',
+          findFamily: false,
+        });
 
         findAptLocation(data.familyAddress);
         // const docRef = doc(db, "families", data.familyId);
@@ -74,7 +84,7 @@ const FindFamily: React.FC = () => {
       .then(() => {
         getMemberData();
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -89,9 +99,9 @@ const FindFamily: React.FC = () => {
   // 지도상의 좌표 변화
   useEffect(() => {
     mapLocation(aptLocation.lat, aptLocation.lng);
-  }, [memberLocation, range]);  
-  
-  // 범위 range 변화 
+  }, [memberLocation, range]);
+
+  // 범위 range 변화
   const valueLabelFormat = (value: number) => {
     const index = marks.findIndex((mark) => mark.value === value);
     setRange(marks[index].range);
@@ -101,35 +111,45 @@ const FindFamily: React.FC = () => {
 
   const mapLocation = (lat: number, lng: number) => {
     const container = document.getElementById('map');
-    const center = new kakao.maps.LatLng(lat, lng)
+    const center = new kakao.maps.LatLng(lat, lng);
     // center: new kakao.maps.LatLng(aptLocation.lat, aptLocation.lng),
-    const options = {  
+    const options = {
       center: center,
-      level: 3 
+      level: 3,
     };
 
-    const map = new kakao.maps.Map(container, options); 
+    const map = new kakao.maps.Map(container, options);
 
     // 반경 표시
-    const circle = new kakao.maps.Circle({ 
+    const circle = new kakao.maps.Circle({
       center: center,
-      radius: range, 
-      strokeWeight: 0, 
-      fillColor: '#dfc5ed', 
-      fillOpacity: 0.3 
+      radius: range,
+      strokeWeight: 0,
+      fillColor: '#dfc5ed',
+      fillOpacity: 0.3,
     });
 
-    // 마커 표시 위치 
-    let markerPosition  = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);
+    // 마커 표시 위치
+    let markerPosition = new kakao.maps.LatLng(
+      memberLocation.lat,
+      memberLocation.lng,
+    );
     const marker = new kakao.maps.Marker({
       position: markerPosition,
     });
 
-    const distance = Math.round(getDistance(memberLocation.lat, memberLocation.lng, aptLocation.lat, aptLocation.lng));
-    
+    const distance = Math.round(
+      getDistance(
+        memberLocation.lat,
+        memberLocation.lng,
+        aptLocation.lat,
+        aptLocation.lng,
+      ),
+    );
+
     if (distance <= range) marker.setMap(map);
     map.setCenter(center);
-    circle.setMap(map); 
+    circle.setMap(map);
   };
 
   const findAptLocation = (address: string) => {
@@ -139,58 +159,71 @@ const FindFamily: React.FC = () => {
       if (status === kakao.maps.services.Status.OK) {
         setAptLocation({
           lat: result[0].y,
-          lng: result[0].x
+          lng: result[0].x,
         });
-        mapLocation(result[0].y, result[0].x);  // 추후 확인!
-      } 
-    });    
+        mapLocation(result[0].y, result[0].x); // 추후 확인!
+      }
+    });
   };
 
-  // firebase 불러오기 
+  // firebase 불러오기
   const getMemberData = async () => {
     if (familyId) {
-      const docRef = doc(db, "families", familyId);
+      const docRef = doc(db, 'families', familyId);
       const member = selectedMember.userId;
 
-      const unsub = onSnapshot(docRef, (document) => { 
+      const unsub = onSnapshot(docRef, (document) => {
         const user = document.get(member.toString());
-        if (memberLocation.lat !== user.lat || memberLocation.lng !== user.lng) {
-          setMemberLocation({ 
-            lat: user.lat, 
-            lng: user.lng 
+        if (
+          memberLocation.lat !== user.lat ||
+          memberLocation.lng !== user.lng
+        ) {
+          setMemberLocation({
+            lat: user.lat,
+            lng: user.lng,
           });
         }
       });
     }
   };
-  
-  // geolocation 콜백함수 + firebase에 나의 좌표 등록하기 
+
+  // geolocation 콜백함수 + firebase에 나의 좌표 등록하기
   const success = (position: any) => {
     const { latitude, longitude } = position.coords;
 
     if (familyId) {
-      const docRef = doc(db, "families", familyId);
+      const docRef = doc(db, 'families', familyId);
       updateDoc(docRef, {
-        [userId]: {  
+        [userId]: {
           lat: latitude,
-          lng: longitude
-        }
+          lng: longitude,
+        },
       });
     }
   };
 
-  const getDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => { 
-    const deg2rad = (deg: number) => { 
-      return deg * (Math.PI/180) 
+  const getDistance = (
+    lat1: number,
+    lng1: number,
+    lat2: number,
+    lng2: number,
+  ) => {
+    const deg2rad = (deg: number) => {
+      return deg * (Math.PI / 180);
     };
     const R = 6371; // 지구 반지름
-    const dLat = deg2rad(lat2-lat1); 
-    const dLon = deg2rad(lng2-lng1); 
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return R * c * 1000
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lng2 - lng1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c * 1000;
   };
-    
+
   // 가족 변화
   const changeMember = (member: familyList) => {
     if (member.findFamily) setSelectedMember(member);
@@ -198,15 +231,15 @@ const FindFamily: React.FC = () => {
 
   return (
     <>
-      <MapContainer id="map"/>
-      <motion.p 
+      <MapContainer id="map" />
+      <motion.p
         drag="y"
         dragConstraints={{ top: 0, bottom: 210 }}
-        style={{ zIndex: "1", marginTop: "90%" }}
+        style={{ zIndex: '1', marginTop: '90%' }}
         dragElastic={0}
       >
         <FamilyListContainer>
-          <Tab/>
+          <Tab />
           <Head>
             <Title>가족들</Title>
             <SliderCustom
@@ -217,13 +250,15 @@ const FindFamily: React.FC = () => {
               marks={marks}
             />
           </Head>
-          {
-            familyList.map((member) => {
-              return (
-                <FamilyMember key={member.userId} member={member} changeMember={changeMember}/>
-              )
-            })
-          }
+          {familyList.map((member) => {
+            return (
+              <FamilyMember
+                key={member.userId}
+                member={member}
+                changeMember={changeMember}
+              />
+            );
+          })}
         </FamilyListContainer>
       </motion.p>
     </>
@@ -279,19 +314,19 @@ const SliderCustom = styled(Slider)`
   & .MuiSlider-thumb {
     width: 17px;
     height: 17px;
-  };
+  }
   & .MuiSlider-thumb.Mui-focusVisible {
     box-shadow: 0 0 0 8px #f4f1f580;
-  };
+  }
   & .MuiSlider-thumb:hover {
     box-shadow: 0 0 0 8px #f4f1f580;
-  };
+  }
   & .Mui-focusVisible {
     box-shadow: none;
-  };
+  }
   & .MuiSlider-markLabel {
     color: transparent;
-  };
+  }
 `;
 
 export default FindFamily;

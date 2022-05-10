@@ -10,7 +10,7 @@ import { useState } from 'react';
 const MyPageMain: React.FC = () => {
   const [profileImgId, setProfileImgId] = useState<number>(1);
   const [profileImgUrl, setProfileImgUrl] =
-    useState<string>('\\img\\image0.svg');
+    useState<string>('\\img\\sheep.png');
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -25,7 +25,7 @@ const MyPageMain: React.FC = () => {
       <Container>
         <ProfileWrapper>
           <ImageWrapper>
-            <Image src="\img\image0.svg" />
+            <Image src="\img\sheep.png" />
             <ModifyButton onClick={handleModifyButtonClick}>
               <AutoFixHighIconCustom />
             </ModifyButton>

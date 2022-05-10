@@ -1,18 +1,18 @@
 export const ProfileImageList = [
   {
     profileImgId: 1,
-    profileImgUrl: '\\img\\image0.svg',
+    profileImgUrl: '\\img\\sheep.png',
   },
-  { profileImgId: 2, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 3, profileImgUrl: '\\img\\horse.jpg' },
-  { profileImgId: 4, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 5, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 6, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 7, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 8, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 9, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 10, profileImgUrl: '\\img\\image0.svg' },
-  { profileImgId: 11, profileImgUrl: '\\img\\image0.svg' },
+  { profileImgId: 2, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 3, profileImgUrl: '\\img\\horse.png' },
+  { profileImgId: 4, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 5, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 6, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 7, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 8, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 9, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 10, profileImgUrl: '\\img\\cat.png' },
+  { profileImgId: 11, profileImgUrl: '\\img\\cat.png' },
 ];
 
 export const userInfo = {

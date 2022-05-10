@@ -16,7 +16,7 @@ const NewMemberMain: React.FC = () => {
   const [showError, setShowError] = useState<boolean>(false);
   const [profileImgId, setProfileImgId] = useState<number>(1);
   const [profileImgUrl, setProfileImgUrl] =
-    useState<string>('\\img\\image0.svg');
+    useState<string>('\\img\\sheep.png');
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');

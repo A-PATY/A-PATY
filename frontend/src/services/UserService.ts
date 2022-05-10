@@ -1,3 +1,4 @@
+import { aptRegisterResponse } from '../types/aptRegisterTypes';
 import {
   IssueTokenResponse,
   LogInResponse,
@@ -12,7 +13,9 @@ class UserService {
   public static async getUserToken(accessCode: string) {
     const response = await axiosInstance.post<LoginResponse>(
       'api/v1/auth/users/log-in',
-      accessCode,
+      {
+        accessCode: accessCode,
+      },
     );
 
     return response.data;
@@ -43,8 +46,9 @@ class UserService {
   }
 
   public static async signUpRequest(data: signUpRequest) {
-    const response = await axiosInstance.post<profileImgList>(
+    const response = await axiosInstance.post<aptRegisterResponse>(
       '/api/v1/auth/users/sign-up',
+      data,
     );
 
     return response.data;
