@@ -26,17 +26,17 @@ public class BaseAddress {
     private String dongName;
 
     @Column(length = 25)
+    private String riName;
+
+    @Column(length = 25)
     private String address;
 
-    private Double lat;
-
-    private Double lng;
-
     @Builder
-    public BaseAddress(String sidoName, String gugunName, String dongName) {
+    public BaseAddress(String sidoName, String gugunName, String dongName, String riName) {
         this.sidoName = sidoName;
         this.gugunName = gugunName;
         this.dongName = dongName;
+        this.riName = riName;
     }
 
 }
