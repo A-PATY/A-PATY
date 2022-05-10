@@ -1,16 +1,20 @@
 package com.ssafy.aptCom.api.controller;
 
-import com.google.firebase.database.annotations.Nullable;
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
 import com.ssafy.aptCom.api.dto.request.ArticleUpdateRequestDto;
-import com.ssafy.aptCom.api.dto.response.ArticleResponseDto;
+import com.ssafy.aptCom.api.dto.response.ErrorMessage;
 import com.ssafy.aptCom.api.service.ArticleServiceImpl;
+import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.db.entity.User;
 import com.ssafy.aptCom.db.repository.UserRepository;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,19 +29,26 @@ public class ArticleController {
 
     ArticleServiceImpl articleService;
     UserRepository userRepository;
+    UserService userService;
 
-    public ArticleController(ArticleServiceImpl articleService, UserRepository userRepository) {
+    public ArticleController(ArticleServiceImpl articleService, UserRepository userRepository, UserService userService) {
         this.articleService = articleService;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
+    @ApiOperation(value = "게시글 작성", notes = "게시판 게시글을 작성한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "작성 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createArticle(ArticleRequestDto articleRequestDto) throws IOException {
+    public ResponseEntity<?> createArticle(@AuthenticationPrincipal String loginUser, ArticleRequestDto articleRequestDto) throws IOException {
 
         List<MultipartFile> multipartFiles = articleRequestDto.getImg();
         log.info("multipartFiles : {} ", multipartFiles);
-//        User user = userRepository.findByKakaoUserNumber(kakao).orElseThrow();
-        User user = userRepository.getOne(1);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         try {
             Integer articleId = articleService.createArticle(articleRequestDto, user);
@@ -45,13 +56,20 @@ public class ArticleController {
                 articleService.saveArticleImages(multipartFiles, articleId) ;
             }
         } catch (Exception e) {
-            log.info("exception: {}", e);
             log.info("exception: {}", e.getClass());
+            return ResponseEntity.status(500).body(ErrorMessage.of( 500, "Internal Server Error"));
+
         }
 
-        return ResponseEntity.status(201).body(new ArticleResponseDto("글 작성이 완료되었습니다."));
+        return ResponseEntity.status(200).body(ErrorMessage.of(200, "글 작성이 완료되었습니다."));
     }
 
+    @ApiOperation(value = "게시글 수정", notes = "게시판 게시글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "수정 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     @PutMapping(value ="/{article-id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateArticle(@PathVariable("article-id") Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) throws IOException {
 
@@ -70,23 +88,28 @@ public class ArticleController {
             articleService.updateArticle(articleId, articleUpdateRequestDto);
         } catch (Exception e) {
             log.info("exception: {}", e.getClass());
+            return ResponseEntity.status(500).body(ErrorMessage.of( 500, "Internal Server Error"));
         }
 
-        return ResponseEntity.status(200).body(new ArticleResponseDto("수정이 완료되었습니다."));
+        return ResponseEntity.status(200).body(ErrorMessage.of(200, "수정이 완료되었습니다."));
     }
 
+    @ApiOperation(value = "게시글 삭제", notes = "게시판 게시글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "삭제 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     @DeleteMapping("/{article-id}")
     public ResponseEntity<?> deleteArticle(@PathVariable("article-id") Integer articleId) throws IOException {
 
         try {
             articleService.deleteArticle(articleId);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            log.info(String.valueOf(e.getClass()));
-
-            return ResponseEntity.status(404).body(new ArticleResponseDto("게시글을 찾을 수 없습니다."));
+            log.info("exception: {}", e.getClass());
+            return ResponseEntity.status(500).body(ErrorMessage.of( 500, "Internal Server Error"));
         }
 
-        return ResponseEntity.status(200).body(new ArticleResponseDto("게시글이 삭제되었습니다."));
+        return ResponseEntity.status(200).body(ErrorMessage.of(200, "게시글이 삭제되었습니다."));
     }
 }
