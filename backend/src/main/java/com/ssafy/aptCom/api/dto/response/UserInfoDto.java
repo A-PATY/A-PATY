@@ -24,6 +24,8 @@ public class UserInfoDto {
 
     private String dongName;
 
+    private String riName;
+
     private String aptName;
 
     private String dong;
@@ -50,9 +52,10 @@ public class UserInfoDto {
             res.setUserId(user.getId());
             res.setNickname(user.getNickname());
             res.setCommunityList(UserCommunityDto.of(user.getUserCommunities()));
-            res.setSidoName(address.orElse(new BaseAddress(null, null, null)).getSidoName());
-            res.setGugunName(address.orElse(new BaseAddress(null, null, null)).getGugunName());
-            res.setDongName(address.orElse(new BaseAddress(null, null, null)).getDongName());
+            res.setSidoName(address.orElse(new BaseAddress(null, null, null, null)).getSidoName());
+            res.setGugunName(address.orElse(new BaseAddress(null, null, null, null)).getGugunName());
+            res.setDongName(address.orElse(new BaseAddress(null, null, null, null)).getDongName());
+            res.setRiName(address.orElse(new BaseAddress(null, null, null, null)).getRiName());
             res.setAptName(apt.orElse(new Apartment(null)).getAptName());
             res.setDong(user.getDong());
             res.setHo(user.getHo());

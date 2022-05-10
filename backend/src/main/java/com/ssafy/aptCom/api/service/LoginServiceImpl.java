@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,10 +24,12 @@ public class LoginServiceImpl implements LoginService {
     private String apiKey;
 
     @Override
-    public String getAccessToken(String accessCode) throws IOException {
+    public String getAccessToken(String accessCode, HttpServletRequest request) throws IOException {
 
         String reqURL = "https://kauth.kakao.com/oauth/token";
-        String redirectUrl = "http://localhost:3000/oauth/callback/kakao";
+//        String redirectUrl = "http://localhost:3000/oauth/callback/kakao";
+        String reqDomain = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        String redirectUrl = reqDomain + "/oauth/callback/kakao";
         String accessToken = "";
 
         try {
