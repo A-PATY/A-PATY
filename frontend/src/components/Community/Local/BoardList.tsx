@@ -5,10 +5,20 @@ import Board from './Board';
 import CategoryChips from './CategoryChips';
 
 interface Props {
-  communityId: number;
+  data: any;
+  fetchNextPage: () => void;
+  hasNextPage: any;
+  isFetching: any;
+  isFetchingNextPage: any;
 }
 
-const BoardList: React.FC<Props> = ({ communityId }) => {
+const BoardList: React.FC<Props> = ({
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetching,
+  isFetchingNextPage,
+}) => {
   return (
     <>
       <CategoryChipsWrapper>
@@ -16,7 +26,13 @@ const BoardList: React.FC<Props> = ({ communityId }) => {
       </CategoryChipsWrapper>
       <BoxCustom>
         <Container>
-          <Board />
+          <Board
+            data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetching={isFetching}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </Container>
       </BoxCustom>
     </>

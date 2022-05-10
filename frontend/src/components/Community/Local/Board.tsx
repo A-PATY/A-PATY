@@ -10,38 +10,52 @@ import BoardService from '../../../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
 
-const Board: React.FC = () => {
+interface Props {
+  data: any;
+  fetchNextPage: () => void;
+  hasNextPage: any;
+  isFetching: any;
+  isFetchingNextPage: any;
+}
+
+const Board: React.FC<Props> = ({
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetching,
+  isFetchingNextPage,
+}) => {
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
-  const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
-  const communityId = 367;
-  const categoryId = 1;
-  const keyword = '';
+  // const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
+  // const communityId = 367;
+  // const categoryId = 1;
+  // const keyword = '';
 
-  const fetchArticles = async ({ pageParam = 0 }) => {
-    const { articles } = await BoardService.getArticles(
-      communityId,
-      pageParam,
-      defaultPaginationSize,
-      categoryId,
-      keyword,
-    );
-    return {
-      result: articles,
-    };
-  };
+  // const fetchArticles = async ({ pageParam = 0 }) => {
+  //   const { articles } = await BoardService.getArticles(
+  //     communityId,
+  //     pageParam,
+  //     defaultPaginationSize,
+  //     categoryId,
+  //     keyword,
+  //   );
+  //   return {
+  //     result: articles,
+  //   };
+  // };
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
-    getNextPageParam: (lastPage) =>
-      lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
-  });
+  // const {
+  //   data,
+  //   error,
+  //   fetchNextPage,
+  //   hasNextPage,
+  //   isFetching,
+  //   isFetchingNextPage,
+  //   status,
+  // } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
+  //   getNextPageParam: (lastPage) =>
+  //     lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
+  // });
 
   const ObservationComponent = (): React.ReactElement => {
     const [ref, inView] = useInView();
@@ -58,14 +72,21 @@ const Board: React.FC = () => {
     return <div ref={ref} />;
   };
 
+  console.log('data.pages');
+  console.log(data?.pages);
+  data?.pages.map((group: article[], i: number) => {
+    console.log(i);
+    console.log(group);
+  });
+
   return (
     <>
       <Container id="Container">
         <Wrapper id="Wrapper">
           <>
-            {data?.pages.map((group, i) => (
+            {data?.pages.map((group: { result: article[] }, i: number) => (
               <React.Fragment key={i}>
-                {group.result.map((article) => {
+                {group.result.map((article: article) => {
                   return (
                     <ArticleWrapper key={article.articleId}>
                       <Category>

@@ -42,7 +42,7 @@ const AptCommunityPage: React.FC = () => {
     <>
       <Container>
         <BoardHeader communityId={AptCommunityId} />
-        <BoardList communityId={AptCommunityId} />
+        {/* <BoardList communityId={AptCommunityId} /> */}
       </Container>
       <Footer footerNumber={1} />
     </>

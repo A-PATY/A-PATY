@@ -5,6 +5,8 @@ import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
 import BoardHeader from '../components/Community/Local/BoardHeader';
 import { userInfoState } from '../features/Login/atom';
+import BoardService from '../services/BoardService';
+import { useInfiniteQuery } from 'react-query';
 
 const LocalCommunityPage: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState);
@@ -39,11 +41,48 @@ const LocalCommunityPage: React.FC = () => {
     document.title = '지역 커뮤니티';
   }, []);
 
+  // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
+  const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
+  const categoryId = 1;
+  const keyword = '';
+
+  const fetchArticles = async ({ pageParam = 0 }) => {
+    const { articles } = await BoardService.getArticles(
+      LocalCommunityId,
+      pageParam,
+      defaultPaginationSize,
+      categoryId,
+      keyword,
+    );
+    return {
+      result: articles,
+    };
+  };
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
+    getNextPageParam: (lastPage) =>
+      lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
+  });
+
   return (
     <>
       <Container>
         <BoardHeader communityId={LocalCommunityId} />
-        <BoardList communityId={LocalCommunityId} />
+        <BoardList
+          data={data}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+        />
       </Container>
       <Footer footerNumber={1} />
     </>
