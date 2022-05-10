@@ -26,4 +26,9 @@ public class Apartment {
     @JoinColumn(name = "base_address_id")
     private BaseAddress baseAddress;
 
+    @Builder
+    public Apartment(String aptName) {
+        this.aptName = aptName;
+    }
+
 }

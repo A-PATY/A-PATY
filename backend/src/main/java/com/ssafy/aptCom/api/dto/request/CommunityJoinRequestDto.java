@@ -20,7 +20,7 @@ public class CommunityJoinRequestDto {
     private MultipartFile image;
 
     @ApiModelProperty(value = "아파트 ID", example = "1")
-    private Apartment aptId;
+    private int aptId;
 
     @ApiModelProperty(value = "아파트 이름", example = "장미 아파트")
     private String aptName;
@@ -30,5 +30,8 @@ public class CommunityJoinRequestDto {
 
     @ApiModelProperty(value = "아파트 호", example = "101")
     private String ho;
+
+    @ApiModelProperty(value = "도로명 주소", example = "장미로 32")
+    private String doroJuso;
 
 }

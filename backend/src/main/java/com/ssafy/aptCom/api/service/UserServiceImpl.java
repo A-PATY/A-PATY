@@ -11,6 +11,7 @@ import com.ssafy.aptCom.db.repository.BaseAddressRepository;
 import com.ssafy.aptCom.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final AuthRepository authRepository;
+    @Autowired
+    private AuthRepository authRepository;
 
-    private final BaseAddressRepository baseAddressRepository;
+    @Autowired
+    private BaseAddressRepository baseAddressRepository;
 
-    private final TokenProvider tokenProvider;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Override
     public User getUserByKakaoUserNumber(String kakaoUserNumber) {
@@ -58,6 +63,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .kakaoUserNumber(kakaoNumber)
                 .roles("ROLE_USER")
+                .billStatus("미제출")
                 .build();
 
         return userRepository.save(user);
@@ -92,7 +98,7 @@ public class UserServiceImpl implements UserService {
     public void deleteAuth(User user) {
         Optional<Auth> auth = authRepository.findByUserId(user.getId());
 
-        authRepository.delete(auth);
+        authRepository.deleteById(auth.get().getId());
     }
 
     @Transactional

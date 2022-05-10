@@ -1,9 +1,10 @@
 package com.ssafy.aptCom.api.controller;
 
 import com.ssafy.aptCom.api.dto.request.CommunityJoinRequestDto;
-import com.ssafy.aptCom.api.dto.response.*;
+import com.ssafy.aptCom.api.dto.response.ApartmentListDto;
+import com.ssafy.aptCom.api.dto.response.ErrorMessage;
+import com.ssafy.aptCom.api.dto.response.SuccessMessage;
 import com.ssafy.aptCom.api.service.ApartmentService;
-import com.ssafy.aptCom.api.service.S3Uploader;
 import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.db.entity.Apartment;
 import com.ssafy.aptCom.db.entity.User;
@@ -36,9 +37,6 @@ public class CommunityController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    final S3Uploader s3Uploader;
 
     @GetMapping("")
     @ApiOperation(value = "아파트 커뮤니티 목록 조회", notes = "아파트 커뮤니티의 목록을 조회하고 반환")
@@ -75,10 +73,13 @@ public class CommunityController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> communityJoin(
-            @AuthenticationPrincipal String loginUser, CommunityJoinRequestDto communityJoinRequestDto) throws IOException {
+            @AuthenticationPrincipal String loginUser, CommunityJoinRequestDto communityJoinRequestDto) {
+
+        log.info("로그인 사용자: {}", loginUser);
+        User user = userService.getUserByKakaoUserNumber(loginUser);
 
         try {
-            apartmentService.saveNoticeImage(communityJoinRequestDto, loginUser);
+            apartmentService.saveNoticeImage(communityJoinRequestDto, loginUser, user);
         } catch (IOException e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));

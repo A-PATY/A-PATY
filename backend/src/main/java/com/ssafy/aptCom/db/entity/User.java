@@ -43,10 +43,10 @@ public class User {
     @Column(length = 25)
     private String nickname;
 
-    @Column(length = 25)
+    @Column(columnDefinition = "varchar(25) default NULL")
     private String dong;
 
-    @Column(length = 25)
+    @Column(columnDefinition = "varchar(25) default NULL")
     private String ho;
 
     @Column(columnDefinition = "boolean default false")
@@ -73,5 +73,8 @@ public class User {
     @OneToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     List<UserCommunity> userCommunities = new ArrayList<>();
+
+    @Column(length = 25)
+    private String billStatus;
 
 }

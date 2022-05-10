@@ -43,7 +43,7 @@ public class LoginController {
     @Autowired
     private TokenProvider tokenProvider;
 
-    @GetMapping("/log-in")
+    @PostMapping("/log-in")
     @ApiOperation(value = "소셜 로그인", notes = "클라이언트에서 Access Code를 받아서 소셜 API를 통해 회원정보를 확인하고 토큰 생성 및 유저 정보 반환")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -51,7 +51,7 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestParam String accessCode) throws IOException {
+            @RequestBody String accessCode) {
 
         boolean isNew;
         String[] tokens;
