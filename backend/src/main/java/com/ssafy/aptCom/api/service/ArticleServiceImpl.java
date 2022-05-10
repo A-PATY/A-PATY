@@ -142,8 +142,8 @@ public class ArticleServiceImpl implements ArticleService {
                 .contact(articleRequestDto.getContact())
                 .isDone(articleRequestDto.getIsDone())
                 .build();
-        articleRepository.save(article);
-        return article.getId();
+        Article savedArticle = articleRepository.save(article);
+        return savedArticle.getId();
     }
 
     public Article getArticle(Integer articleId) {
@@ -214,7 +214,8 @@ public class ArticleServiceImpl implements ArticleService {
     // 게시글 DELETE
     @Transactional
     @Override
-    public void deleteArticle(Integer articleId) {
+    public boolean deleteArticle(Integer articleId) {
         articleRepository.deleteById(articleId);
+        return true;
     }
 }

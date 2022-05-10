@@ -41,6 +41,6 @@ public interface ArticleService {
 
     boolean updateArticleViews(Article article);
 
-    void deleteArticle(Integer articleId);
+    boolean deleteArticle(Integer articleId);
 
 }
