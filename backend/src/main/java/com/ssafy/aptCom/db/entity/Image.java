@@ -20,7 +20,7 @@ public class Image {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @Column(length = 255)
+    @Column(length = 200)
     private String imgUrl;
 
 }
