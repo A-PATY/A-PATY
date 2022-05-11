@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         BaseAddress baseAddress = getAddress(signUpRequestDto.getAddress());
         ProfileImg profileImg = getProfileImg(signUpRequestDto.getProfileImgId());
 
-        user.setNickname(signUpRequestDto.getNickName());
+        user.setNickname(signUpRequestDto.getNickname());
         user.setProfileImg(profileImg);
         user.setBaseAddress(baseAddress);
 
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
     public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) {
 
         if (profileInfo.equals("nickname")) {
-            user.setNickname(userModifyRequestDto.getNickName());
+            user.setNickname(userModifyRequestDto.getNickname());
         } else if (profileInfo.equals("address")) {
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
