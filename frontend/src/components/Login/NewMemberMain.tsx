@@ -85,7 +85,14 @@ const NewMemberMain: React.FC = () => {
         setAddressName(response.documents[0].address_name);
         setAddressError(false);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        Swal.fire({
+          title: '위치 기반 주소 검색에 실패했습니다.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
   };
 
   const handleClose = () => {

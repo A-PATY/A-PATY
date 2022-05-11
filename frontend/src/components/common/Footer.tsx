@@ -64,6 +64,7 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
         icon={<ApartmentRoundedIcon />}
       />
       <BottomNavigationActionCustom
+        className="findFamily"
         label="가족찾기"
         icon={<PersonSearchRoundedIcon />}
       />
@@ -99,6 +100,10 @@ const BottomNavigationActionCustom = styled(BottomNavigationAction)`
 
     &.apt {
       color: #bae6e5;
+    }
+
+    &.findFamily {
+      color: #e4d2ee;
     }
   }
 `;
