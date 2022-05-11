@@ -21,7 +21,7 @@ public class ApartmentList {
         for (Apartment apartment : apartments) {
             ApartmentList apartmentList = new ApartmentList();
             apartmentList.setAptId(apartment.getId());
-            apartmentList.setAptName(apartmentList.getAptName());
+            apartmentList.setAptName(apartment.getAptName());
             res.add(apartmentList);
         }
 
