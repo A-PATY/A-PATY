@@ -137,8 +137,6 @@ const OfflineBadge = styled(Badge)`
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    /* animation: ripple 1.2s infinite ease-in-out;
-    border: 1px solid currentColor; */
     content: '""';
   }
   & .MuiBadge-badge {
@@ -151,6 +149,17 @@ const OfflineBadge = styled(Badge)`
   }
 `;
 
+const MemberInfo = styled.div`
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  & .MuiSvgIcon-root {
+    font-size: 20px;
+    margin-left: 5px;
+  }
+`;
+
 const MemberName = styled.h3`
   max-width: 120px;
   height: 20px;
@@ -159,18 +168,6 @@ const MemberName = styled.h3`
   font-weight: bold;
   color: #292929;
   white-space: nowrap;
-`;
-
-const MemberInfo = styled.div`
-  margin-left: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  & .MuiSvgIcon-root {
-    font-size: 20px;
-    /* color: #9e9d9d; */
-    margin-left: 5px;
-  }
 `;
 
 export default FamilyMember;

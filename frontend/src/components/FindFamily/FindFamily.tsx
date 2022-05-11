@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import FamilyService from '../../services/FamilyService';
 import FamilyMember from './FamilyMember';
 import { familyList, location } from '../../types/familyTypes';
-import { UserInfo } from '../../types/loginTypes'
+import { UserInfo } from '../../types/loginTypes';
 import styled from '@emotion/styled';
 import Slider from '@mui/material/Slider';
 import { motion } from 'framer-motion';
 
 import { firestore } from '../../firebase';
-import { getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 
@@ -36,7 +36,7 @@ const FindFamily: React.FC = () => {
   
   const [range, setRange] = useState<number>(100);
   const [familyList, setFamilyList] = useState<familyList[]>([]); 
-  const [familyAddress, setFamilyAddress] = useState<string>("");
+  // const [familyAddress, setFamilyAddress] = useState<string>("");
   const [familyId, setFamilyId] = useState<string>("");
   const [selectedMember, setSelectedMember] = useState<familyList>({
     userId: 0,  
@@ -44,39 +44,42 @@ const FindFamily: React.FC = () => {
     profileImgUrl: "",
     findFamily: true
   });
+
   const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 })
   const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
   
   const { kakao } = window as any;
   
   useEffect(() => {
-    console.log(userInfo?.userId)
     FamilyService.getFamilyList()
       .then((data) => {
+        const family = data.familyList;
+
         setFamilyId(data.familyId);
-        setFamilyAddress(data.familyAddress);
         setFamilyList(data.familyList);
+        // getMemberData();
+        // setFamilyAddress(data.familyAddress); 
+        // findAptLocation(data.familyAddress);
         
         if (userInfo !== null) {
-          console.log('접속 유저 확인',userInfo.userId)
-          setSelectedMember({ 
-            userId: userInfo.userId,
-            userName: userInfo.nickName,
-            profileImgUrl: "../img/image0.svg",  // data.profileImgUrl
-            findFamily: userInfo.findFamily
-          });
+          for (let i = 0; i < family.length; i++) {
+            if (family[i].userId === userInfo.userId) {
+              setSelectedMember({ 
+                userId: userInfo.userId,
+                userName: userInfo.nickName,
+                profileImgUrl: family[i].profileImgUrl,
+                findFamily: userInfo.findFamily
+              });
+              break;
+            }
+          }
         }
-        
-        findAptLocation(data.familyAddress);
-        // const docRef = doc(db, "families", data.familyId);
-        // getDoc(docRef).then(res => {
-        //   setFamilyAddress(res.get('doroJuso'));
-        //   console.log('apt 위치 찾기');
-        //   findAptLocation(res.get('doroJuso'));
-        // });
-      })
-      .then(() => {
-        getMemberData();
+
+        // 도로명 주소 사용 
+        const docRef = doc(firestore, "families", data.familyId);
+        getDoc(docRef).then(res => {
+          findAptLocation(res.get('doroJuso'));
+        });
       })
       .catch(err => console.log(err));
   }, []);
@@ -113,7 +116,6 @@ const FindFamily: React.FC = () => {
 
     const map = new kakao.maps.Map(container, options); 
 
-    // 반경 표시
     const circle = new kakao.maps.Circle({ 
       center: center,
       radius: range, 
@@ -122,7 +124,7 @@ const FindFamily: React.FC = () => {
       fillOpacity: 0.3 
     });
 
-    // 마커 표시 위치 
+    // 마커 표시 
     let markerPosition  = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);
     const marker = new kakao.maps.Marker({
       position: markerPosition,
@@ -130,14 +132,30 @@ const FindFamily: React.FC = () => {
 
     const distance = Math.round(getDistance(memberLocation.lat, memberLocation.lng, aptlat, aptlng));
     
-    if (distance <= range) marker.setMap(map);
+    // 커스텀 컨텐트
+    // const content = '<div class="customoverlay">' + 
+    // '<img src="http://www.urbanbrush.net/web/wp-content/uploads/edd/2017/11/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7-2017-11-02-%EC%98%A4%EC%A0%84-10.11.55.png" alt="profile" style="z-index: 1; width:50px; border-radius: 30px;"/>'+
+    // '</div>';
+
+    // 커스텀 오버레이가 표시될 위치입니다 
+    const position = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);  
+
+    if (distance <= range) {
+      marker.setMap(map);
+      // const customOverlay = new kakao.maps.CustomOverlay({
+      //   map: map,
+      //   position: position,
+      //   content: content,
+      //   yAnchor: 1 
+      // });
+    };
     map.setCenter(center);
     circle.setMap(map); 
   };
 
   const findAptLocation = (address: string) => {
     const geocoder = new kakao.maps.services.Geocoder();
-
+    
     geocoder.addressSearch(address, (result: any, status: string) => {
       if (status === kakao.maps.services.Status.OK) {
         setAptLocation({
@@ -155,8 +173,9 @@ const FindFamily: React.FC = () => {
       const docRef = doc(firestore, "families", familyId);
       const member = selectedMember.userId;
 
-      const snapshot = onSnapshot(docRef, (document) => { 
+      onSnapshot(docRef, (document) => { 
         const user = document.get(member.toString());
+        
         if (memberLocation.lat !== user.lat || memberLocation.lng !== user.lng) {
           setMemberLocation({ 
             lat: user.lat, 
@@ -170,7 +189,6 @@ const FindFamily: React.FC = () => {
   // geolocation 콜백함수 + firebase 좌표 등록
   const success = (position: any) => {
     const { latitude, longitude } = position.coords;
-    console.log('현재 위치', latitude, longitude)
     
     if (familyId) {
       const docRef = doc(firestore, "families", familyId);
@@ -186,9 +204,8 @@ const FindFamily: React.FC = () => {
   };
 
   const getDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => { 
-    const deg2rad = (deg: number) => { 
-      return deg * (Math.PI/180);
-    };
+    const deg2rad = (deg: number) => deg * (Math.PI/180);
+
     const R = 6371; // 지구 반지름
     const dLat = deg2rad(lat2-lat1); 
     const dLon = deg2rad(lng2-lng1); 
@@ -204,7 +221,7 @@ const FindFamily: React.FC = () => {
   return (
     <>
       <MapContainer id="map"/>
-      <motion.p 
+      <motion.div 
         drag="y"
         dragConstraints={{ top: 0, bottom: 180 }}
         style={{ zIndex: "1", marginTop: "90%" }}
@@ -230,10 +247,24 @@ const FindFamily: React.FC = () => {
             })
           }
         </FamilyListContainer>
-      </motion.p>
+      </motion.div>
     </>
   );
 };
+
+const CustomOverlay = styled.div`
+  position:relative;
+  bottom:85px;
+  border-radius:6px;
+  border: 1px solid #ccc;
+  border-bottom:2px solid #ddd;
+  float:left;
+`;
+// .customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+// .customoverlay a {display:block;text-decoration:none;color:#000;text-align:center;border-radius:6px;font-size:14px;font-weight:bold;overflow:hidden;background: #d95050;background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+// .customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
+// .customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+
 
 const MapContainer = styled.div`
   width: 100%;

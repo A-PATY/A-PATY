@@ -10,7 +10,6 @@ export const familyHandlers = [
       return response(
         context.json({
           familyId: "1-101-203",
-          familyAddress: "서울시 성동구 독서당로343",
           familyList: [
               { 
                 userId: 5,
