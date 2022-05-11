@@ -11,7 +11,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @ApiModel(value = "회원가입 입력 정보", description = "닉네임, 프로필 이미지 ID, 주소, 실명 등 회원 정보를 담는 클래스")
 public class SignUpRequestDto {
 
