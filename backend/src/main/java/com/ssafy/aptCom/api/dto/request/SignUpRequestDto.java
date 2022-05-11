@@ -15,7 +15,7 @@ import lombok.*;
 public class SignUpRequestDto {
 
     @ApiModelProperty(value = "닉네임", example = "장미")
-    private String nickName;
+    private String nickname;
 
     @ApiModelProperty(value = "프로필 이미지 ID", example = "1")
     private int profileImgId;
