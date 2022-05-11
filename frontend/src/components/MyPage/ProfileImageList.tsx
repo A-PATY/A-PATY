@@ -6,12 +6,14 @@ import Dialog from '@mui/material/Dialog';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import useProfileImageList from '../../hooks/useProfileImageList';
+import { profileImg } from '../../types/loginTypes';
 
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
   setProfileImgId: (value: number) => void;
   setProfileImgUrl: (value: string) => void;
+  itemData: profileImg[];
 }
 
 const ProfileImageList: React.FC<SimpleDialogProps> = ({
@@ -19,6 +21,7 @@ const ProfileImageList: React.FC<SimpleDialogProps> = ({
   onClose,
   setProfileImgId,
   setProfileImgUrl,
+  itemData,
 }) => {
   const handleImageListItemClick =
     (imgUrl: string) =>
@@ -28,8 +31,6 @@ const ProfileImageList: React.FC<SimpleDialogProps> = ({
       setProfileImgUrl(imgUrl);
       onClose();
     };
-
-  const itemData = useProfileImageList();
 
   return (
     <>

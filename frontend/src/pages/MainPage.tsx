@@ -1,7 +1,4 @@
 import { useEffect } from 'react';
-import Footer from '../components/common/Footer';
-import Header from '../components/common/Header';
-import MainHeader from '../components/Main/Header';
 import Main from '../components/Main/Main';
 
 const MainPage: React.FC = () => {

@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { ProfileImageList, userInfo } from './database/UserInfoDatabase';
 
-export const loginHandlers = [
+export const userHandlers = [
   rest.post(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/log-in`,
     async (request: any, response, context) => {
@@ -90,16 +90,16 @@ export const loginHandlers = [
   rest.post(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/sign-up`,
     async (request, response, context) => {
-      context.status(401);
+      // context.status(401);
 
-      return response(
-        context.status(401),
-        context.json({
-          status: 400,
-          success: false,
-          message: '입력값이 유효하지 않습니다.',
-        }),
-      );
+      // return response(
+      //   context.status(401),
+      //   context.json({
+      //     status: 400,
+      //     success: false,
+      //     message: '입력값이 유효하지 않습니다.',
+      //   }),
+      // );
 
       // return response(
       //   context.status(400),
@@ -110,11 +110,11 @@ export const loginHandlers = [
       //   }),
       // );
 
-      // return response(
-      //   context.json({
-      //     message: '회원가입이 완료되었습니다.',
-      //   }),
-      // );
+      return response(
+        context.json({
+          message: '회원가입이 완료되었습니다.',
+        }),
+      );
     },
   ),
 
@@ -124,6 +124,17 @@ export const loginHandlers = [
       return response(
         context.json({
           userInfo: userInfo,
+        }),
+      );
+    },
+  ),
+
+  rest.put(
+    `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/users/:profile`,
+    async (request, response, context) => {
+      return response(
+        context.json({
+          message: '회원 정보가 수정되었습니다.',
         }),
       );
     },
