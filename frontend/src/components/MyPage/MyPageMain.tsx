@@ -36,7 +36,16 @@ const MyPageMain: React.FC = () => {
   const [profileImgId, setProfileImgId] = useState<number>(-1);
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
+
+  useEffect(() => {
+    if (nickname === '') {
+      setNicknameError(true);
+    } else {
+      setNicknameError(false);
+    }
+  }, [nickname]);
 
   useEffect(() => {
     if (userInfo !== null) {
@@ -53,8 +62,44 @@ const MyPageMain: React.FC = () => {
           setProfileImgUrl(itemData[itemIndex].profileImgUrl);
         }
       }
+      setFindFamilyChecked(userInfo?.findFamily);
     }
   }, [itemData, userInfo]);
+
+  useEffect(() => {
+    if (profileImgId !== userInfo?.profileImgId) {
+      const profileImgIdFormData = new FormData();
+      profileImgIdFormData.append('profileImgId', profileImgId as any);
+      UserService.modifyUserInfo({
+        profileInfo: 'profileImgId',
+        data: profileImgIdFormData,
+      })
+        .then((response) => {})
+        .catch(({ message }) => {
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        })
+        .finally(() => {
+          UserService.getUserInfo()
+            .then(({ userInfo }) => {
+              setUserInfo(userInfo);
+            })
+            .catch(({ message }) => {
+              Swal.fire({
+                title: message,
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            });
+        });
+    }
+  }, [profileImgId, userInfo?.profileImgId]);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -78,9 +123,8 @@ const MyPageMain: React.FC = () => {
   const handleNicknameConfirmIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    setNicknameReadOnly(true);
-
-    if (nickname !== userInfo?.nickname) {
+    if (nickname !== userInfo?.nickname && !nicknameError) {
+      setNicknameReadOnly(true);
       const nicknameFormData = new FormData();
       nicknameFormData.append('nickname', nickname);
       UserService.modifyUserInfo({
@@ -116,7 +160,19 @@ const MyPageMain: React.FC = () => {
   const handleAddressModifyIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    setAddressReadOnly(false);
+    Swal.fire({
+      title: '주소 수정 시, 알림 사항 ',
+      text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
+      showDenyButton: true,
+      confirmButtonText: '수정하기',
+      denyButtonText: `취소하기`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setAddressReadOnly(false);
+      } else if (result.isDenied) {
+        setAddressReadOnly(true);
+      }
+    });
   };
 
   const handleAddressConfirmIconClick = (
@@ -159,12 +215,33 @@ const MyPageMain: React.FC = () => {
     }
   };
 
-  const handleTest = () => {
-    const testFormData = new FormData();
-    testFormData.append('findFamily', false as any);
+  const handleGpsIconClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    UserService.getUserAddress({ x, y })
+      .then((response) => {
+        setAddress(response.documents[0].code);
+        setAddressName(response.documents[0].address_name);
+        setAddressError(false);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: '위치 기반 주소 검색에 실패했습니다.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
+
+  const handleFindFamilySwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const findFamilyFormData = new FormData();
+    findFamilyFormData.append('findFamily', !findFamilyChecked as any);
     UserService.modifyUserInfo({
       profileInfo: 'findFamily',
-      data: testFormData,
+      data: findFamilyFormData,
     })
       .then((response) => {})
       .catch(({ message }) => {
@@ -174,57 +251,26 @@ const MyPageMain: React.FC = () => {
           showConfirmButton: false,
           timer: 2000,
         });
+      })
+      .finally(() => {
+        UserService.getUserInfo()
+          .then(({ userInfo }) => {
+            setUserInfo(userInfo);
+          })
+          .catch(({ message }) => {
+            Swal.fire({
+              title: message,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          });
       });
   };
+  console.log(findFamilyChecked);
   return (
     <>
       <Container>
-        {/* <ProfileWrapper>
-          <ImageWrapper>
-            <Image src="\img\sheep.png" />
-            <ModifyButton onClick={handleModifyButtonClick}>
-              <AutoFixHighIconCustom />
-            </ModifyButton>
-          </ImageWrapper>
-          <NicknameContainer>
-            <NicknameWrapper>
-              <Nickname>장미</Nickname>
-              <ModifyIcon />
-            </NicknameWrapper>
-          </NicknameContainer>
-        </ProfileWrapper> */}
-        {/* <AddressWrapper>
-          <BoxCustom>
-            <ImageWrapper>
-              <Image src="\img\sheep.png" />
-              <ModifyButton onClick={handleModifyButtonClick}>
-                <AutoFixHighIconCustom />
-              </ModifyButton>
-            </ImageWrapper>
-            <NicknameContainer>
-              <NicknameWrapper>
-                <Nickname>장미</Nickname>
-                <ModifyIcon />
-              </NicknameWrapper>
-            </NicknameContainer>
-            <AddressListWrapper>
-              <AddressValueWrapper>
-                <RoomRoundedIconCustom />
-                <AddressText>장미시 장미구 장미동</AddressText>
-                <ModifyIcon />
-              </AddressValueWrapper>
-            </AddressListWrapper>
-          </BoxCustom>
-        </AddressWrapper>
-        <ButtonsWrapper>
-          <ButtonCustom>
-            가족찾기 허용 <Switch {...label} />
-          </ButtonCustom>
-
-          <ButtonCustom>로그아웃</ButtonCustom>
-          <ButtonCustom>회원 탈퇴</ButtonCustom>
-        </ButtonsWrapper>
-         */}
         <Wrapper>
           <ImageWrapper>
             <Image src={profileImgUrl} />
@@ -249,7 +295,10 @@ const MyPageMain: React.FC = () => {
                         <ModifyIcon />
                       </GpsIconWrapper>
                     ) : (
-                      <GpsIconWrapper onClick={handleNicknameConfirmIconClick}>
+                      <GpsIconWrapper
+                        onClick={handleNicknameConfirmIconClick}
+                        className={nicknameError ? 'error' : undefined}
+                      >
                         <ConfirmIcon />
                       </GpsIconWrapper>
                     )}
@@ -278,7 +327,7 @@ const MyPageMain: React.FC = () => {
                       </GpsIconWrapper>
                     ) : (
                       <>
-                        <GpsIconWrapper>
+                        <GpsIconWrapper onClick={handleGpsIconClick}>
                           <GpsFixedRoundedIcon />
                         </GpsIconWrapper>
                         <GpsIconWrapper onClick={handleAddressConfirmIconClick}>
@@ -293,8 +342,14 @@ const MyPageMain: React.FC = () => {
           </StyledTextFieldWrapper>
 
           <StyledTextFieldWrapper>
-            <FindFamilyButton onClick={handleTest}>
-              가족찾기 허용 <Switch {...label} />
+            <FindFamilyButton>
+              가족 찾기{' '}
+              <Switch
+                {...label}
+                color="secondary"
+                checked={findFamilyChecked}
+                onChange={handleFindFamilySwitchChange}
+              />
             </FindFamilyButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
@@ -418,8 +473,14 @@ const GpsIconWrapper = styled.div`
   height: auto;
   width: auto;
   display: flex;
+  margin-left: 5px;
+
   &:hover {
     cursor: pointer;
+  }
+
+  &.error {
+    cursor: not-allowed;
   }
 `;
 
@@ -439,18 +500,20 @@ const SignUpButton = styled(Button)`
 `;
 
 const FindFamilyButton = styled(Button)`
-  justify-content: space-around;
-  background-color: #ffd0b6;
+  justify-content: space-between;
+  background-color: #e4d2ee;
   color: white;
   width: 250px;
   height: 50px;
   border-radius: 126px;
   font-family: 'MinSans-Regular';
+  padding: 16.5px 14px;
+  padding-right: 7px;
 
   &:hover {
     box-shadow: none;
     text-decoration: none;
-    background-color: #ffb2a9;
+    background-color: #e4d2ee;
   }
 `;
 
