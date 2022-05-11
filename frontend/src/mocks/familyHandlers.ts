@@ -14,16 +14,22 @@ export const familyHandlers = [
           familyList: [
               { 
                 userId: 5,
-                userName: "장미",
+                userName: "가족1",
                 profileImgUrl: "../img/image0.svg",
                 findFamily: true
               },
               {
                 userId: 6,
-                userName: "민들레",
+                userName: "가족2",
                 profileImgUrl: "../img/image0.svg",
                 findFamily: false
-              }
+              },
+              {
+                userId: 12,
+                userName: "유저(나)",
+                profileImgUrl: "../img/image0.svg",
+                findFamily: true
+              },
           ],
         }),
       );
