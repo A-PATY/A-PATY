@@ -1,6 +1,5 @@
 package com.ssafy.aptCom.api.dto.request;
 
-import com.ssafy.aptCom.db.entity.ProfileImg;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

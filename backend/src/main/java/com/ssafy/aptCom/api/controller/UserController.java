@@ -90,7 +90,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userModify(
-            @PathVariable final String profileInfo,
+            @PathVariable(value = "profile-info") String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
             @AuthenticationPrincipal final String loginUser) {
 
