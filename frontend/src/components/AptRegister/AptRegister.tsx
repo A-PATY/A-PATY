@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
@@ -13,9 +13,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import AptRegisterService from '../../services/AptRegisterService';
 import Swal from 'sweetalert2';
-import { doroJuso } from '../../types/aptRegisterTypes';
+import {
+  doroJuso,
+  kakaoMapSearchKeywordResponse,
+} from '../../types/aptRegisterTypes';
 
 interface Props {
   setAptId: (aptId: number) => void;
@@ -32,8 +34,69 @@ const AptRegister: React.FC<Props> = ({
   const aptList = useAptList();
   const [aptOpen, setAptOpen] = useState<boolean>(false);
   const [doroJusoList, setDoroJusoList] = useState<doroJuso[] | null>(null);
-
+  const [searchAptName, setSearchAptName] = useState<string>('');
   const handleOpen = () => setAptOpen(true);
+  const kakao = (window as any).kakao;
+  const ps = new kakao.maps.services.Places();
+
+  useEffect(() => {
+    if (searchAptName !== '') {
+      searchPlaces(searchAptName);
+    }
+  }, [searchAptName]);
+
+  const searchPlaces = (keyword: string) => {
+    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+      Swal.fire({
+        title: '아파트를 찾을 수 없습니다.',
+        text: '아파티 개발자에게 문의주세요.',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return false;
+    }
+
+    ps.keywordSearch(keyword, placesSearchCB);
+  };
+
+  const placesSearchCB = (
+    data: kakaoMapSearchKeywordResponse[],
+    status: string,
+    pagination: number,
+  ) => {
+    if (status === kakao.maps.services.Status.OK) {
+      let dataList: doroJuso[] = [];
+      data.forEach((one) => {
+        if (one.category_name === '부동산 > 주거시설 > 아파트') {
+          dataList.push({
+            id: one.id,
+            road_address_name: one.road_address_name,
+            name: one.place_name,
+          });
+        }
+      });
+      setDoroJusoList(dataList);
+    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+      Swal.fire({
+        title: '사용자 정보 주소 기반 아파트가 없습니다.',
+        text: `'내 정보' 에서 주소를 변경해주세요.`,
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
+      return;
+    } else if (status === kakao.maps.services.Status.ERROR) {
+      Swal.fire({
+        title: '검색 결과 중 오류가 발생했습니다.',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+  };
 
   const handleCustomMenuItemClick =
     (aptId: number) =>
@@ -42,25 +105,7 @@ const AptRegister: React.FC<Props> = ({
       setAptId(aptId);
       setAptName(aptName);
       setAptOpen(false);
-
-      AptRegisterService.getDoroJusoList({
-        confmKey: `${process.env.REACT_APP_DOROJUSO_KEY}`,
-        countPerPage: 10,
-        currentPage: 1,
-        keyword: `${userInfo?.sidoName}${userInfo?.gugunName}${userInfo?.dongName}${aptName}`,
-        resultType: 'json',
-      }).then(({ results }) => {
-        if (results.common.errorCode !== '0') {
-          Swal.fire({
-            title: results.common.errorMessage,
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000,
-          });
-        } else {
-          setDoroJusoList(results.juso);
-        }
-      });
+      setSearchAptName(aptName);
     };
 
   const handleListItemClick =
@@ -87,13 +132,15 @@ const AptRegister: React.FC<Props> = ({
               return (
                 <ListItem
                   disablePadding
-                  key={doroJuso.bdMgtSn}
+                  key={doroJuso.id}
                   onClick={(event) =>
-                    handleListItemClick(doroJuso.roadAddr)(event)
+                    handleListItemClick(doroJuso.road_address_name)(event)
                   }
                 >
                   <ListItemButton>
-                    <ListItemTextCustom>{doroJuso.roadAddr}</ListItemTextCustom>
+                    <ListItemTextCustom>
+                      {doroJuso.road_address_name + ' ' + doroJuso.name}
+                    </ListItemTextCustom>
                   </ListItemButton>
                 </ListItem>
               );
