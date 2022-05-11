@@ -6,11 +6,10 @@ import { UserInfo } from '../../types/loginTypes'
 import styled from '@emotion/styled';
 import Slider from '@mui/material/Slider';
 import { motion } from 'framer-motion';
-import { db, firebase } from '../../firebase';
-import { getDocs, updateDoc, setDoc, doc, onSnapshot, getDoc } from 'firebase/firestore';
-import { getDatabase, ref } from 'firebase/database'
 
-import { atom, selector, useRecoilValue, useRecoilState} from 'recoil';
+import { firestore } from '../../firebase';
+import { getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
+import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 
 
@@ -51,6 +50,7 @@ const FindFamily: React.FC = () => {
   const { kakao } = window as any;
   
   useEffect(() => {
+    console.log(userInfo?.userId)
     FamilyService.getFamilyList()
       .then((data) => {
         setFamilyId(data.familyId);
@@ -58,6 +58,7 @@ const FindFamily: React.FC = () => {
         setFamilyList(data.familyList);
         
         if (userInfo !== null) {
+          console.log('접속 유저 확인',userInfo.userId)
           setSelectedMember({ 
             userId: userInfo.userId,
             userName: userInfo.nickName,
@@ -95,7 +96,6 @@ const FindFamily: React.FC = () => {
   }, [memberLocation, range]);  
   
 
-  // 범위 range 변화 
   const valueLabelFormat = (value: number) => {
     const index = marks.findIndex((mark) => mark.value === value);
     setRange(marks[index].range);
@@ -152,7 +152,7 @@ const FindFamily: React.FC = () => {
   // firebase 불러오기 
   const getMemberData = async () => {
     if (familyId) {
-      const docRef = doc(db, "families", familyId);
+      const docRef = doc(firestore, "families", familyId);
       const member = selectedMember.userId;
 
       const snapshot = onSnapshot(docRef, (document) => { 
@@ -167,13 +167,13 @@ const FindFamily: React.FC = () => {
     }
   };
   
-  // geolocation 콜백함수 + firebase에 나의 좌표 등록하기 
+  // geolocation 콜백함수 + firebase 좌표 등록
   const success = (position: any) => {
     const { latitude, longitude } = position.coords;
     console.log('현재 위치', latitude, longitude)
     
     if (familyId) {
-      const docRef = doc(db, "families", familyId);
+      const docRef = doc(firestore, "families", familyId);
       if (userInfo !== null) {
         updateDoc(docRef, {
           [userInfo.userId]: {  

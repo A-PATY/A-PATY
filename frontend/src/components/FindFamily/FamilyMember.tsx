@@ -1,20 +1,72 @@
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
 import { memberProps } from '../../types/familyTypes';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocationOffIcon from '@mui/icons-material/LocationOff';
 
+import { db } from '../../firebase';
+import { ref, get, child, onChildChanged } from 'firebase/database';
+
+
 const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
+  const statusRef = ref(db, `/status/${member.userId}`);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  
+  useEffect(() => {
+    get(child(ref(db), `/status/${member.userId}/state`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        checkConnection(snapshot.val());
+      } else {
+        console.log("No data available");
+      };
+    }).catch(err => console.error(err));
+
+    onChildChanged(statusRef, (data) => {
+      checkConnection(data.val());
+    });
+  }, []);
+
+  const checkConnection = (value: string) => {
+    if (value === 'online') {
+      setIsConnected(true);
+    } else {
+      setIsConnected(false);
+    };
+  };
+
   return (
     <>
       <Container>
-        <AvatarCustom 
-          src={member.profileImgUrl} 
-          alt={member.userName} 
-          onClick={() => {changeMember(member)}}
-          style={{ cursor: member.findFamily ? "pointer" : "default" }}
-        />
+        {
+          isConnected ? 
+          <OnlineBadge 
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            variant="dot"
+          >
+            <AvatarCustom 
+              src={member.profileImgUrl} 
+              alt={member.userName} 
+              onClick={() => {changeMember(member)}}
+              style={{ cursor: member.findFamily ? "pointer" : "default" }}
+            />
+          </OnlineBadge> :
+          <OfflineBadge 
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            variant="dot"
+          >
+            <AvatarCustom 
+              src={member.profileImgUrl} 
+              alt={member.userName} 
+              onClick={() => {changeMember(member)}}
+              style={{ cursor: member.findFamily ? "pointer" : "default" }}
+            />
+          </OfflineBadge>
+        }
         <MemberInfo 
           onClick={() => {changeMember(member)}} 
           style={{ cursor: member.findFamily ? "pointer" : "default" }}
@@ -55,6 +107,48 @@ const Container = styled.div`
 const AvatarCustom = styled(Avatar)`
   width: 55px;
   height: 55px;
+`;
+
+const OnlineBadge = styled(Badge)`
+  & .MuiBadge-badge::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    content: '""';
+  }
+  & .MuiBadge-badge {
+    background-color: #44b700;
+    color: #44b700;
+    box-shadow: 0 0 0 1px #43b70049;
+    bottom: 21%;
+    min-width: 10px;
+    height: 10px
+  }
+`;
+
+const OfflineBadge = styled(Badge)`
+  & .MuiBadge-badge::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* animation: ripple 1.2s infinite ease-in-out;
+    border: 1px solid currentColor; */
+    content: '""';
+  }
+  & .MuiBadge-badge {
+    background-color: gray;
+    color: gray;
+    box-shadow: 0 0 0 1px lightgray;
+    bottom: 21%;
+    min-width: 10px;
+    height: 10px
+  }
 `;
 
 const MemberName = styled.h3`

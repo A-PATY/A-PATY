@@ -11,6 +11,9 @@ import { setCookie } from '../../hooks/Cookie';
 import { useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 
+import { db } from '../../firebase';
+import { ref, set, get, child, onValue, onDisconnect } from 'firebase/database';
+
 const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
   const href = window.location.href;
@@ -36,6 +39,18 @@ const KakaoCallbackMain: React.FC = () => {
           } else {
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
+
+              const connectRef = ref(db, '.info/connected');
+              onValue(connectRef, (snapshot) => {
+                if (snapshot.val() === true) {
+                  // firebase 저장하기 
+                  set(ref(db, `/status/${userInfo.userId}`), {
+                    state: 'online',
+                  });
+                }
+
+                onDisconnect(ref(db, `/status/${userInfo.userId}/state`)).set('offline') // 유저의 state를 offline으로 바굼
+              });
 
               Swal.fire({
                 title: '로그인하였습니다.',
