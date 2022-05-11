@@ -8,21 +8,26 @@ export const familyHandlers = [
     async (request: any, response, context) => {
       return response(
         context.json({
-          familyId: '1-101-203',
-          familyAddress: '서울시 성동구 독서당로343',
+          familyId: "1-101-203",
           familyList: [
-            {
-              userId: 5,
-              userName: '장미',
-              profileImgUrl: '../img/sheep.png',
-              findFamily: true,
-            },
-            {
-              userId: 6,
-              userName: '민들레',
-              profileImgUrl: '../img/cat.png',
-              findFamily: false,
-            },
+              { 
+                userId: 5,
+                userName: "가족1",
+                profileImgUrl: '../img/horse.png',
+                findFamily: true
+              },
+              {
+                userId: 6,
+                userName: "가족2",
+                profileImgUrl: '../img/cat.png',
+                findFamily: false
+              },
+              {
+                userId: 12,
+                userName: "유저(나)",
+                profileImgUrl: '../img/sheep.png',
+                findFamily: true
+              },
           ],
         }),
       );

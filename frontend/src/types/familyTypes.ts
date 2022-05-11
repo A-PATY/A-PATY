@@ -5,7 +5,7 @@ export interface memberProps {
     findFamily: boolean; 
     profileImgUrl: string;
   },
-  changeMember: (member: familyList) => void, // 아무것도 리턴하지 X
+  changeMember: (member: familyList) => void, 
 };
 
 export interface familyList {
