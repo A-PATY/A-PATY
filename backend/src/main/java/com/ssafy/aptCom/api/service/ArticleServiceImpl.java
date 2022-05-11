@@ -130,8 +130,12 @@ public class ArticleServiceImpl implements ArticleService {
         int randIdx2 = (int)((Math.random()) * nicks2.size());
         String randNick = nicks1.get(randIdx1) + " " + nicks2.get(randIdx2);
 
-        Community community = communityRepository.getOne(articleRequestDto.getCommunityId());
+        // getCommunityId() 0이면 null로 community 넣기(공지용)
+        Community community = null;
         Category category = categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory());
+        if (articleRequestDto.getCommunityId() != 0) {
+            community = communityRepository.getOne(articleRequestDto.getCommunityId());
+        }
         Article article = Article.builder()
                 .user(user)
                 .community(community)
