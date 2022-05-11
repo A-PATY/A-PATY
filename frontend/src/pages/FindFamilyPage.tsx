@@ -6,7 +6,7 @@ import Header from '../components/common/Header';
 
 const FindFamilyPage: React.FC = () => {
   useEffect(() => {
-    document.title = '게시글 상세 조회';
+    document.title = '가족 위치 찾기';
   }, []);
 
   return (
