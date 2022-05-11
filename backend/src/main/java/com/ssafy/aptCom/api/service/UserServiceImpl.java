@@ -132,16 +132,22 @@ public class UserServiceImpl implements UserService {
 
         if (profileInfo.equals("nickname")) {
             user.setNickname(userModifyRequestDto.getNickname());
+            userRepository.save(user);
         } else if (profileInfo.equals("address")) {
+            deleteUserCommunity(user);
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
+            userRepository.save(user);
+            userCommunitySave(userModifyRequestDto.getAddress(), user);
         } else if (profileInfo.equals("profileImgId")) {
             ProfileImg profileImg = getProfileImg(userModifyRequestDto.getProfileImgId());
             user.setProfileImg(profileImg);
+            userRepository.save(user);
         } else if (profileInfo.equals("findFamily")) {
             user.setFindFamily(userModifyRequestDto.isFindFamily());
+            userRepository.save(user);
         }
-        return userRepository.save(user);
+        return user;
     }
 
     @Transactional
@@ -152,4 +158,9 @@ public class UserServiceImpl implements UserService {
         return profileImgRepository.findById(profileImgId);
     }
 
+    @Transactional
+    public void deleteUserCommunity(User user) {
+        BaseAddress baseAddress = user.getBaseAddress();
+        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
+        userCommunityRepository.deleteByCommunity(community);}
 }
