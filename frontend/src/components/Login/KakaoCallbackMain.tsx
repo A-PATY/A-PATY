@@ -31,7 +31,7 @@ const KakaoCallbackMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            expires: new Date(Date.now() + 100 * 60),
+            expires: new Date(Date.now() + 100 * 60 * 60),
           });
 
           if (newMember) {
@@ -65,7 +65,12 @@ const KakaoCallbackMain: React.FC = () => {
         })
         .catch((error) => {
           const { message } = error;
-          alert(message);
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
         });
     }
   }, []);

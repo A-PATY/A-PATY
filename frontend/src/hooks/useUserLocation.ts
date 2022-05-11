@@ -5,8 +5,6 @@ const UserLocation = () => {
   const [x, setX] = useState<number>(0);
   const [y, setY] = useState<number>(0);
 
-  console.log(x);
-  console.log(y);
   useEffect(() => {
     const getLocation = () => {
       let lat: number, long: number;

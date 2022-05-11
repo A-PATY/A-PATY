@@ -14,20 +14,23 @@ export interface IssueTokenResponse {
 }
 
 export interface LogInResponse {
-  userInfo: UserInfo;
+  userInfo: UserInfo | null;
 }
 export interface UserInfo {
-  userId: number;
-  nickName: string;
-  communityList: community[];
-  sidoName: string;
-  gugunName: string;
-  dongName: string;
-  aptName: string | null;
-  dong: string | null;
-  ho: string | null;
-  profileImgId: number;
-  findFamily: boolean;
+  //회원가입 실패 후 소셜 로그인 했을 때
+  userId: number; // 얘는 정상적으로 반환
+  nickname: string; // null
+  communityList: community[]; // []
+  sidoName: string; // null
+  gugunName: string; //null
+  dongName: string; //null
+  aptName: string | null; //null
+  dong: string | null; //null
+  ho: string | null; //null
+  profileImgId: number; // 1
+  findFamily: boolean; // false
+  role: 'ROLE_USER' | 'ROLE_ADMIN'; // ROLE_USER
+  billStatus: '미제출' | '승인 대기중' | '반려' | '승인'; // 미제출
 }
 
 export interface community {
@@ -51,8 +54,13 @@ export interface xy {
 }
 
 export interface signUpRequest {
-  nickName: string;
+  nickname: string;
   profileImgId: number;
   address: string;
   name: string;
+}
+
+export interface modifyUserInfoRequest {
+  profileInfo: 'nickname' | 'address' | 'profileImgId' | 'findFamily';
+  data: FormData;
 }

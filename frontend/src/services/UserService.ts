@@ -1,7 +1,9 @@
+import { aptRegisterResponse } from '../types/aptRegisterTypes';
 import {
   IssueTokenResponse,
   LogInResponse,
   LoginResponse,
+  modifyUserInfoRequest,
   profileImgList,
   signUpRequest,
   xy,
@@ -12,7 +14,9 @@ class UserService {
   public static async getUserToken(accessCode: string) {
     const response = await axiosInstance.post<LoginResponse>(
       'api/v1/auth/users/log-in',
-      accessCode,
+      {
+        accessCode: accessCode,
+      },
     );
 
     return response.data;
@@ -43,8 +47,9 @@ class UserService {
   }
 
   public static async signUpRequest(data: signUpRequest) {
-    const response = await axiosInstance.post<profileImgList>(
+    const response = await axiosInstance.post<aptRegisterResponse>(
       '/api/v1/auth/users/sign-up',
+      data,
     );
 
     return response.data;
@@ -53,6 +58,15 @@ class UserService {
   public static async getUserInfo() {
     const response = await axiosInstance.get<LogInResponse>(
       '/api/v1/auth/users/user-info',
+    );
+
+    return response.data;
+  }
+
+  public static async modifyUserInfo(data: modifyUserInfoRequest) {
+    const response = await axiosInstance.put<aptRegisterResponse>(
+      `api/v1/users/${data.profileInfo}`,
+      data.data,
     );
 
     return response.data;
