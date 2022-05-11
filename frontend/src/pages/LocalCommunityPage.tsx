@@ -10,8 +10,8 @@ import { useInfiniteQuery } from 'react-query';
 
 const LocalCommunityPage: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState);
-  // console.log('userInfo : ');
-  // console.log(userInfo);
+  console.log('userInfo : ');
+  console.log(userInfo);
 
   // communityList를 userInfo에서 가져오는걸로 수정해야함
   const communityList = [
@@ -33,10 +33,10 @@ const LocalCommunityPage: React.FC = () => {
   ];
 
   // 공통 함수로 만들어도 될듯
-  const communityId = communityList.filter(
+  const LocalCommunityId = communityList.filter(
     (com) => com.communityType === '지역',
   )[0].communityId;
-  console.log(communityId);
+  console.log(LocalCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
@@ -45,7 +45,7 @@ const LocalCommunityPage: React.FC = () => {
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     const { articles } = await BoardService.getArticles(
-      communityId,
+      LocalCommunityId,
       pageParam,
       defaultPaginationSize,
       categoryId,
@@ -76,7 +76,7 @@ const LocalCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
-        <BoardHeader communityId={communityId} />
+        <BoardHeader communityId={LocalCommunityId} />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}
