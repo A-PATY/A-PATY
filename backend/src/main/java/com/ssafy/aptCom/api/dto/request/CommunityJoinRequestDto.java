@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @ApiModel(value = "회원 정보 수정", description = "닉네임, 프로필 이미지 ID, 주소, 가족찾기여부 등 회원 정보 수정과 관련된 클래스")
 public class CommunityJoinRequestDto {
 

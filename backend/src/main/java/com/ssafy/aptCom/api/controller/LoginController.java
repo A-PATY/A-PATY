@@ -53,14 +53,14 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestBody SocialLoginDto socialLoginDto, HttpServletRequest request) {
+            @RequestBody SocialLoginDto socialLoginDto) {
         log.info("access code: {}", socialLoginDto.getAccessCode());
         boolean isNew;
         String[] tokens;
         String accessCode = socialLoginDto.getAccessCode();
 
         try {
-            String accessToken = loginService.getAccessToken(accessCode, request);
+            String accessToken = loginService.getAccessToken(accessCode);
             HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
             String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
 
