@@ -135,10 +135,10 @@ public class UserServiceImpl implements UserService {
         } else if (profileInfo.equals("address")) {
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
-        } else if (profileInfo.equals("profile-img")) {
+        } else if (profileInfo.equals("profileImgId")) {
             ProfileImg profileImg = getProfileImg(userModifyRequestDto.getProfileImgId());
             user.setProfileImg(profileImg);
-        } else if (profileInfo.equals("find-family")) {
+        } else if (profileInfo.equals("findFamily")) {
             user.setFindFamily(userModifyRequestDto.isFindFamily());
         }
         return userRepository.save(user);
