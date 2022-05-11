@@ -19,6 +19,7 @@ import UserService from '../../services/UserService';
 import Swal from 'sweetalert2';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
 import UserLocation from '../../hooks/useUserLocation';
+import { useNavigate } from 'react-router-dom';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -38,7 +39,7 @@ const MyPageMain: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
-
+  let navigate = useNavigate();
   useEffect(() => {
     if (nickname === '') {
       setNicknameError(true);
@@ -67,7 +68,7 @@ const MyPageMain: React.FC = () => {
   }, [itemData, userInfo]);
 
   useEffect(() => {
-    if (profileImgId !== userInfo?.profileImgId) {
+    if (profileImgId !== userInfo?.profileImgId && profileImgId !== -1) {
       const profileImgIdFormData = new FormData();
       profileImgIdFormData.append('profileImgId', profileImgId as any);
       UserService.modifyUserInfo({
@@ -267,7 +268,30 @@ const MyPageMain: React.FC = () => {
           });
       });
   };
-  console.log(findFamilyChecked);
+
+  const handleDeleteButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    UserService.deleteUser()
+      .then(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        navigate('/');
+      })
+      .catch(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
+
   return (
     <>
       <Container>
@@ -353,10 +377,12 @@ const MyPageMain: React.FC = () => {
             </FindFamilyButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
-            <SignUpButton>로그아웃</SignUpButton>
+            <LogOutButton>로그아웃</LogOutButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
-            <SignUpButton>탈퇴하기</SignUpButton>
+            <DeleteButton onClick={handleDeleteButtonClick}>
+              탈퇴하기
+            </DeleteButton>
           </StyledTextFieldWrapper>
         </Wrapper>
       </Container>
@@ -484,7 +510,22 @@ const GpsIconWrapper = styled.div`
   }
 `;
 
-const SignUpButton = styled(Button)`
+const LogOutButton = styled(Button)`
+  background-color: #ffd0b6;
+  color: white;
+  width: 250px;
+  height: 50px;
+  border-radius: 126px;
+  font-family: 'MinSans-Regular';
+
+  &:hover {
+    box-shadow: none;
+    text-decoration: none;
+    background-color: #ffb2a9;
+  }
+`;
+
+const DeleteButton = styled(Button)`
   background-color: #ffd0b6;
   color: white;
   width: 250px;
@@ -517,56 +558,6 @@ const FindFamilyButton = styled(Button)`
   }
 `;
 
-const ProfileWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20% 5% 5%;
-`;
-// const ImageWrapper = styled.div`
-//   position: relative;
-// `;
-
-// const Image = styled.img`
-//   width: 60px;
-// `;
-
-// const ModifyButton = styled(IconButton)`
-//   position: absolute;
-//   border-radius: 20px;
-//   background-color: white;
-//   bottom: 0px;
-//   left: 45px;
-//   width: 25px;
-//   height: 25px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   box-shadow: rgb(0 0 0 / 16%) 0px 3px 6px, rgb(0 0 0 / 23%) 0px 3px 6px;
-// `;
-
-// const AutoFixHighIconCustom = styled(BorderColorRoundedIcon)`
-//   font-size: 12px;
-// `;
-
-// const NicknameContainer = styled.div`
-//   margin: 0px 0px 0px 24px;
-//   display: flex;
-//   flex-direction: column;
-// `;
-
-const NicknameWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Nickname = styled.p`
-  //수정 시 input으로 변환
-  font-size: 15px;
-`;
-
 const ModifyIcon = styled(CreateRoundedIcon)`
   color: #8c8888;
 `;
@@ -575,63 +566,4 @@ const ConfirmIcon = styled(CheckRoundedIcon)`
   color: #8c8888;
 `;
 
-const AddressWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const BoxCustom = styled(Box)`
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const AddressListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const AddressValueWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const RoomRoundedIconCustom = styled(RoomRoundedIcon)`
-  color: #8c8888;
-  height: 20px;
-  opacity: 0.8;
-  width: 20px;
-`;
-
-const AddressText = styled.p`
-  margin: 0px 0px 0px 16px;
-`;
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  -webkit-box-align: center;
-  align-items: center;
-`;
-
-const ButtonCustom = styled(Button)`
-  background-color: #ffd0b6;
-  margin: 10px 0px 0px;
-  box-shadow: none;
-  color: white;
-  width: 300px;
-  min-height: 56px;
-  border-radius: 126px;
-
-  &:hover {
-    box-shadow: none;
-    text-decoration: none;
-    background-color: #ffb2a9;
-  }
-`;
 export default MyPageMain;

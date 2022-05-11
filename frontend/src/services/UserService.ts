@@ -71,6 +71,14 @@ class UserService {
 
     return response.data;
   }
+
+  public static async deleteUser() {
+    const response = await axiosInstance.delete<aptRegisterResponse>(
+      `api/v1/users`,
+    );
+
+    return response.data;
+  }
 }
 
 export default UserService;
