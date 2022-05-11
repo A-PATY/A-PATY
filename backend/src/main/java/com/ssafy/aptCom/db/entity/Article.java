@@ -24,6 +24,7 @@ public class Article extends BaseTimeEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Nullable
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
     private Community community;
