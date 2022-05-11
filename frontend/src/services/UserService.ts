@@ -3,6 +3,7 @@ import {
   IssueTokenResponse,
   LogInResponse,
   LoginResponse,
+  modifyUserInfoRequest,
   profileImgList,
   signUpRequest,
   xy,
@@ -57,6 +58,15 @@ class UserService {
   public static async getUserInfo() {
     const response = await axiosInstance.get<LogInResponse>(
       '/api/v1/auth/users/user-info',
+    );
+
+    return response.data;
+  }
+
+  public static async modifyUserInfo(data: modifyUserInfoRequest) {
+    const response = await axiosInstance.put<aptRegisterResponse>(
+      `api/v1/users/${data.profileInfo}`,
+      data.value,
     );
 
     return response.data;

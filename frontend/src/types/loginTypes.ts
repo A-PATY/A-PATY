@@ -59,3 +59,8 @@ export interface signUpRequest {
   address: string;
   name: string;
 }
+
+export interface modifyUserInfoRequest {
+  profileInfo: 'nickname' | 'address' | 'profileImgId' | 'findFamily';
+  value: boolean | number | string;
+}
