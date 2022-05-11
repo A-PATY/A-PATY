@@ -2,8 +2,6 @@ package com.ssafy.aptCom.api.service;
 
 import com.ssafy.aptCom.api.dto.request.ArticleRequestDto;
 import com.ssafy.aptCom.db.entity.Article;
-import com.ssafy.aptCom.db.entity.Category;
-import com.ssafy.aptCom.db.entity.Community;
 import com.ssafy.aptCom.db.entity.User;
 import com.ssafy.aptCom.db.repository.ArticleRepository;
 import com.ssafy.aptCom.db.repository.CategoryRepository;
@@ -22,11 +20,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -57,22 +56,6 @@ class ArticleServiceImplTest {
     void createArticle() {
 
         // given
-        final Community community =
-                Community.builder()
-                        .communityCode("1")
-                        .communityType("잡담")
-                        .communityType2("안부")
-                        .build();
-
-        communityRepository.save(community);
-
-        final Category category =
-                Category.builder()
-                        .categoryName("잡담")
-                        .build();
-
-        categoryRepository.save(category);
-
         final User user =
                 User.builder()
                         .nickname("nick")
@@ -102,6 +85,8 @@ class ArticleServiceImplTest {
                         .id(1)
                         .title(articleRequestDto.getTitle())
                         .contents(articleRequestDto.getContents())
+                        .community(communityRepository.getOne(articleRequestDto.getCommunityId()))
+                        .category(categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory()))
                         .user(user)
                         .build();
 
@@ -109,31 +94,18 @@ class ArticleServiceImplTest {
 
         // when
         final int id = articleService.createArticle(articleRequestDto, user);
+
         // then
         assertEquals(1, id);
+        verify(articleRepository, times(1)).save(any(Article.class));
+
     }
 
     @Test
     @DisplayName("delete 테스트")
     void deleteArticle() {
 
-        // given
-        final Community community =
-                Community.builder()
-                        .communityCode("1")
-                        .communityType("잡담")
-                        .communityType2("안부")
-                        .build();
-
-        communityRepository.save(community);
-
-        final Category category =
-                Category.builder()
-                        .categoryName("잡담")
-                        .build();
-
-        categoryRepository.save(category);
-
+        //given
         final User user =
                 User.builder()
                         .nickname("nick")
@@ -163,19 +135,20 @@ class ArticleServiceImplTest {
                         .id(1)
                         .title(articleRequestDto.getTitle())
                         .contents(articleRequestDto.getContents())
+                        .community(communityRepository.getOne(articleRequestDto.getCommunityId()))
+                        .category(categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory()))
                         .user(user)
                         .build();
 
         doReturn(article).when(articleRepository).save(any(Article.class));
-        doNothing().when(articleRepository).deleteById(1);
 
         // when
         final int id = articleService.createArticle(articleRequestDto, user);
-        final boolean result = articleService.deleteArticle(1);
+        final boolean result = articleService.deleteArticle(id);
 
         // then
         assertEquals(1, id);
-        assertEquals(true, result);
+        assertTrue(result);
 
     }
 }

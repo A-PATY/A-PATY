@@ -59,11 +59,11 @@ public class Article extends BaseTimeEntity{
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Image> images = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Comment> comments = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "article_id", referencedColumnName = "id")
     List<Likes> likes = new ArrayList<>();
 

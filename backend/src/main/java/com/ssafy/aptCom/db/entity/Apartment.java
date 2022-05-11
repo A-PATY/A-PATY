@@ -19,7 +19,7 @@ public class Apartment {
     @Column(length = 25)
     private String aptCode;
 
-    @Column(length = 25)
+    @Column(length = 50)
     private String aptName;
 
     @ManyToOne(targetEntity = BaseAddress.class, fetch = FetchType.EAGER)
