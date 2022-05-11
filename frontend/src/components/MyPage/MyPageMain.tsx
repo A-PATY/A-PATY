@@ -18,6 +18,7 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import UserService from '../../services/UserService';
 import Swal from 'sweetalert2';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
+import UserLocation from '../../hooks/useUserLocation';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -35,10 +36,11 @@ const MyPageMain: React.FC = () => {
   const [profileImgId, setProfileImgId] = useState<number>(-1);
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
+  let { x, y } = UserLocation();
 
   useEffect(() => {
     if (userInfo !== null) {
-      setNickname(userInfo.nickName);
+      setNickname(userInfo.nickname);
       setAddressName(
         `${userInfo.sidoName} ${userInfo.gugunName} ${userInfo.dongName}`,
       );
@@ -78,9 +80,23 @@ const MyPageMain: React.FC = () => {
   ) => {
     setNicknameReadOnly(true);
 
-    if (nickname !== userInfo?.nickName) {
-      UserService.modifyUserInfo({ profileInfo: 'nickname', value: nickname })
-        .then((response) => {
+    if (nickname !== userInfo?.nickname) {
+      const nicknameFormData = new FormData();
+      nicknameFormData.append('nickname', nickname);
+      UserService.modifyUserInfo({
+        profileInfo: 'nickname',
+        data: nicknameFormData,
+      })
+        .then((response) => {})
+        .catch(({ message }) => {
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        })
+        .finally(() => {
           UserService.getUserInfo()
             .then(({ userInfo }) => {
               setUserInfo(userInfo);
@@ -93,14 +109,6 @@ const MyPageMain: React.FC = () => {
                 timer: 2000,
               });
             });
-        })
-        .catch(({ message }) => {
-          Swal.fire({
-            title: message,
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000,
-          });
         });
     }
   };
@@ -120,7 +128,12 @@ const MyPageMain: React.FC = () => {
       addressName !==
       `${userInfo?.sidoName} ${userInfo?.gugunName} ${userInfo?.dongName}`
     ) {
-      UserService.modifyUserInfo({ profileInfo: 'address', value: address })
+      const addressFormData = new FormData();
+      addressFormData.append('address', address);
+      UserService.modifyUserInfo({
+        profileInfo: 'address',
+        data: addressFormData,
+      })
         .then((response) => {
           UserService.getUserInfo()
             .then(({ userInfo }) => {
@@ -146,6 +159,23 @@ const MyPageMain: React.FC = () => {
     }
   };
 
+  const handleTest = () => {
+    const testFormData = new FormData();
+    testFormData.append('findFamily', false as any);
+    UserService.modifyUserInfo({
+      profileInfo: 'findFamily',
+      data: testFormData,
+    })
+      .then((response) => {})
+      .catch(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
   return (
     <>
       <Container>
@@ -247,9 +277,14 @@ const MyPageMain: React.FC = () => {
                         <ModifyIcon />
                       </GpsIconWrapper>
                     ) : (
-                      <GpsIconWrapper onClick={handleAddressConfirmIconClick}>
-                        <GpsFixedRoundedIcon />
-                      </GpsIconWrapper>
+                      <>
+                        <GpsIconWrapper>
+                          <GpsFixedRoundedIcon />
+                        </GpsIconWrapper>
+                        <GpsIconWrapper onClick={handleAddressConfirmIconClick}>
+                          <ConfirmIcon />
+                        </GpsIconWrapper>
+                      </>
                     )}
                   </InputAdornment>
                 ),
@@ -258,7 +293,7 @@ const MyPageMain: React.FC = () => {
           </StyledTextFieldWrapper>
 
           <StyledTextFieldWrapper>
-            <FindFamilyButton>
+            <FindFamilyButton onClick={handleTest}>
               가족찾기 허용 <Switch {...label} />
             </FindFamilyButton>
           </StyledTextFieldWrapper>

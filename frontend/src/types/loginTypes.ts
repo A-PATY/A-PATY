@@ -19,7 +19,7 @@ export interface LogInResponse {
 export interface UserInfo {
   //회원가입 실패 후 소셜 로그인 했을 때
   userId: number; // 얘는 정상적으로 반환
-  nickName: string; // null
+  nickname: string; // null
   communityList: community[]; // []
   sidoName: string; // null
   gugunName: string; //null
@@ -54,7 +54,7 @@ export interface xy {
 }
 
 export interface signUpRequest {
-  nickName: string;
+  nickname: string;
   profileImgId: number;
   address: string;
   name: string;
@@ -62,5 +62,5 @@ export interface signUpRequest {
 
 export interface modifyUserInfoRequest {
   profileInfo: 'nickname' | 'address' | 'profileImgId' | 'findFamily';
-  value: boolean | number | string;
+  data: FormData;
 }

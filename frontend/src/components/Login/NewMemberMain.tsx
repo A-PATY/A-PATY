@@ -102,7 +102,7 @@ const NewMemberMain: React.FC = () => {
     if (!nameError && !nicknameError && !addressError) {
       UserService.signUpRequest({
         address: address,
-        nickName: nickname,
+        nickname: nickname,
         name: name,
         profileImgId: profileImgId,
       })

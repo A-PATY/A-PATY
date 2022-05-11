@@ -66,7 +66,7 @@ class UserService {
   public static async modifyUserInfo(data: modifyUserInfoRequest) {
     const response = await axiosInstance.put<aptRegisterResponse>(
       `api/v1/users/${data.profileInfo}`,
-      data.value,
+      data.data,
     );
 
     return response.data;
