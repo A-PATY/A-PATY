@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
@@ -10,8 +10,8 @@ import { useInfiniteQuery } from 'react-query';
 
 const LocalCommunityPage: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo');
-  console.log(userInfo);
+  // console.log('userInfo : ');
+  // console.log(userInfo);
 
   // communityList를 userInfo에서 가져오는걸로 수정해야함
   const communityList = [
@@ -32,23 +32,20 @@ const LocalCommunityPage: React.FC = () => {
     },
   ];
 
-  const LocalCommunityId = communityList.filter(
-    (com) => com.communityType === '지역' && com.communityType2 === '전체',
+  // 공통 함수로 만들어도 될듯
+  const communityId = communityList.filter(
+    (com) => com.communityType === '지역',
   )[0].communityId;
-  console.log(LocalCommunityId);
-
-  useEffect(() => {
-    document.title = '지역 커뮤니티';
-  }, []);
+  console.log(communityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
-  const categoryId = 1;
+  const [categoryId, setCategoryId] = useState<number>(0);
   const keyword = '';
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     const { articles } = await BoardService.getArticles(
-      LocalCommunityId,
+      communityId,
       pageParam,
       defaultPaginationSize,
       categoryId,
@@ -72,11 +69,17 @@ const LocalCommunityPage: React.FC = () => {
       lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
   });
 
+  useEffect(() => {
+    document.title = '지역 커뮤니티';
+  }, []);
+
   return (
     <>
       <Container>
-        <BoardHeader communityId={LocalCommunityId} />
+        <BoardHeader communityId={communityId} />
         <BoardList
+          categoryId={categoryId}
+          setCategoryId={setCategoryId}
           data={data}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}

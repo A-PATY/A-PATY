@@ -8,7 +8,13 @@ interface ChipData {
   label: string;
 }
 
-const CategoryChips = () => {
+interface Props {
+  categoryId: number;
+
+  setCategoryId: (value: number) => void;
+}
+
+const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   const [chipData, setChipData] = React.useState<readonly ChipData[]>([
     { key: 0, label: '전체' },
     { key: 1, label: '일상' },
@@ -19,6 +25,12 @@ const CategoryChips = () => {
     { key: 6, label: '공구' },
     { key: 7, label: '후기' },
   ]);
+
+  const handleCategoryClick = (categoryId: number) => {
+    console.log('categoryId');
+    console.log(categoryId);
+    setCategoryId(categoryId);
+  };
 
   return (
     <PaperCustom
@@ -34,8 +46,22 @@ const CategoryChips = () => {
     >
       {chipData.map((data) => {
         return (
-          <ListItem key={data.key}>
-            <Chip label={data.label} />
+          <ListItem
+            key={data.key}
+            onClick={() => handleCategoryClick(data.key)}
+          >
+            <Chip
+              label={data.label}
+              style={
+                data.key === categoryId
+                  ? {
+                      background: '#e4d2ee',
+                      fontWeight: 'bold',
+                      // boxShadow: '2px 2px 5px 1px grey',
+                    }
+                  : {}
+              }
+            />
           </ListItem>
         );
       })}
@@ -63,6 +89,7 @@ const PaperCustom = styled(Paper)`
 
 const ListItem = styled.li`
   margin: 3px;
+  cursor: pointer;
 `;
 
 export default CategoryChips;

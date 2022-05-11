@@ -5,6 +5,8 @@ import Board from './Board';
 import CategoryChips from './CategoryChips';
 
 interface Props {
+  categoryId: number;
+  setCategoryId: (value: number) => void;
   data: any;
   fetchNextPage: () => void;
   hasNextPage: any;
@@ -13,6 +15,8 @@ interface Props {
 }
 
 const BoardList: React.FC<Props> = ({
+  categoryId,
+  setCategoryId,
   data,
   fetchNextPage,
   hasNextPage,
@@ -22,7 +26,7 @@ const BoardList: React.FC<Props> = ({
   return (
     <>
       <CategoryChipsWrapper>
-        <CategoryChips />
+        <CategoryChips categoryId={categoryId} setCategoryId={setCategoryId} />
       </CategoryChipsWrapper>
       <BoxCustom>
         <Container>

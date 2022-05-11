@@ -44,7 +44,7 @@ const AptAnonyCommunityPage: React.FC = () => {
         <BoardHeader communityId={AptAnonyCommunityId} />
         {/* <BoardList communityId={AptAnonyCommunityId} /> */}
       </Container>
-      <Footer footerNumber={1} />
+      <Footer footerNumber={2} />
     </>
   );
 };
