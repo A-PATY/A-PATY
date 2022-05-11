@@ -11,12 +11,13 @@ import UserService from '../../services/UserService';
 import UserLocation from '../../hooks/useUserLocation';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import useProfileImageList from '../../hooks/useProfileImageList';
 
 const NewMemberMain: React.FC = () => {
+  const itemData = useProfileImageList();
   const [showError, setShowError] = useState<boolean>(false);
-  const [profileImgId, setProfileImgId] = useState<number>(1);
-  const [profileImgUrl, setProfileImgUrl] =
-    useState<string>('\\img\\sheep.png');
+  const [profileImgId, setProfileImgId] = useState<number>(-1);
+  const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
@@ -27,6 +28,13 @@ const NewMemberMain: React.FC = () => {
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
   let { x, y } = UserLocation();
+
+  useEffect(() => {
+    if (itemData !== undefined) {
+      setProfileImgId(itemData[0].profileImgId);
+      setProfileImgUrl(itemData[0].profileImgUrl);
+    }
+  }, [itemData]);
 
   useEffect(() => {
     if (name === '') {
@@ -73,7 +81,6 @@ const NewMemberMain: React.FC = () => {
   ) => {
     UserService.getUserAddress({ x, y })
       .then((response) => {
-        console.log(response);
         setAddress(response.documents[0].code);
         setAddressName(response.documents[0].address_name);
         setAddressError(false);
@@ -95,7 +102,7 @@ const NewMemberMain: React.FC = () => {
     if (!nameError && !nicknameError && !addressError) {
       UserService.signUpRequest({
         address: address,
-        nickName: nickname,
+        nickname: nickname,
         name: name,
         profileImgId: profileImgId,
       })
@@ -182,12 +189,15 @@ const NewMemberMain: React.FC = () => {
           </Wrapper>
         </FormWrapper>
       </Container>
-      <ProfileImageList
-        open={open}
-        onClose={handleClose}
-        setProfileImgId={setProfileImgId}
-        setProfileImgUrl={setProfileImgUrl}
-      />
+      {itemData !== undefined ? (
+        <ProfileImageList
+          open={open}
+          onClose={handleClose}
+          setProfileImgId={setProfileImgId}
+          setProfileImgUrl={setProfileImgUrl}
+          itemData={itemData}
+        />
+      ) : undefined}
     </>
   );
 };
@@ -202,7 +212,7 @@ const Container = styled.div`
 `;
 
 const FormWrapper = styled.form`
-  height: 100%;
+  // height: 100%;
 `;
 
 const Wrapper = styled.div`
