@@ -63,7 +63,7 @@ const FindFamily: React.FC = () => {
             if (family[i].userId === userInfo.userId) {
               setSelectedMember({ 
                 userId: userInfo.userId,
-                userName: userInfo.nickName,
+                userName: family[i].userName,
                 profileImgUrl: family[i].profileImgUrl,
                 findFamily: userInfo.findFamily
               });
@@ -142,7 +142,9 @@ const FindFamily: React.FC = () => {
     const position = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);  
 
     if (distance <= range) {
-      marker.setMap(map);
+      if (memberLocation.lat && memberLocation.lng) {
+        marker.setMap(map);
+      };
       // const customOverlay = new kakao.maps.CustomOverlay({
       //   map: map,
       //   position: position,

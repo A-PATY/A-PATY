@@ -13,7 +13,7 @@ export const familyHandlers = [
               { 
                 userId: 5,
                 userName: "가족1",
-                profileImgUrl: '../img/sheep.png',
+                profileImgUrl: '../img/horse.png',
                 findFamily: true
               },
               {

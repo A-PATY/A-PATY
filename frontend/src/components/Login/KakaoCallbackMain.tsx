@@ -44,12 +44,12 @@ const KakaoCallbackMain: React.FC = () => {
               onValue(connectRef, (snapshot) => {
                 if (snapshot.val() === true) {
                   // firebase 저장하기 
-                  set(ref(db, `/status/${userInfo.userId}`), {
+                  set(ref(db, `/status/${userInfo?.userId}`), {
                     state: 'online',
                   });
                 }
 
-                onDisconnect(ref(db, `/status/${userInfo.userId}/state`)).set('offline') // 유저의 state를 offline으로 바굼
+                onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set('offline')  // offline
               });
 
               Swal.fire({
