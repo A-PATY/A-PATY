@@ -1,6 +1,5 @@
 package com.ssafy.aptCom.api.dto.request;
 
-import com.ssafy.aptCom.db.entity.ProfileImg;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -14,7 +13,7 @@ import lombok.*;
 public class UserModifyRequestDto {
 
     @ApiModelProperty(value = "닉네임", example = "장미")
-    private String nickName;
+    private String nickname;
 
     @ApiModelProperty(value = "프로필 이미지 ID", example = "1")
     private int profileImgId;
