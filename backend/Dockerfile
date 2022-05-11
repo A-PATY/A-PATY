@@ -11,7 +11,7 @@ RUN chmod +x ./gradlew
 RUN chmod +x ./gradle
 
 RUN ./gradlew clean
-RUN ./gradlew build
+RUN ./gradlew build -x test
 
 FROM openjdk:11
 ARG JAR_FILE=build/libs/.jar
