@@ -67,7 +67,7 @@ const AptAnonyCommunityPage: React.FC = () => {
           isFetchingNextPage={isFetchingNextPage}
         />
       </Container>
-      <Footer footerNumber={2} />
+      <Footer footerNumber={-1} />
     </>
   );
 };

@@ -4,7 +4,9 @@ import React from 'react';
 
 class BoardService {
   public static async getCategoryList() {
-    const response = await axiosInstance.get(`/api/v1/category-list`);
+    const response = await axiosInstance.get(
+      `/api/v1/auth/users/category-list`,
+    );
     return response.data;
   }
 
@@ -20,7 +22,7 @@ class BoardService {
         communityId: communityId,
         lastArticleId: lastArticleId,
         size: size,
-        category: categoryId,
+        categoryId: categoryId,
         keyword: keyword,
       },
     });
