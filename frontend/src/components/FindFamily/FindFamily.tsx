@@ -14,17 +14,17 @@ import { userInfoState } from '../../features/Login/atom';
 const marks = [
   {
     value: 33,
-    label: '1',
+    label: '100m',
     range: 100,
   },
   {
     value: 66,
-    label: '2',
+    label: '200m',
     range: 200,
   },
   {
     value: 100,
-    label: '3',
+    label: '400m',
     range: 400,
   },
 ];
@@ -42,11 +42,11 @@ const FindFamily: React.FC = () => {
     findFamily: true
   });
 
-  const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 })
+  const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 });
   const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
   
   const { kakao } = window as any;
-
+  
   useEffect(() => {
     FamilyService.getFamilyList()
       .then((data) => {
@@ -115,7 +115,6 @@ const FindFamily: React.FC = () => {
     };
 
     const map = new kakao.maps.Map(container, options);
-
     const circle = new kakao.maps.Circle({ 
       center: center,
       radius: range,
@@ -130,27 +129,19 @@ const FindFamily: React.FC = () => {
       memberLocation.lng,
     );
 
-    const marker = new kakao.maps.Marker({
-      position: markerPosition,
-    });
-
     const distance = Math.round(getDistance(memberLocation.lat, memberLocation.lng, aptlat, aptlng));
-    // 커스텀 컨텐트
     const imgurl = "http://localhost:3000/img/sheep.png"  // 임시 selectedMember.profileUrl
     const content = '<div class="customoverlay" style="position: relative">' + 
-    '<div style="z-index: 1; position: absolute; bottom: -1px; left: -10px; width: 0px; height: 0px; border-top: 20px solid #fff; border-left: 10px solid transparent; border-right: 10px solid transparent; box-shadow: 0 4px 4px -4px gray;"></div>' + 
-    '<img src="' + imgurl + '" alt="profile" style="position: absolute; bottom: 8px; left: -20px; z-index: 2; width: 40px; border-radius: 40px; object-fit: fill;"/>'+
+    '<div style="z-index: 1; position: absolute; bottom: -1px; left: -10px; width: 0px; height: 0px; border-top: 20px solid #fff; border-left: 10px solid transparent; border-right: 10px solid transparent; box-shadow: 0 5px 5px -5px gray;"></div>' + 
+    '<img src="' + imgurl + '" alt="profile" style="position: absolute; bottom: 8px; left: -23px; z-index: 2; width: 45px; border-radius: 40px; object-fit: fill;"/>'+
     '</div>';
-
-    // 커스텀 오버레이가 표시될 위치
-    const position = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);  
 
     if (distance <= range) {
       if (memberLocation.lat && memberLocation.lng) {
         // marker.setMap(map);
         const customOverlay = new kakao.maps.CustomOverlay({
           map: map,
-          position: position,
+          position: markerPosition,
           content: content,
           yAnchor: 1 
         });
@@ -219,9 +210,9 @@ const FindFamily: React.FC = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c * 1000;
   };
@@ -307,7 +298,7 @@ const Title = styled.h3`
   height: 20px;
   font-weight: 600;
 `;
-
+ 
 const SliderCustom = styled(Slider)`
   width: 100px;
   margin-top: 20px;
