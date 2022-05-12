@@ -7,7 +7,7 @@ import java.util.HashMap;
 public interface LoginService {
     
     // accessCode를 활용하여 Access Token 받기
-    String getAccessToken(String accessCode) throws IOException;
+    String getAccessToken(String accessCode, boolean testMode) throws IOException;
 
     // Access Token으로 카카오 유저정보(회원번호) 받기
     HashMap<String, Object> getUserInfo(String accessToken) throws IOException;

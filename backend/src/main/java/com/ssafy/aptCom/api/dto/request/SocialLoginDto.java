@@ -15,4 +15,6 @@ public class SocialLoginDto {
     @ApiModelProperty(value = "Access Code", example = "sdfghlkjhw3k1123hzxcv2=")
     private String accessCode;
 
+    private boolean testMode;
+
 }

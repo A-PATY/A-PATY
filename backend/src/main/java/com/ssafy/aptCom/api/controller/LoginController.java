@@ -58,9 +58,10 @@ public class LoginController {
         boolean isNew;
         String[] tokens;
         String accessCode = socialLoginDto.getAccessCode();
+        boolean testMode = socialLoginDto.isTestMode();
 
         try {
-            String accessToken = loginService.getAccessToken(accessCode);
+            String accessToken = loginService.getAccessToken(accessCode, testMode);
             HashMap<String, Object> kakaoInfo = loginService.getUserInfo(accessToken);
             String kakaoNum = String.valueOf(kakaoInfo.get("kakaoUserNumber"));
 

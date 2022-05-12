@@ -24,11 +24,17 @@ public class LoginServiceImpl implements LoginService {
     private String apiKey;
 
     @Override
-    public String getAccessToken(String accessCode) throws IOException {
+    public String getAccessToken(String accessCode, boolean testMode) throws IOException {
 
         String reqURL = "https://kauth.kakao.com/oauth/token";
-        String redirectUrl = "http://localhost:3000/oauth/callback/kakao";
         String accessToken = "";
+
+        String redirectUrl;
+        if (testMode) {
+            redirectUrl = "http://localhost:3000/oauth/callback/kakao";
+        } else {
+            redirectUrl = "https://apaty.co.kr/oauth/callback/kakao";
+        }
 
         try {
             URL url = new URL(reqURL);
