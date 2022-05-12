@@ -43,9 +43,9 @@ const KakaoCallbackMain: React.FC = () => {
               const connectRef = ref(db, '.info/connected');
               onValue(connectRef, (snapshot) => {
                 if (snapshot.val() === true) {
-                  // firebase 저장하기 
                   set(ref(db, `/status/${userInfo?.userId}`), {
                     state: 'online',
+                    nickname: userInfo?.nickname
                   });
                 }
 
