@@ -80,8 +80,7 @@ public class LoginController {
 
             Cookie cookie = new Cookie("refreshToken", tokens[1]);
             cookie.setPath("/");
-            cookie.setMaxAge(60 * 60 * 5);
-            cookie.setSecure(true);
+            cookie.setMaxAge(5 * 60);
             response.addCookie(cookie);
 
         } catch (IOException e) {
