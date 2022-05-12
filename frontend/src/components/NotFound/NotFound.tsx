@@ -17,7 +17,7 @@ const NotFound: React.FC = () => {
       <Container>
         <BoxCustom>
           <ImgBox>
-            <NotFoundImg src="/img/404.png" />
+            <NotFoundImg src="/img/404(1).png" />
           </ImgBox>
           <MainText>요청하신 페이지를 찾을 수 없습니다</MainText>
           <SubText>입력하신 주소를 다시 한번 확인해 주세요</SubText>
@@ -64,9 +64,9 @@ const motion = keyframes`
 `;
 
 const NotFoundImg = styled.img`
-  width: 90%;
+  width: 80%;
   margin-bottom: 20px;
-  animation: ${motion} 0.9s linear 0s infinite alternate; 
+  /* animation: ${motion} 0.9s linear 0s infinite alternate;  */
   object-fit: contain;
 `;
 
@@ -80,11 +80,10 @@ const SubText = styled.p`
 `;
 
 const ButtonCustom = styled(Button)`
-  background-color: #ffd0b6;
+  background-color: #bae6e5;
   margin: 20px;
   box-shadow: none;
   color: white;
-  /* width: 50%; */
   width: 180px;
   min-height: 50px;
   border-radius: 126px;
@@ -93,7 +92,7 @@ const ButtonCustom = styled(Button)`
   &:hover {
     box-shadow: none;
     text-decoration: none;
-    background-color: #ffb2a9;
+    background-color: #9bd2d1;
   }
 `;
 export default NotFound;
