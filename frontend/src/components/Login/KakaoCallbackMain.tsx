@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
+import BoardService from '../../services/BoardService';
 // import userInfoState from '../'
 import { axiosInstance } from '../../utils/axios';
 
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 import { setCookie } from '../../hooks/Cookie';
 import { useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
+import { categoryListState } from '../../features/Board/atom';
 
 import { db } from '../../firebase';
 import { ref, set, get, child, onValue, onDisconnect } from 'firebase/database';
@@ -21,6 +23,7 @@ const KakaoCallbackMain: React.FC = () => {
   let code = params.get('code');
   let navigate = useNavigate();
   const setUserInfo = useSetRecoilState(userInfoState);
+  const setCategoryList = useSetRecoilState(categoryListState);
 
   // 배포 후 삭제
   const href2 = href.split(':');
@@ -40,6 +43,11 @@ const KakaoCallbackMain: React.FC = () => {
           if (newMember) {
             navigate('/newMember');
           } else {
+            BoardService.getCategoryList().then(({ categoryList }) => {
+              console.log('categoryList : ');
+              console.log(categoryList);
+              setCategoryList(categoryList);
+            });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
 

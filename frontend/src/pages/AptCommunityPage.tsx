@@ -9,14 +9,14 @@ import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
 
-const LocalCommunityPage: React.FC = () => {
+const AptCommunityPage: React.FC = () => {
   // const userInfo = useRecoilValue(userInfoState);
   // console.log('userInfo : ');
   // console.log(userInfo);
 
   // 공통 함수
-  const LocalCommunityId = useCommunityId(1);
-  console.log(LocalCommunityId);
+  const AptCommunityId = useCommunityId(2);
+  console.log(AptCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
@@ -25,7 +25,7 @@ const LocalCommunityPage: React.FC = () => {
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     const { articles } = await BoardService.getArticles(
-      LocalCommunityId,
+      AptCommunityId,
       pageParam,
       defaultPaginationSize,
       categoryId,
@@ -50,13 +50,13 @@ const LocalCommunityPage: React.FC = () => {
   });
 
   useEffect(() => {
-    document.title = '지역 커뮤니티';
+    document.title = '아파트 커뮤니티';
   }, []);
 
   return (
     <>
       <Container>
-        <BoardHeader communityId={LocalCommunityId} />
+        <BoardHeader communityId={AptCommunityId} />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}
@@ -67,7 +67,7 @@ const LocalCommunityPage: React.FC = () => {
           isFetchingNextPage={isFetchingNextPage}
         />
       </Container>
-      <Footer footerNumber={1} />
+      <Footer footerNumber={2} />
     </>
   );
 };
@@ -77,4 +77,4 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
-export default LocalCommunityPage;
+export default AptCommunityPage;
