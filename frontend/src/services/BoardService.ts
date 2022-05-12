@@ -3,6 +3,11 @@ import { articles, article } from '../types/boardTypes';
 import React from 'react';
 
 class BoardService {
+  public static async getCategoryList() {
+    const response = await axiosInstance.get(`/api/v1/category-list`);
+    return response.data;
+  }
+
   public static async getArticles(
     communityId: number | undefined,
     lastArticleId: number,

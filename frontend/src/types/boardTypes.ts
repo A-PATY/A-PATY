@@ -36,6 +36,9 @@ export interface comment {
 }
 
 export interface category {
-  key: number;
-  label: string;
+  // key: number;
+  // label: string;
+  categoryId: number;
+  categoryName: string;
+  adminOnly: boolean;
 }
