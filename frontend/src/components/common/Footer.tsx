@@ -34,6 +34,7 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
         navigate('/apt_register');
       } else {
         //아파트 커뮤니티 게시판으로 연결
+        // navigate('/apt_community');
       }
     } else if (value === 3) {
       navigate('/find_family');

@@ -61,7 +61,10 @@ const Board: React.FC<Props> = ({
     const [ref, inView] = useInView();
 
     React.useEffect(() => {
-      if (!data) return;
+      if (!data) {
+        console.log('data가 없음');
+        return;
+      }
       if (inView) {
         console.log('////////////////fetchNextPage 실행//////////////');
         console.log('inView: ' + inView);
@@ -72,78 +75,76 @@ const Board: React.FC<Props> = ({
     return <div ref={ref} />;
   };
 
-  console.log('data.pages');
-  console.log(data?.pages);
-  data?.pages.map((group: article[], i: number) => {
-    console.log(i);
-    console.log(group);
-  });
-
   return (
     <>
       <Container id="Container">
         <Wrapper id="Wrapper">
           <>
-            {data?.pages.map((group: { result: article[] }, i: number) => (
-              <React.Fragment key={i}>
-                {group.result.map((article: article) => {
-                  return (
-                    <ArticleWrapper key={article.articleId}>
-                      <Category>
-                        {article.category}
-                        {(article.category === '나눔장터' ||
-                          article.category === '공구') &&
-                        article.isDone === true ? (
-                          <Info className="isDone">완료</Info>
-                        ) : undefined}
-                        {(article.category === '나눔장터' ||
-                          article.category === '공구') &&
-                        article.isDone === false ? (
-                          <Info className="isNotDone">진행 중</Info>
-                        ) : undefined}
-                      </Category>
-                      <Article>
-                        <Title href={`/board/${article.articleId}`}>
-                          {article.title}
-                        </Title>
-                        <Contents href={`/board/${article.articleId}`}>
-                          {article.contents}
-                          {article.imgs !== null && (
-                            <Image src={article.imgs[0].src} />
-                          )}
-                        </Contents>
-                      </Article>
-                      <ArticleInfoWrapper>
-                        <ArticleInfo>
-                          <Info>{article.createdAt}</Info>
-                          <Info>{article.author}</Info>
-                        </ArticleInfo>
-                        <ArticleInfo>
-                          <Info className="icon">
-                            <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
-                          </Info>
-                          <Info>{article.views}</Info>
-                          <Info className="icon">
-                            {article.isLike ? (
-                              <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
-                            ) : (
-                              <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
+            {data?.pages.map(
+              (
+                group: { result: article[] },
+                i: number, // 타입 지정을 안해주면 에러 발생
+              ) => (
+                <React.Fragment key={i}>
+                  {group.result.map((article: article) => {
+                    return (
+                      <ArticleWrapper key={article.articleId}>
+                        <Category>
+                          {article.category}
+                          {(article.category === '나눔장터' ||
+                            article.category === '공구') &&
+                          article.isDone === true ? (
+                            <Info className="isDone">완료</Info>
+                          ) : undefined}
+                          {(article.category === '나눔장터' ||
+                            article.category === '공구') &&
+                          article.isDone === false ? (
+                            <Info className="isNotDone">진행 중</Info>
+                          ) : undefined}
+                        </Category>
+                        <Article>
+                          <Title href={`/board/${article.articleId}`}>
+                            {article.title}
+                          </Title>
+                          <Contents href={`/board/${article.articleId}`}>
+                            {article.contents}
+                            {article.imgs !== null && (
+                              <Image src={article.imgs[0].src} />
                             )}
-                          </Info>
-                          <Info>{article.likes}</Info>
-                          <Info className="icon">
-                            <ChatBubbleOutlineRoundedIcon
-                              sx={{ fontSize: '8px' }}
-                            />
-                          </Info>
-                          <Info>{article.commentCount}</Info>
-                        </ArticleInfo>
-                      </ArticleInfoWrapper>
-                    </ArticleWrapper>
-                  );
-                })}
-              </React.Fragment>
-            ))}
+                          </Contents>
+                        </Article>
+                        <ArticleInfoWrapper>
+                          <ArticleInfo>
+                            <Info>{article.createdAt}</Info>
+                            <Info>{article.author}</Info>
+                          </ArticleInfo>
+                          <ArticleInfo>
+                            <Info className="icon">
+                              <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
+                            </Info>
+                            <Info>{article.views}</Info>
+                            <Info className="icon">
+                              {article.isLike ? (
+                                <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
+                              ) : (
+                                <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
+                              )}
+                            </Info>
+                            <Info>{article.likes}</Info>
+                            <Info className="icon">
+                              <ChatBubbleOutlineRoundedIcon
+                                sx={{ fontSize: '8px' }}
+                              />
+                            </Info>
+                            <Info>{article.commentCount}</Info>
+                          </ArticleInfo>
+                        </ArticleInfoWrapper>
+                      </ArticleWrapper>
+                    );
+                  })}
+                </React.Fragment>
+              ),
+            )}
             {/* <div>
               <button
                 onClick={() => fetchNextPage()}

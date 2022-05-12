@@ -4,7 +4,7 @@ import React from 'react';
 
 class BoardService {
   public static async getArticles(
-    communityId: number,
+    communityId: number | undefined,
     lastArticleId: number,
     size: number,
     categoryId: number,

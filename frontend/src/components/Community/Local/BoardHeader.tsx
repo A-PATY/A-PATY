@@ -8,7 +8,7 @@ import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsAct
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  communityId: number;
+  communityId: number | undefined;
 }
 
 const BoardHeader: React.FC<Props> = ({ communityId }) => {
@@ -16,12 +16,16 @@ const BoardHeader: React.FC<Props> = ({ communityId }) => {
   const writeArticle = () => {
     navigate('/board/write');
   };
+  const goToAnony = () => {
+    navigate('/apt_community/anonymous');
+  };
   return (
     <>
       <Container>
         <Grid container spacing={0}>
           <GridText item xs={3}>
             <Text>장미동</Text>
+            <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
           </GridText>
           <Grid item xs={5.5}></Grid>
           <GridCustom item xs={3}>

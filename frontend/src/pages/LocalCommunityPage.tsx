@@ -7,35 +7,15 @@ import BoardHeader from '../components/Community/Local/BoardHeader';
 import { userInfoState } from '../features/Login/atom';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
+import useCommunityId from '../hooks/useCommunityId';
 
 const LocalCommunityPage: React.FC = () => {
-  const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo : ');
-  console.log(userInfo);
+  // const userInfo = useRecoilValue(userInfoState);
+  // console.log('userInfo : ');
+  // console.log(userInfo);
 
-  // communityList를 userInfo에서 가져오는걸로 수정해야함
-  const communityList = [
-    {
-      communityId: 455,
-      communityType: '지역',
-      communityType2: '전체',
-    },
-    {
-      communityId: 478,
-      communityType: '아파트',
-      communityType2: '전체',
-    },
-    {
-      communityId: 479,
-      communityType: '아파트',
-      communityType2: '익명',
-    },
-  ];
-
-  // 공통 함수로 만들어도 될듯
-  const LocalCommunityId = communityList.filter(
-    (com) => com.communityType === '지역',
-  )[0].communityId;
+  // 공통 함수
+  const LocalCommunityId = useCommunityId(1);
   console.log(LocalCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);

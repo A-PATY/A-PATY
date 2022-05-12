@@ -24,16 +24,16 @@ export const userInfo = {
       communityType: '지역',
       communityType2: '전체',
     },
-    // {
-    //   communityId: 478,
-    //   communityType: '아파트',
-    //   communityType2: '전체',
-    // },
-    // {
-    //   communityId: 479,
-    //   communityType: '아파트',
-    //   communityType2: '익명',
-    // },
+    {
+      communityId: 478,
+      communityType: '아파트',
+      communityType2: '전체',
+    },
+    {
+      communityId: 479,
+      communityType: '아파트',
+      communityType2: '익명',
+    },
   ],
   sidoName: '서울특별시',
   gugunName: '송파구',
