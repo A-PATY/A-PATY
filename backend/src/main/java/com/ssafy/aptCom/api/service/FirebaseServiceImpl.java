@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,7 +16,8 @@ public class FirebaseServiceImpl implements FirebaseService {
     public static final String COLLECTION_NAME = "families";
 
     @Override
-    public Boolean insertFamilyMember(String familyId, String userId) throws Exception {
+    public Boolean insertFamilyMember(String familyId, String userId, String doroJuso) {
+
         Firestore firestore = FirestoreClient.getFirestore();
 
         Map<String, Object> userInfo = new HashMap<>();
@@ -23,6 +25,7 @@ public class FirebaseServiceImpl implements FirebaseService {
         userInfoDeep.put("lng", 0);
         userInfoDeep.put("lat", 0);
         userInfo.put(userId, userInfoDeep);
+        userInfo.put("doroJuso", doroJuso);
 
         // family id 가 없으면 새로 family 생성 및 멤버 추가, 있으면 멤버 추가
         try {
