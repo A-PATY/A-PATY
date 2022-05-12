@@ -34,7 +34,6 @@ const FindFamily: React.FC = () => {
   
   const [range, setRange] = useState<number>(100);
   const [familyList, setFamilyList] = useState<familyList[]>([]); 
-  // const [familyAddress, setFamilyAddress] = useState<string>("");
   const [familyId, setFamilyId] = useState<string>("");
   const [selectedMember, setSelectedMember] = useState<familyList>({
     userId: 0,  
@@ -54,9 +53,6 @@ const FindFamily: React.FC = () => {
         const family = data.familyList;
         setFamilyId(data.familyId);
         setFamilyList(data.familyList);
-        // getMemberData();
-        // setFamilyAddress(data.familyAddress); 
-        // findAptLocation(data.familyAddress);
         
         if (userInfo !== null) {
           for (let i = 0; i < family.length; i++) {
@@ -78,7 +74,14 @@ const FindFamily: React.FC = () => {
           findAptLocation(res.get('doroJuso'));
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 400) {
+          console.log('가입된 아파트가 없습니다');
+        } else if (err.response.status === 500) {
+          console.log('가족을 찾을 수 없습니다');
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -132,25 +135,26 @@ const FindFamily: React.FC = () => {
     });
 
     const distance = Math.round(getDistance(memberLocation.lat, memberLocation.lng, aptlat, aptlng));
-    
     // 커스텀 컨텐트
-    // const content = '<div class="customoverlay">' + 
-    // '<img src="http://www.urbanbrush.net/web/wp-content/uploads/edd/2017/11/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7-2017-11-02-%EC%98%A4%EC%A0%84-10.11.55.png" alt="profile" style="z-index: 1; width:50px; border-radius: 30px;"/>'+
-    // '</div>';
+    const imgurl = "http://localhost:3000/img/sheep.png"  // 임시 selectedMember.profileUrl
+    const content = '<div class="customoverlay" style="position: relative">' + 
+    '<div style="z-index: 1; position: absolute; bottom: -1px; left: -10px; width: 0px; height: 0px; border-top: 20px solid #fff; border-left: 10px solid transparent; border-right: 10px solid transparent; box-shadow: 0 4px 4px -4px gray;"></div>' + 
+    '<img src="' + imgurl + '" alt="profile" style="position: absolute; bottom: 8px; left: -20px; z-index: 2; width: 40px; border-radius: 40px; object-fit: fill;"/>'+
+    '</div>';
 
-    // 커스텀 오버레이가 표시될 위치입니다 
+    // 커스텀 오버레이가 표시될 위치
     const position = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);  
 
     if (distance <= range) {
       if (memberLocation.lat && memberLocation.lng) {
-        marker.setMap(map);
+        // marker.setMap(map);
+        const customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: position,
+          content: content,
+          yAnchor: 1 
+        });
       };
-      // const customOverlay = new kakao.maps.CustomOverlay({
-      //   map: map,
-      //   position: position,
-      //   content: content,
-      //   yAnchor: 1 
-      // });
     };
 
     map.setCenter(center);
