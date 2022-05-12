@@ -6,6 +6,7 @@ import com.ssafy.aptCom.api.dto.response.BillListDto;
 import com.ssafy.aptCom.api.dto.response.ErrorMessage;
 import com.ssafy.aptCom.api.dto.response.SuccessMessage;
 import com.ssafy.aptCom.api.service.ApartmentService;
+import com.ssafy.aptCom.api.service.FirebaseService;
 import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.db.entity.Bill;
 import com.ssafy.aptCom.db.entity.User;
@@ -33,6 +34,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FirebaseService firebaseService;
 
     @GetMapping("/bill")
     @ApiOperation(value = "고지서 이미지 리스트 조회", notes = "S3의 고지서 이미지 리스트를 조회한다.")
@@ -72,12 +76,24 @@ public class AdminController {
 
         try {
             apartmentService.billApproval(billApprovalRequestDto, user);
+
+            // firebase에 도로명 주소 포함 유저정보 저장
+            String aptId = String.valueOf(billApprovalRequestDto.getAptId());
+            String dong = billApprovalRequestDto.getDong();
+            String ho = billApprovalRequestDto.getHo();
+            String familyId = aptId + "-" + dong + "-" + ho;
+            String userId = String.valueOf(user.getId());
+//            String userId = String.valueOf(1); => login 대체
+            String doroJuso = billApprovalRequestDto.getDoroJuso();
+            firebaseService.insertFamilyMember(familyId, userId, doroJuso);
+
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
 
             return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 고지서 승인 실패"));
         }
+
 
         return ResponseEntity.status(200).body(SuccessMessage.of("승인 성공했습니다."));
 

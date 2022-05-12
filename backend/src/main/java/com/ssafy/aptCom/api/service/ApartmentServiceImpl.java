@@ -123,6 +123,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
         userCommunitySave(aptCode, user);
 
+
     }
 
     public void userCommunitySave(String aptCode, User user) {

@@ -12,10 +12,10 @@ public class FirebaseController {
     @Autowired
     FirebaseService firebaseService;
 
-    @PostMapping("/insertFamilyMember")
-    public Boolean insertFamilyMember(@RequestParam String familyId, String userId) throws Exception {
-        return firebaseService.insertFamilyMember(familyId, userId);
-    }
+//    @PostMapping("/insertFamilyMember")
+//    public Boolean insertFamilyMember(@RequestParam String familyId, String userId) throws Exception {
+//        return firebaseService.insertFamilyMember(familyId, userId);
+//    }
 
     @GetMapping("/getFamilyDetail")
     public Map<String, Object> getFamilyDetail(@RequestParam String familyId) throws  Exception {
