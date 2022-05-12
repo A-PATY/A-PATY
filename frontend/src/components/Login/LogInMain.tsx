@@ -3,14 +3,27 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 const LogInMain: React.FC = () => {
-  const REST_API_KEY = '9f8212ade1576047ddcf60fd0ab79a2e';
-  const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const REDIRECT_URI = 'https://apaty.co.kr/oauth/callback/kakao';
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_AUTH_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  // 배포 후 삭제
+  const TEST_REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
+  const KAKAO_TEST_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_AUTH_REST_API_KEY}&redirect_uri=${TEST_REDIRECT_URI}&response_type=code`;
+  //
 
   const handleButtomCustomClick = (
     event: React.MouseEvent<HTMLImageElement>,
   ) => {
-    window.location.href = KAKAO_AUTH_URL;
+    // 배포 후 삭제
+    if (window.location.href === 'http://localhost:3000/login') {
+      window.location.href = KAKAO_TEST_AUTH_URL;
+    } else {
+      window.location.href = KAKAO_AUTH_URL;
+    }
+    //
+
+    //배포 후 살리기
+    // window.location.href = KAKAO_AUTH_URL;
   };
 
   return (
