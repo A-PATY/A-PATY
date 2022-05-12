@@ -17,7 +17,7 @@ export const ProfileImageList = [
 
 export const userInfo = {
   userId: 12,
-  nickName: '장미',
+  nickname: '장미',
   communityList: [
     {
       communityId: 455,
@@ -36,7 +36,7 @@ export const userInfo = {
     },
   ],
   sidoName: '서울특별시',
-  gugunName: '송파구',
+  gugunName: '강남구',
   dongName: '잠실동',
   aptName: '장미아파트',
   dong: '101',
