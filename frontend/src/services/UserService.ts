@@ -11,17 +11,32 @@ import {
 import { axiosInstance, kakaoAxiosInstance } from './../utils/axios';
 
 class UserService {
-  public static async getUserToken(accessCode: string) {
+  //  배포 후 살리기
+  // public static async getUserToken(accessCode: string) {
+  //   const response = await axiosInstance.post<LoginResponse>(
+  //     'api/v1/auth/users/log-in',
+  //     {
+  //       accessCode: accessCode,
+  //     },
+  //   );
+
+  //   return response.data;
+  // }
+  //
+
+  //배포 후 삭제
+  public static async getUserToken(accessCode: string, testMode: boolean) {
     const response = await axiosInstance.post<LoginResponse>(
       'api/v1/auth/users/log-in',
       {
         accessCode: accessCode,
+        testMode: testMode,
       },
     );
 
     return response.data;
   }
-
+  //
   public static async getNewToken() {
     const response = await axiosInstance.post<IssueTokenResponse>(
       '/api/v1/auth/users/issue-token',
