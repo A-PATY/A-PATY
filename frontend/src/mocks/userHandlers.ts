@@ -39,7 +39,7 @@ export const userHandlers = [
     },
   ),
 
-  rest.post(
+  rest.get(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/issue-token`,
     async (request, response, context) => {
       // const token: string | null =
