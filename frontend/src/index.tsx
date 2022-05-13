@@ -6,10 +6,13 @@ import { axiosInstance } from './utils/axios';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { CookiesProvider } from 'react-cookie';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');
-  // worker.start();
+
+  //worker.start();
+
 }
 
 const root = ReactDOM.createRoot(
@@ -26,6 +29,9 @@ root.render(
     <ReactQueryDevtools initialIsOpen={true} />
     <Suspense fallback={<p>loading...</p>}>
       <RecoilRoot>
+        <CookiesProvider>
+          <App />
+        </CookiesProvider>
         <App />
       </RecoilRoot>
     </Suspense>

@@ -4,17 +4,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
 import BoardService from '../../services/BoardService';
-// import userInfoState from '../'
 import { axiosInstance } from '../../utils/axios';
-
 import Swal from 'sweetalert2';
-import { setCookie } from '../../hooks/Cookie';
 import { useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 import { categoryListState } from '../../features/Board/atom';
-
 import { db } from '../../firebase';
 import { ref, set, get, child, onValue, onDisconnect } from 'firebase/database';
+import { getCookie, setCookie } from '../../hooks/Cookie';
 
 const KakaoCallbackMain: React.FC = () => {
   const [open, setOpen] = useState(true);
@@ -24,11 +21,11 @@ const KakaoCallbackMain: React.FC = () => {
   let navigate = useNavigate();
   const setUserInfo = useSetRecoilState(userInfoState);
   const setCategoryList = useSetRecoilState(categoryListState);
-
   // 배포 후 삭제
   const href2 = href.split(':');
   useEffect(() => {
     if (code !== null && href2[0] === 'http') {
+      console.log(axiosInstance);
       UserService.getUserToken(code, true)
         .then(({ accessToken, refreshToken, newMember }) => {
           axiosInstance.defaults.headers.common[
@@ -36,8 +33,8 @@ const KakaoCallbackMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            //expires: Math.floor(Date.now() / 1000) + (60 * 60) }
-            expires: new Date(Date.now() + 100 * 60 * 60),
+            maxAge: 60 * 5,
+            path: '/',
           });
 
           if (newMember) {
@@ -95,8 +92,8 @@ const KakaoCallbackMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            //expires: Math.floor(Date.now() / 1000) + (60 * 60) }
-            expires: new Date(Date.now() + 100 * 60 * 60),
+            maxAge: 60 * 5,
+            path: '/',
           });
 
           if (newMember) {
@@ -152,10 +149,10 @@ const KakaoCallbackMain: React.FC = () => {
   //           'Authorization'
   //         ] = `Bearer ${accessToken}`;
 
-  //         setCookie('apaty_refresh', refreshToken, {
-  //           //expires: Math.floor(Date.now() / 1000) + (60 * 60) }
-  //           expires: new Date(Date.now() + 100 * 60 * 60),
-  //         });
+  // setCookie('apaty_refresh', refreshToken, {
+  //   maxAge: 60 * 5,
+  //   path: '/',
+  // });
 
   //         if (newMember) {
   //           navigate('/newMember');
