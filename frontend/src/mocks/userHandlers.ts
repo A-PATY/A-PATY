@@ -139,4 +139,15 @@ export const userHandlers = [
       );
     },
   ),
+
+  rest.get(
+    `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/log-out`,
+    async (request, response, context) => {
+      return response(
+        context.json({
+          message: '로그아웃 되었습니다.',
+        }),
+      );
+    },
+  ),
 ];

@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
 import UserLocation from '../../hooks/useUserLocation';
 import { useNavigate } from 'react-router-dom';
-import { getCookie } from '../../hooks/Cookie';
+import { getCookie, removeCookie } from '../../hooks/Cookie';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -40,6 +40,7 @@ const MyPageMain: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -299,6 +300,7 @@ const MyPageMain: React.FC = () => {
   ) => {
     UserService.logOutUser()
       .then(({ message }) => {
+        removeCookie('apaty_refresh', { path: '/' });
         Swal.fire({
           title: message,
           icon: 'success',
