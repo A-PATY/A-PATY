@@ -29,6 +29,12 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             @Param("keyword") String keyword,
             @Param("size") int size);
 
+    @Query(value = "select * from article a " +
+            "where a.category_id = :categoryId", nativeQuery = true)
+    List<Article> findByCategoryId(@Param("categoryId") int categoryId);
+
+
     List<Article> findAllByUserId(int userId);
+
 
 }

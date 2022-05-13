@@ -68,10 +68,13 @@ public class ArticleDto {
         res.setCreatedAt(createdAt);
 
         // 커뮤니티 타입에 따라 article의 Author 사용자명 변경
-        String type1 = article.getCommunity().getCommunityType();
-        String type2 = article.getCommunity().getCommunityType2();
-        User user = article.getUser();
+        String type1 = "", type2 = "";
+        if(article.getCategory().getId() != 1) {
+            type1 = article.getCommunity().getCommunityType();
+            type2 = article.getCommunity().getCommunityType2();
+        }
 
+        User user = article.getUser();
         res.setAuthorId(user.getId());
 
         if(type1.equals("지역")){
