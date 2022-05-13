@@ -9,12 +9,16 @@ import LogInPage from './pages/LogInPage';
 import AptRegisterPage from './pages/AptRegisterPage';
 import MyPage from './pages/MyPage';
 import LocalCommunityPage from './pages/LocalCommunityPage';
+import AptCommunityPage from './pages/AptCommunityPage';
+import AptAnonyCommunityPage from './pages/AptAnonyCommunityPage';
 import ArticlePage from './pages/ArticlePage';
 import FindFamilyPage from './pages/FindFamilyPage';
 import ArticleWritePage from './pages/ArticleWritePage';
 import ArticleEditPage from './pages/ArticleEditPage';
 import KakaoCallbackPage from './pages/KakaoCallbackPage';
 import NewMemberPage from './pages/NewMemberPage';
+import NotFoundPage from './pages/NotFoundPage';
+
 import AdminPage from './pages/AdminPage';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -69,6 +73,11 @@ const App: React.FC = () => {
           <Route path="/apt_register" element={<AptRegisterPage />} />
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/local_community" element={<LocalCommunityPage />} />
+          <Route path="/apt_community" element={<AptCommunityPage />} />
+          <Route
+            path="/apt_community/anonymous"
+            element={<AptAnonyCommunityPage />}
+          />
           <Route path="/board/:article_id" element={<ArticlePage />} />
           <Route path="/oauth/callback/kakao" element={<KakaoCallbackPage />} />
           <Route path="/find_family" element={<FindFamilyPage />} />
@@ -76,6 +85,7 @@ const App: React.FC = () => {
           <Route path="/board/:article_id/edit" element={<ArticleEditPage />} />
           <Route path="/newMember" element={<NewMemberPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </>
@@ -83,6 +93,4 @@ const App: React.FC = () => {
 };
 
 export default App;
-function setUserInfo(userInfo: import('./types/loginTypes').UserInfo | null) {
-  throw new Error('Function not implemented.');
-}
+

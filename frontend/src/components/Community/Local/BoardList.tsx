@@ -4,15 +4,39 @@ import Button from '@mui/material/Button';
 import Board from './Board';
 import CategoryChips from './CategoryChips';
 
-const BoardList: React.FC = () => {
+interface Props {
+  categoryId: number;
+  setCategoryId: (value: number) => void;
+  data: any;
+  fetchNextPage: () => void;
+  hasNextPage: any;
+  isFetching: any;
+  isFetchingNextPage: any;
+}
+
+const BoardList: React.FC<Props> = ({
+  categoryId,
+  setCategoryId,
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetching,
+  isFetchingNextPage,
+}) => {
   return (
     <>
       <CategoryChipsWrapper>
-        <CategoryChips />
+        <CategoryChips categoryId={categoryId} setCategoryId={setCategoryId} />
       </CategoryChipsWrapper>
       <BoxCustom>
         <Container>
-          <Board />
+          <Board
+            data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetching={isFetching}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         </Container>
       </BoxCustom>
     </>

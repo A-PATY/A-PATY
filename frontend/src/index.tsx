@@ -10,7 +10,9 @@ import { CookiesProvider } from 'react-cookie';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');
+
   //worker.start();
+
 }
 
 const root = ReactDOM.createRoot(
@@ -30,6 +32,7 @@ root.render(
         <CookiesProvider>
           <App />
         </CookiesProvider>
+        <App />
       </RecoilRoot>
     </Suspense>
   </QueryClientProvider>,
