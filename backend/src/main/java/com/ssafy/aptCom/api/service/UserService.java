@@ -32,9 +32,8 @@ public interface UserService {
     void deleteAuth(User user);
     
     // 유저 정보 수정
-    User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo);
+    void userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo);
 
-    // 회원 탈퇴
-    void deleteUser(User user);
+    void userDelete(User user);
 
 }

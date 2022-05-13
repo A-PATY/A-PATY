@@ -10,4 +10,6 @@ public interface UserCommunityRepository extends JpaRepository<UserCommunity, Lo
 
     void deleteByCommunity(Community community);
 
+    void deleteByUserId(int userId);
+
 }

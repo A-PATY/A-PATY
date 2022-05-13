@@ -13,4 +13,6 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
 
     Optional<Likes> findLikesByArticleAndUser(Article article, User user);
 
+    void deleteByUserId(int userId);
+
 }

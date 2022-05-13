@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service("userService")
@@ -39,6 +40,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserCommunityRepository userCommunityRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
 
     @Override
     public User getUserByKakaoUserNumber(String kakaoUserNumber) {
@@ -127,17 +140,28 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Modifying
     @Override
-    public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) {
+    public void userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) {
 
         if (profileInfo.equals("nickname")) {
             user.setNickname(userModifyRequestDto.getNickname());
             userRepository.save(user);
         } else if (profileInfo.equals("address")) {
-            deleteUserCommunity(user);
+            // 지역 + 아파트 커뮤니티 삭제
+            userCommunityRepository.deleteByUserId(user.getId());
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
+            user.setBillStatus("미제출");
+            user.setDong(null);
+            user.setHo(null);
+            user.setApartment(null);
             userRepository.save(user);
-            userCommunitySave(userModifyRequestDto.getAddress(), user);
+            // 지역 커뮤니티 가입
+            Community community = communityRepository.findCommunityByCommunityCode(userModifyRequestDto.getAddress());
+            UserCommunity userCommunity = UserCommunity.builder()
+                    .community(community)
+                    .user(user)
+                    .build();
+            userCommunityRepository.save(userCommunity);
         } else if (profileInfo.equals("profileImgId")) {
             ProfileImg profileImg = getProfileImg(userModifyRequestDto.getProfileImgId());
             user.setProfileImg(profileImg);
@@ -146,20 +170,41 @@ public class UserServiceImpl implements UserService {
             user.setFindFamily(userModifyRequestDto.isFindFamily());
             userRepository.save(user);
         }
-        return user;
+
     }
 
     @Transactional
     @Override
-    public void deleteUser(User user) { userRepository.delete(user); }
+    public void userDelete(User user) {
+        // Auth 삭제
+        Optional<Auth> auth = authRepository.findByUserId(user.getId());
+        authRepository.deleteById(auth.get().getId());
+
+        // User Community 삭제
+        BaseAddress baseAddress = user.getBaseAddress();
+        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
+        userCommunityRepository.deleteByCommunity(community);
+
+        // Likes 삭제
+        likesRepository.deleteByUserId(user.getId());
+
+        // Comment 삭제
+        commentRepository.deleteByUserId(user.getId());
+
+        // Image, Article 삭제
+        List<Article> articles = articleRepository.findAllByUserId(user.getId());
+        for (Article article : articles) {
+            imageRepository.deleteAllImgByArticleId(article.getId());
+            articleRepository.deleteById(article.getId());
+        }
+
+        // User 삭제
+        userRepository.delete(user);
+
+    }
 
     public ProfileImg getProfileImg(int profileImgId) {
         return profileImgRepository.findById(profileImgId);
     }
 
-    @Transactional
-    public void deleteUserCommunity(User user) {
-        BaseAddress baseAddress = user.getBaseAddress();
-        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
-        userCommunityRepository.deleteByCommunity(community);}
 }

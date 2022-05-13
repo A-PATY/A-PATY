@@ -29,4 +29,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             @Param("keyword") String keyword,
             @Param("size") int size);
 
+    List<Article> findAllByUserId(int userId);
+
 }

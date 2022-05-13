@@ -141,8 +141,7 @@ public class UserController {
         try {
 
             User user = userService.getUserByKakaoUserNumber(loginUser);
-            userService.deleteAuth(user);
-            userService.deleteUser(user);
+            userService.userDelete(user);
 
             String aptId = String.valueOf(user.getApartment().getId());
             String dong = user.getDong();
