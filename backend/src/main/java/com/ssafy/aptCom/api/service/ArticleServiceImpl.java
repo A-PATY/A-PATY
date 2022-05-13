@@ -162,11 +162,15 @@ public class ArticleServiceImpl implements ArticleService {
             User user, int communityId, int lastArticleId, int size,
             int categoryId, String keyword
     ) {
+        List<Article> articleList = null;
 
-        List<Article> articleList =
-                articleRepository.findByIdIsLessThanOrderByCreatedAtDesc(
-                        communityId, lastArticleId, categoryId, keyword, size);
-        //List<Article> articleList = articleRepository.findAll();
+        // categoryId가 1인 경우는 공지사항 조회 (나머지 파라미터 모두 0), 1이 아닌 경우는 일반 게시글 조회
+        if(categoryId == 1) {
+            articleList = articleRepository.findByCategoryId(categoryId);
+        } else {
+            articleList = articleRepository.findByIdIsLessThanOrderByCreatedAtDesc(
+                    communityId, lastArticleId, categoryId, keyword, size);
+        }
 
         List<ArticleDto> articleDtoList = new ArrayList<>();
         Boolean likeYn = false;
