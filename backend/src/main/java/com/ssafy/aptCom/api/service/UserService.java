@@ -20,7 +20,10 @@ public interface UserService {
     User userNew(String kakaoNumber);
     
     // 유저 정보 저장
-    void userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber);
+    User userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber);
+
+    // 유저 - 지역 커뮤니티 가입
+    void userCommunitySave(String addressCode, User user);
 
     // Refresh Token으로 Auth Entity 찾기
     Optional<Auth> getAuthByRefreshToken(String refreshToken);

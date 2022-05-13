@@ -50,7 +50,8 @@ public class UserController {
             @RequestBody SignUpRequestDto signUpRequestDto, @AuthenticationPrincipal String loginUser) {
 
         try {
-            userService.userSave(signUpRequestDto, loginUser);
+            User user = userService.userSave(signUpRequestDto, loginUser);
+            userService.userCommunitySave(signUpRequestDto.getAddress(), user);
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
