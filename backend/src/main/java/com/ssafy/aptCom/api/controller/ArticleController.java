@@ -44,18 +44,13 @@ public class ArticleController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<?> createArticle(@AuthenticationPrincipal String loginUser, ArticleRequestDto articleRequestDto) throws IOException {
-    public ResponseEntity<?> createArticle(ArticleRequestDto articleRequestDto) throws IOException {
-
-        List<MultipartFile> multipartFiles = articleRequestDto.getImg();
-        log.info("multipartFiles : {} ", multipartFiles);
-        User user = new User();
-        user.setId(1);
-        user.setNickname("nick");
-//        User user = userRepository.getOne(1);
-//        User user = userService.getUserByKakaoUserNumber(loginUser);
+    public ResponseEntity<?> createArticle(@AuthenticationPrincipal String loginUser, ArticleRequestDto articleRequestDto) {
 
         try {
+            List<MultipartFile> multipartFiles = articleRequestDto.getImg();
+            log.info("multipartFiles : {} ", multipartFiles);
+
+            User user = userService.getUserByKakaoUserNumber(loginUser);
             Integer articleId = articleService.createArticle(articleRequestDto, user);
             if (multipartFiles != null) {
                 articleService.saveArticleImages(multipartFiles, articleId) ;
