@@ -50,6 +50,8 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   const chipData = [{ categoryId: 0, categoryName: '전체', adminOnly: false }];
 
   const categoryList = useRecoilValue(categoryListState);
+  console.log('categoryList');
+  console.log(categoryList);
 
   if (userInfo?.role === 'ROLE_ADMIN') {
     if (categoryList !== null) chipData.push(...categoryList);
