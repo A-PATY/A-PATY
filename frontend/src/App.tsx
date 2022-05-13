@@ -27,8 +27,11 @@ import { getCookie, setCookie } from './hooks/Cookie';
 import { axiosInstance } from './utils/axios';
 
 import UserService from './services/UserService';
+import BoardService from './services/BoardService';
+import { categoryListState } from './features/Board/atom';
 
 const App: React.FC = () => {
+  const setCategoryList = useSetRecoilState(categoryListState);
   const userInfo = useRecoilValue(userInfoState);
   const setUserInfo = useSetRecoilState(userInfoState);
   const accessToken = axiosInstance.defaults.headers.common['Authorization'];
@@ -46,6 +49,11 @@ const App: React.FC = () => {
         setCookie('apaty_refresh', refreshToken, {
           maxAge: 60 * 5,
           path: '/',
+        });
+        BoardService.getCategoryList().then(({ categoryList }) => {
+          // console.log('categoryList : ');
+          // console.log(categoryList);
+          setCategoryList(categoryList);
         });
         UserService.getUserInfo().then(({ userInfo }) => {
           setUserInfo(userInfo);
@@ -93,4 +101,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

@@ -10,13 +10,15 @@ import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
 
 const LocalCommunityPage: React.FC = () => {
-  // const userInfo = useRecoilValue(userInfoState);
-  // console.log('userInfo : ');
-  // console.log(userInfo);
+  const userInfo = useRecoilValue(userInfoState);
+  console.log('userInfo : ');
+  console.log(userInfo);
 
   // 공통 함수
-  const LocalCommunityId = useCommunityId(1);
-  // console.log(LocalCommunityId);
+  // const LocalCommunityId = useCommunityId(1);
+  const LocalCommunityId = userInfo?.communityList[0].communityId;
+  console.log('LocalCommunityId');
+  console.log(LocalCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 10; // 한 번 요청으로 가져올 게시글의 개수
@@ -24,6 +26,7 @@ const LocalCommunityPage: React.FC = () => {
   const keyword = '';
 
   const fetchArticles = async ({ pageParam = 0 }) => {
+    // 여기서 조건문 분기하면 될듯
     const { articles } = await BoardService.getArticles(
       LocalCommunityId,
       pageParam,
@@ -44,17 +47,21 @@ const LocalCommunityPage: React.FC = () => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
-    getNextPageParam: (lastPage) => {
-      // console.log('lastPage : ');
-      // console.log(lastPage);
-      return lastPage.result.length !== 0
-        ? lastPage.result[lastPage.result.length - 1].articleId
-        : false;
+  } = useInfiniteQuery(
+    [`localArticles-category${categoryId}`, LocalCommunityId],
+    fetchArticles,
+    {
+      getNextPageParam: (lastPage) => {
+        // console.log('lastPage : ');
+        // console.log(lastPage);
+        return lastPage.result.length !== 0
+          ? lastPage.result[lastPage.result.length - 1].articleId
+          : false;
+      },
+      // getNextPageParam: (lastPage) =>
+      //   lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
     },
-    // getNextPageParam: (lastPage) =>
-    //   lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
-  });
+  );
 
   useEffect(() => {
     document.title = '지역 커뮤니티';
