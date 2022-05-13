@@ -43,7 +43,7 @@ const LogInMain: React.FC = () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
         console.log(res);
-        setArticle(res.data);
+        setArticle(res);
       })
       .catch((err) => {
         if (err.response) {
