@@ -24,10 +24,8 @@ public interface FamilyRepository extends JpaRepository<User, Integer> {
             "on u.profile_img_id = pi.id " +
             "where u.apt_id = :aptId " +
             "and u.dong = :dong " +
-            "and u.ho = :ho " +
-            "and u.id != :userId", nativeQuery = true)
+            "and u.ho = :ho", nativeQuery = true)
     Optional<List<FamilyInterface>> findFamilyInfo(
-            @Param("userId") int userId,
             @Param("aptId") int aptId,
             @Param("dong") String dong,
             @Param("ho") String ho);
