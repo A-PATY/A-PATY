@@ -1,5 +1,6 @@
 // src/mocks/browser.js
 import { setupWorker } from 'msw';
+import { adminHandlers } from './adminHandler';
 import { aptRegisterHandlers } from './aptRegisterHandlers';
 import { boardHandlers } from './boardHandlers';
 import { familyHandlers } from './familyHandlers';
@@ -10,4 +11,5 @@ export const worker = setupWorker(
   ...boardHandlers,
   ...familyHandlers,
   ...aptRegisterHandlers,
+  ...adminHandlers,
 );

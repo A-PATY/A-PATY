@@ -46,8 +46,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
-    console.log('인터셉터 작동');
     const {
       config,
       response: { status },
@@ -61,7 +59,8 @@ axiosInstance.interceptors.response.use(
       const accessToken =
         axiosInstance.defaults.headers.common['Authorization'];
 
-      if (accessToken !== null) {
+      if (refreshToken !== undefined) {
+        delete axiosInstance.defaults.headers.common['Authorization'];
         axiosInstance.defaults.headers.common[
           'RefreshToken'
         ] = `Bearer ${refreshToken}`;
@@ -72,10 +71,10 @@ axiosInstance.interceptors.response.use(
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            expires: new Date(Date.now() + 100 * 60),
+            maxAge: 60 * 5,
+            path: '/',
           });
 
-          // return axios(originalRequest);
           return axiosInstance(originalRequest);
         });
       }

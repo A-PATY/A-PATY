@@ -39,7 +39,7 @@ export const userHandlers = [
     },
   ),
 
-  rest.post(
+  rest.get(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/issue-token`,
     async (request, response, context) => {
       // const token: string | null =
@@ -135,6 +135,17 @@ export const userHandlers = [
       return response(
         context.json({
           message: '회원 정보가 수정되었습니다.',
+        }),
+      );
+    },
+  ),
+
+  rest.get(
+    `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/auth/users/log-out`,
+    async (request, response, context) => {
+      return response(
+        context.json({
+          message: '로그아웃 되었습니다.',
         }),
       );
     },
