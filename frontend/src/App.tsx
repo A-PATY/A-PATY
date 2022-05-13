@@ -17,6 +17,7 @@ import ArticleWritePage from './pages/ArticleWritePage';
 import ArticleEditPage from './pages/ArticleEditPage';
 import KakaoCallbackPage from './pages/KakaoCallbackPage';
 import NewMemberPage from './pages/NewMemberPage';
+import NotificationPage from './pages/NotificationPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App: React.FC = () => {
@@ -42,6 +43,7 @@ const App: React.FC = () => {
           <Route path="/board/write" element={<ArticleWritePage />} />
           <Route path="/board/:article_id/edit" element={<ArticleEditPage />} />
           <Route path="/newMember" element={<NewMemberPage />} />
+          <Route path="/notification" element={<NotificationPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
