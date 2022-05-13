@@ -153,11 +153,12 @@ public class LoginController {
     public ResponseEntity<?> issueToken(
             @RequestHeader(value = "RefreshToken") String refreshToken) {
 
-        Optional<Auth> auth = userService.getAuthByRefreshToken(refreshToken);
+        String rfToken = refreshToken.substring(7);
+        Optional<Auth> auth = userService.getAuthByRefreshToken(rfToken);
         User user = auth.get().getUser();
 
         try {
-            boolean tokenValid = tokenProvider.isTokenValid(refreshToken);
+            boolean tokenValid = tokenProvider.isTokenValid(rfToken);
 
             if (!tokenValid) {
                 userService.deleteAuth(user);
@@ -172,7 +173,7 @@ public class LoginController {
         }
 
         String accessToken = tokenProvider.createJwtAccessToken(user.getKakaoUserNumber(), user.getRoleList());
-        return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, refreshToken));
+        return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, rfToken));
 
     }
 
