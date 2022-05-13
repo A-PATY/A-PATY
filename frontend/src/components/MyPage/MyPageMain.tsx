@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
 import UserLocation from '../../hooks/useUserLocation';
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from '../../hooks/Cookie';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -40,6 +41,7 @@ const MyPageMain: React.FC = () => {
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
   let navigate = useNavigate();
+
   useEffect(() => {
     if (nickname === '') {
       setNicknameError(true);
@@ -292,6 +294,29 @@ const MyPageMain: React.FC = () => {
       });
   };
 
+  const handleLogOutButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    UserService.logOutUser()
+      .then(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        navigate('/');
+      })
+      .catch(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
+
   return (
     <>
       <Container>
@@ -377,7 +402,9 @@ const MyPageMain: React.FC = () => {
             </FindFamilyButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
-            <LogOutButton>로그아웃</LogOutButton>
+            <LogOutButton onClick={handleLogOutButtonClick}>
+              로그아웃
+            </LogOutButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
             <DeleteButton onClick={handleDeleteButtonClick}>

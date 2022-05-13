@@ -1,3 +1,5 @@
+import { useSetRecoilState } from 'recoil';
+import { userInfoState } from '../features/Login/atom';
 import { aptRegisterResponse } from '../types/aptRegisterTypes';
 import {
   IssueTokenResponse,
@@ -38,7 +40,7 @@ class UserService {
   }
   //
   public static async getNewToken() {
-    const response = await axiosInstance.post<IssueTokenResponse>(
+    const response = await axiosInstance.get<IssueTokenResponse>(
       '/api/v1/auth/users/issue-token',
     );
 
@@ -74,7 +76,6 @@ class UserService {
     const response = await axiosInstance.get<LogInResponse>(
       '/api/v1/auth/users/user-info',
     );
-
     return response.data;
   }
 
@@ -90,6 +91,14 @@ class UserService {
   public static async deleteUser() {
     const response = await axiosInstance.delete<aptRegisterResponse>(
       `api/v1/users`,
+    );
+
+    return response.data;
+  }
+
+  public static async logOutUser() {
+    const response = await axiosInstance.get<aptRegisterResponse>(
+      `api/v1/auth/users/log-out`,
     );
 
     return response.data;
