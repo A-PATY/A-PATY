@@ -104,14 +104,14 @@ public class UserController {
 
             String dtoAddress = userModifyRequestDto.getAddress();
             String userAddress = user.getBaseAddress().getAddress();
-
             String aptId = String.valueOf(user.getApartment().getId());
-            String dong = user.getDong();
-            String ho = user.getHo();
-            String familyId = aptId + "-" + dong + "-" + ho;
-            String userId = String.valueOf(user.getId());
 
             if(!dtoAddress.equals(userAddress)){
+
+                String dong = user.getDong();
+                String ho = user.getHo();
+                String familyId = aptId + "-" + dong + "-" + ho;
+                String userId = String.valueOf(user.getId());
                 firebaseService.deleteFamilyMember(familyId, userId);
             }
 
