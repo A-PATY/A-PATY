@@ -85,7 +85,8 @@ public class TokenProvider {
 
     public boolean isTokenValid(String jwtToken) {
         try {
-            Jws<Claims> claims = getClaimsFromJwtToken(jwtToken);
+            String token = jwtToken.substring(7);
+            Jws<Claims> claims = getClaimsFromJwtToken(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;

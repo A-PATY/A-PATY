@@ -55,7 +55,7 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestBody SocialLoginDto socialLoginDto, HttpServletResponse response) {
+            @RequestBody SocialLoginDto socialLoginDto) {
         log.info("access code: {}", socialLoginDto.getAccessCode());
         boolean isNew;
         String[] tokens;
@@ -77,11 +77,6 @@ public class LoginController {
             }
 
             tokens = userService.createTokens(user);
-
-            Cookie cookie = new Cookie("refreshToken", tokens[1]);
-            cookie.setPath("/");
-            cookie.setMaxAge(5 * 60);
-            response.addCookie(cookie);
 
         } catch (IOException e) {
             log.info(e.getMessage());
