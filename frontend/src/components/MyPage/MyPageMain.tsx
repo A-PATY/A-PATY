@@ -19,6 +19,7 @@ import UserService from '../../services/UserService';
 import Swal from 'sweetalert2';
 import GpsFixedRoundedIcon from '@mui/icons-material/GpsFixedRounded';
 import UserLocation from '../../hooks/useUserLocation';
+import { useNavigate } from 'react-router-dom';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -36,7 +37,16 @@ const MyPageMain: React.FC = () => {
   const [profileImgId, setProfileImgId] = useState<number>(-1);
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (nickname === '') {
+      setNicknameError(true);
+    } else {
+      setNicknameError(false);
+    }
+  }, [nickname]);
 
   useEffect(() => {
     if (userInfo !== null) {
@@ -53,8 +63,44 @@ const MyPageMain: React.FC = () => {
           setProfileImgUrl(itemData[itemIndex].profileImgUrl);
         }
       }
+      setFindFamilyChecked(userInfo?.findFamily);
     }
   }, [itemData, userInfo]);
+
+  useEffect(() => {
+    if (profileImgId !== userInfo?.profileImgId && profileImgId !== -1) {
+      const profileImgIdFormData = new FormData();
+      profileImgIdFormData.append('profileImgId', profileImgId as any);
+      UserService.modifyUserInfo({
+        profileInfo: 'profileImgId',
+        data: profileImgIdFormData,
+      })
+        .then((response) => {})
+        .catch(({ message }) => {
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        })
+        .finally(() => {
+          UserService.getUserInfo()
+            .then(({ userInfo }) => {
+              setUserInfo(userInfo);
+            })
+            .catch(({ message }) => {
+              Swal.fire({
+                title: message,
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            });
+        });
+    }
+  }, [profileImgId, userInfo?.profileImgId]);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -78,9 +124,8 @@ const MyPageMain: React.FC = () => {
   const handleNicknameConfirmIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    setNicknameReadOnly(true);
-
-    if (nickname !== userInfo?.nickname) {
+    if (nickname !== userInfo?.nickname && !nicknameError) {
+      setNicknameReadOnly(true);
       const nicknameFormData = new FormData();
       nicknameFormData.append('nickname', nickname);
       UserService.modifyUserInfo({
@@ -116,7 +161,19 @@ const MyPageMain: React.FC = () => {
   const handleAddressModifyIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    setAddressReadOnly(false);
+    Swal.fire({
+      title: '주소 수정 시, 알림 사항 ',
+      text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
+      showDenyButton: true,
+      confirmButtonText: '수정하기',
+      denyButtonText: `취소하기`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setAddressReadOnly(false);
+      } else if (result.isDenied) {
+        setAddressReadOnly(true);
+      }
+    });
   };
 
   const handleAddressConfirmIconClick = (
@@ -159,12 +216,33 @@ const MyPageMain: React.FC = () => {
     }
   };
 
-  const handleTest = () => {
-    const testFormData = new FormData();
-    testFormData.append('findFamily', false as any);
+  const handleGpsIconClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    UserService.getUserAddress({ x, y })
+      .then((response) => {
+        setAddress(response.documents[0].code);
+        setAddressName(response.documents[0].address_name);
+        setAddressError(false);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: '위치 기반 주소 검색에 실패했습니다.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
+
+  const handleFindFamilySwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const findFamilyFormData = new FormData();
+    findFamilyFormData.append('findFamily', !findFamilyChecked as any);
     UserService.modifyUserInfo({
       profileInfo: 'findFamily',
-      data: testFormData,
+      data: findFamilyFormData,
     })
       .then((response) => {})
       .catch(({ message }) => {
@@ -174,57 +252,49 @@ const MyPageMain: React.FC = () => {
           showConfirmButton: false,
           timer: 2000,
         });
+      })
+      .finally(() => {
+        UserService.getUserInfo()
+          .then(({ userInfo }) => {
+            setUserInfo(userInfo);
+          })
+          .catch(({ message }) => {
+            Swal.fire({
+              title: message,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          });
       });
   };
+
+  const handleDeleteButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    UserService.deleteUser()
+      .then(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        navigate('/');
+      })
+      .catch(({ message }) => {
+        Swal.fire({
+          title: message,
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      });
+  };
+
   return (
     <>
       <Container>
-        {/* <ProfileWrapper>
-          <ImageWrapper>
-            <Image src="\img\sheep.png" />
-            <ModifyButton onClick={handleModifyButtonClick}>
-              <AutoFixHighIconCustom />
-            </ModifyButton>
-          </ImageWrapper>
-          <NicknameContainer>
-            <NicknameWrapper>
-              <Nickname>장미</Nickname>
-              <ModifyIcon />
-            </NicknameWrapper>
-          </NicknameContainer>
-        </ProfileWrapper> */}
-        {/* <AddressWrapper>
-          <BoxCustom>
-            <ImageWrapper>
-              <Image src="\img\sheep.png" />
-              <ModifyButton onClick={handleModifyButtonClick}>
-                <AutoFixHighIconCustom />
-              </ModifyButton>
-            </ImageWrapper>
-            <NicknameContainer>
-              <NicknameWrapper>
-                <Nickname>장미</Nickname>
-                <ModifyIcon />
-              </NicknameWrapper>
-            </NicknameContainer>
-            <AddressListWrapper>
-              <AddressValueWrapper>
-                <RoomRoundedIconCustom />
-                <AddressText>장미시 장미구 장미동</AddressText>
-                <ModifyIcon />
-              </AddressValueWrapper>
-            </AddressListWrapper>
-          </BoxCustom>
-        </AddressWrapper>
-        <ButtonsWrapper>
-          <ButtonCustom>
-            가족찾기 허용 <Switch {...label} />
-          </ButtonCustom>
-
-          <ButtonCustom>로그아웃</ButtonCustom>
-          <ButtonCustom>회원 탈퇴</ButtonCustom>
-        </ButtonsWrapper>
-         */}
         <Wrapper>
           <ImageWrapper>
             <Image src={profileImgUrl} />
@@ -249,7 +319,10 @@ const MyPageMain: React.FC = () => {
                         <ModifyIcon />
                       </GpsIconWrapper>
                     ) : (
-                      <GpsIconWrapper onClick={handleNicknameConfirmIconClick}>
+                      <GpsIconWrapper
+                        onClick={handleNicknameConfirmIconClick}
+                        className={nicknameError ? 'error' : undefined}
+                      >
                         <ConfirmIcon />
                       </GpsIconWrapper>
                     )}
@@ -278,7 +351,7 @@ const MyPageMain: React.FC = () => {
                       </GpsIconWrapper>
                     ) : (
                       <>
-                        <GpsIconWrapper>
+                        <GpsIconWrapper onClick={handleGpsIconClick}>
                           <GpsFixedRoundedIcon />
                         </GpsIconWrapper>
                         <GpsIconWrapper onClick={handleAddressConfirmIconClick}>
@@ -293,15 +366,23 @@ const MyPageMain: React.FC = () => {
           </StyledTextFieldWrapper>
 
           <StyledTextFieldWrapper>
-            <FindFamilyButton onClick={handleTest}>
-              가족찾기 허용 <Switch {...label} />
+            <FindFamilyButton>
+              가족 찾기{' '}
+              <Switch
+                {...label}
+                color="secondary"
+                checked={findFamilyChecked}
+                onChange={handleFindFamilySwitchChange}
+              />
             </FindFamilyButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
-            <SignUpButton>로그아웃</SignUpButton>
+            <LogOutButton>로그아웃</LogOutButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
-            <SignUpButton>탈퇴하기</SignUpButton>
+            <DeleteButton onClick={handleDeleteButtonClick}>
+              탈퇴하기
+            </DeleteButton>
           </StyledTextFieldWrapper>
         </Wrapper>
       </Container>
@@ -418,12 +499,33 @@ const GpsIconWrapper = styled.div`
   height: auto;
   width: auto;
   display: flex;
+  margin-left: 5px;
+
   &:hover {
     cursor: pointer;
   }
+
+  &.error {
+    cursor: not-allowed;
+  }
 `;
 
-const SignUpButton = styled(Button)`
+const LogOutButton = styled(Button)`
+  background-color: #ffd0b6;
+  color: white;
+  width: 250px;
+  height: 50px;
+  border-radius: 126px;
+  font-family: 'MinSans-Regular';
+
+  &:hover {
+    box-shadow: none;
+    text-decoration: none;
+    background-color: #ffb2a9;
+  }
+`;
+
+const DeleteButton = styled(Button)`
   background-color: #ffd0b6;
   color: white;
   width: 250px;
@@ -439,69 +541,21 @@ const SignUpButton = styled(Button)`
 `;
 
 const FindFamilyButton = styled(Button)`
-  justify-content: space-around;
-  background-color: #ffd0b6;
+  justify-content: space-between;
+  background-color: #e4d2ee;
   color: white;
   width: 250px;
   height: 50px;
   border-radius: 126px;
   font-family: 'MinSans-Regular';
+  padding: 16.5px 14px;
+  padding-right: 7px;
 
   &:hover {
     box-shadow: none;
     text-decoration: none;
-    background-color: #ffb2a9;
+    background-color: #e4d2ee;
   }
-`;
-
-const ProfileWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20% 5% 5%;
-`;
-// const ImageWrapper = styled.div`
-//   position: relative;
-// `;
-
-// const Image = styled.img`
-//   width: 60px;
-// `;
-
-// const ModifyButton = styled(IconButton)`
-//   position: absolute;
-//   border-radius: 20px;
-//   background-color: white;
-//   bottom: 0px;
-//   left: 45px;
-//   width: 25px;
-//   height: 25px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   box-shadow: rgb(0 0 0 / 16%) 0px 3px 6px, rgb(0 0 0 / 23%) 0px 3px 6px;
-// `;
-
-// const AutoFixHighIconCustom = styled(BorderColorRoundedIcon)`
-//   font-size: 12px;
-// `;
-
-// const NicknameContainer = styled.div`
-//   margin: 0px 0px 0px 24px;
-//   display: flex;
-//   flex-direction: column;
-// `;
-
-const NicknameWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Nickname = styled.p`
-  //수정 시 input으로 변환
-  font-size: 15px;
 `;
 
 const ModifyIcon = styled(CreateRoundedIcon)`
@@ -512,63 +566,4 @@ const ConfirmIcon = styled(CheckRoundedIcon)`
   color: #8c8888;
 `;
 
-const AddressWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const BoxCustom = styled(Box)`
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const AddressListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const AddressValueWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const RoomRoundedIconCustom = styled(RoomRoundedIcon)`
-  color: #8c8888;
-  height: 20px;
-  opacity: 0.8;
-  width: 20px;
-`;
-
-const AddressText = styled.p`
-  margin: 0px 0px 0px 16px;
-`;
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  -webkit-box-align: center;
-  align-items: center;
-`;
-
-const ButtonCustom = styled(Button)`
-  background-color: #ffd0b6;
-  margin: 10px 0px 0px;
-  box-shadow: none;
-  color: white;
-  width: 300px;
-  min-height: 56px;
-  border-radius: 126px;
-
-  &:hover {
-    box-shadow: none;
-    text-decoration: none;
-    background-color: #ffb2a9;
-  }
-`;
 export default MyPageMain;

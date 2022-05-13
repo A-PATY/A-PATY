@@ -3,8 +3,15 @@ import { articles, article } from '../types/boardTypes';
 import React from 'react';
 
 class BoardService {
+  public static async getCategoryList() {
+    const response = await axiosInstance.get(
+      `/api/v1/auth/users/category-list`,
+    );
+    return response.data;
+  }
+
   public static async getArticles(
-    communityId: number,
+    communityId: number | undefined,
     lastArticleId: number,
     size: number,
     categoryId: number,
@@ -15,7 +22,7 @@ class BoardService {
         communityId: communityId,
         lastArticleId: lastArticleId,
         size: size,
-        category: categoryId,
+        categoryId: categoryId,
         keyword: keyword,
       },
     });

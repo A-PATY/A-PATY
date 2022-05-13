@@ -33,7 +33,7 @@ export const kakaoAxiosInstance = createKakaoAxiosInstance();
 
 const createAxiosInstance = () => {
   const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_LOCALHOST_URL,
+    baseURL: process.env.REACT_APP_SERVER_URL,
   });
 
   return axiosInstance;

@@ -14,7 +14,11 @@ const Header: React.FC<Props> = ({ header }) => {
   return (
     <>
       <Container>
-        <Grid container spacing={0} sx={{ height: "70px", alignContent: "center"}}>
+        <Grid
+          container
+          spacing={0}
+          sx={{ height: '70px', alignContent: 'center' }}
+        >
           <GridIcon item xs={3}>
             <ArrowBackIosRoundedIconCustom onClick={() => navigate(-1)} />
           </GridIcon>
@@ -46,6 +50,7 @@ const GridIcon = styled(Grid)`
 `;
 
 const ArrowBackIosRoundedIconCustom = styled(ArrowBackIosRoundedIcon)`
+  cursor: pointer;
   margin: 5px 0px 0px 8px;
 `;
 
