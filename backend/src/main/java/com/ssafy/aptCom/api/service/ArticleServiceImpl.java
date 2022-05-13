@@ -136,6 +136,8 @@ public class ArticleServiceImpl implements ArticleService {
         if (articleRequestDto.getCommunityId() != 0) {
             community = communityRepository.getOne(articleRequestDto.getCommunityId());
         }
+
+        // is_done 은 null일 경우 0으로 수동으로 default 잡아주어야
         Article article = Article.builder()
                 .user(user)
                 .community(community)
@@ -144,7 +146,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .title(articleRequestDto.getTitle())
                 .contents(articleRequestDto.getContents())
                 .contact(articleRequestDto.getContact())
-                .isDone(articleRequestDto.getIsDone())
+                .isDone((articleRequestDto.getIsDone() == null) ? false : articleRequestDto.getIsDone())
                 .build();
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getId();

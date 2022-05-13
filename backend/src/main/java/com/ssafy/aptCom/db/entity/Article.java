@@ -1,6 +1,8 @@
 package com.ssafy.aptCom.db.entity;
 
+import com.google.firebase.database.annotations.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -48,8 +50,7 @@ public class Article extends BaseTimeEntity{
     @Column(columnDefinition = "varchar(25) default NULL")
     private String contact;
 
-    @Nullable
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "tinyint default 0")
     private Boolean isDone;
 
     @Column(columnDefinition = "integer default 0")
