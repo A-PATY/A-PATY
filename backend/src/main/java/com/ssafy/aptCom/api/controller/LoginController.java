@@ -55,7 +55,7 @@ public class LoginController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> socialLogin(
-            @RequestBody SocialLoginDto socialLoginDto, HttpServletResponse response) {
+            @RequestBody SocialLoginDto socialLoginDto) {
         log.info("access code: {}", socialLoginDto.getAccessCode());
         boolean isNew;
         String[] tokens;
@@ -77,11 +77,6 @@ public class LoginController {
             }
 
             tokens = userService.createTokens(user);
-
-            Cookie cookie = new Cookie("refreshToken", tokens[1]);
-            cookie.setPath("/");
-            cookie.setMaxAge(5 * 60);
-            response.addCookie(cookie);
 
         } catch (IOException e) {
             log.info(e.getMessage());
@@ -158,11 +153,12 @@ public class LoginController {
     public ResponseEntity<?> issueToken(
             @RequestHeader(value = "RefreshToken") String refreshToken) {
 
-        Optional<Auth> auth = userService.getAuthByRefreshToken(refreshToken);
+        String rfToken = refreshToken.substring(7);
+        Optional<Auth> auth = userService.getAuthByRefreshToken(rfToken);
         User user = auth.get().getUser();
 
         try {
-            boolean tokenValid = tokenProvider.isTokenValid(refreshToken);
+            boolean tokenValid = tokenProvider.isTokenValid(rfToken);
 
             if (!tokenValid) {
                 userService.deleteAuth(user);
@@ -177,7 +173,7 @@ public class LoginController {
         }
 
         String accessToken = tokenProvider.createJwtAccessToken(user.getKakaoUserNumber(), user.getRoleList());
-        return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, refreshToken));
+        return ResponseEntity.status(200).body(IssueTokenResponseDto.of(accessToken, rfToken));
 
     }
 

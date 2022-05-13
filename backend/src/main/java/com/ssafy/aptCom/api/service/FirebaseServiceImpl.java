@@ -4,7 +4,6 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -73,10 +72,9 @@ public class FirebaseServiceImpl implements FirebaseService {
 
         DocumentReference documentReference = firestore.collection(COLLECTION_NAME).document(familyId);
 
-
-        // map의 크기가 1 초과면 멤버만 삭제, 1이면 마지막 멤버이므로 family를 삭제
+        // map의 크기가 2 초과면 멤버만 삭제, 2이면 마지막 멤버이므로 family를 삭제
         int size = getFamilyDetail(familyId).size();
-        if (size > 1) {
+        if (size > 2) {
             Map<String, Object> updates = new HashMap<>();
             updates.put(userId, FieldValue.delete());
             documentReference.update(updates);

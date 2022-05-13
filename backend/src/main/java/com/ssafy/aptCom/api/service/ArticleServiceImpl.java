@@ -155,6 +155,7 @@ public class ArticleServiceImpl implements ArticleService {
         return  articleRepository.findById(articleId).orElse(null);
     }
 
+    @Transactional
     public List<ArticleDto> getArticles(
             User user, int communityId, int lastArticleId, int size,
             int categoryId, String keyword
@@ -169,7 +170,6 @@ public class ArticleServiceImpl implements ArticleService {
         Boolean likeYn = false;
 
         for(Article article : articleList){
-
             Likes likes = likesRepository.findLikesByArticleAndUser(article, user).orElse(null);
             if(likes != null) likeYn = true;
             else likeYn =  false;

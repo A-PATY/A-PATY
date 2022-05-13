@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -96,7 +97,7 @@ public class BoardController {
 
     }
 
-
+    @Transactional
     @ApiOperation(value = "좋아요 저장", notes = "게시판을 좋아요한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -135,7 +136,7 @@ public class BoardController {
         return ResponseEntity.status(200).body(SuccessResponseDto.of("좋아요 완료되었습니다."));
     }
 
-
+    @Transactional
     @ApiOperation(value = "게시글 조회", notes = "게시글을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

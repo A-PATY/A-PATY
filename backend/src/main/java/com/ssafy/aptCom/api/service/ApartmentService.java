@@ -8,6 +8,7 @@ import com.ssafy.aptCom.db.entity.Bill;
 import com.ssafy.aptCom.db.entity.User;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface ApartmentService {
@@ -22,8 +23,8 @@ public interface ApartmentService {
 
     void deleteBillImage(String oiu);
 
-    void billApproval(BillApprovalRequestDto billApprovalRequestDto, User user);
+    void billApproval(BillApprovalRequestDto billApprovalRequestDto, User user) throws UnsupportedEncodingException;
 
-    void billRejection(BillRejectionRequestDto billRejectionRequestDto, User user);
+    void billRejection(BillRejectionRequestDto billRejectionRequestDto, User user) throws UnsupportedEncodingException;
     
 }

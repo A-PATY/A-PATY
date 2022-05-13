@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service("userService")
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber) {
+    public User userSave(SignUpRequestDto signUpRequestDto, String kakaoUserNumber) {
         User user = getUserByKakaoUserNumber(kakaoUserNumber);
         BaseAddress baseAddress = getAddress(signUpRequestDto.getAddress());
         ProfileImg profileImg = getProfileImg(signUpRequestDto.getProfileImgId());
@@ -90,12 +89,12 @@ public class UserServiceImpl implements UserService {
         user.setProfileImg(profileImg);
         user.setBaseAddress(baseAddress);
 
-        userRepository.save(user);
-
-        userCommunitySave(signUpRequestDto.getAddress(), user);
+        return userRepository.save(user);
 
     }
 
+    @Transactional
+    @Override
     public void userCommunitySave(String addressCode, User user) {
         Community community = communityRepository.findCommunityByCommunityCode(addressCode);
 
