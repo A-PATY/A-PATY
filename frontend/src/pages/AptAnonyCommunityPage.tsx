@@ -56,7 +56,7 @@ const AptAnonyCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
-        <BoardHeader communityId={AptAnonyCommunityId} />
+        <BoardHeader type={3} communityId={AptAnonyCommunityId} />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}

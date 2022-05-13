@@ -8,13 +8,16 @@ import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsAct
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
+  type: number;
   communityId: number | undefined;
 }
 
-const BoardHeader: React.FC<Props> = ({ communityId }) => {
+const BoardHeader: React.FC<Props> = ({ type, communityId }) => {
   const navigate = useNavigate();
   const writeArticle = () => {
-    navigate('/board/write');
+    navigate('/board/write', {
+      state: { type: type, communityId: communityId },
+    });
   };
   const goToAnony = () => {
     navigate('/apt_community/anonymous');
