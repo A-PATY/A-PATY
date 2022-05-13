@@ -56,7 +56,7 @@ const AptCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
-        <BoardHeader communityId={AptCommunityId} />
+        <BoardHeader type={2} communityId={AptCommunityId} />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}

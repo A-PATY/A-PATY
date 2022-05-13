@@ -41,8 +41,8 @@ const KakaoCallbackMain: React.FC = () => {
             navigate('/newMember');
           } else {
             BoardService.getCategoryList().then(({ categoryList }) => {
-              console.log('categoryList : ');
-              console.log(categoryList);
+              // console.log('categoryList : ');
+              // console.log(categoryList);
               setCategoryList(categoryList);
             });
             UserService.getUserInfo().then(({ userInfo }) => {

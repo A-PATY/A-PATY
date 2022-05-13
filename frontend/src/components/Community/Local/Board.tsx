@@ -57,12 +57,21 @@ const Board: React.FC<Props> = ({
   //     lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
   // });
 
+  console.log('data');
+  console.log(data);
+
   const ObservationComponent = (): React.ReactElement => {
     const [ref, inView] = useInView();
 
     React.useEffect(() => {
       if (!data) {
         console.log('data가 없음');
+        console.log(data);
+        return;
+      }
+      if (data.pages[data.pages.length - 1].result.length === 0) {
+        console.log('마지막 page의 result 길이가 0입니다.');
+        console.log(data.pages[data.pages.length - 1].result);
         return;
       }
       if (inView) {
@@ -93,12 +102,12 @@ const Board: React.FC<Props> = ({
                           {article.category}
                           {(article.category === '나눔장터' ||
                             article.category === '공구') &&
-                          article.isDone === true ? (
+                          article.doneyn === true ? (
                             <Info className="isDone">완료</Info>
                           ) : undefined}
                           {(article.category === '나눔장터' ||
                             article.category === '공구') &&
-                          article.isDone === false ? (
+                          article.doneyn === false ? (
                             <Info className="isNotDone">진행 중</Info>
                           ) : undefined}
                         </Category>
@@ -108,9 +117,10 @@ const Board: React.FC<Props> = ({
                           </Title>
                           <Contents href={`/board/${article.articleId}`}>
                             {article.contents}
-                            {article.imgs !== null && (
-                              <Image src={article.imgs[0].src} />
-                            )}
+                            {article.imgs?.length !== 0 &&
+                              article.imgs !== null && (
+                                <Image src={article.imgs[0].src} />
+                              )}
                           </Contents>
                         </Article>
                         <ArticleInfoWrapper>
@@ -158,11 +168,11 @@ const Board: React.FC<Props> = ({
               </button>
             </div> */}
             <ObservationComponent />
-            <div>
+            <Notice>
               {isFetching && !isFetchingNextPage
                 ? '글을 가져오는 중입니다..'
                 : null}
-            </div>
+            </Notice>
           </>
         </Wrapper>
       </Container>
@@ -253,6 +263,17 @@ const Info = styled.span`
     margin-left: 5px;
     border-radius: 3px;
   }
+`;
+
+const Notice = styled.div`
+  display: block;
+  max-width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  line-height: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: gray;
 `;
 
 export default Board;

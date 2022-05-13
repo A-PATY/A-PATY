@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import { category } from '../../types/boardTypes';
 import { useRecoilValue } from 'recoil';
 import { categoryListState } from '../../features/Board/atom';
+import { userInfoState } from '../../features/Login/atom';
 
 interface Props {
   category: string;
@@ -14,17 +15,21 @@ interface Props {
 }
 
 const ArticleCategory: React.FC<Props> = ({ category, setCategory }) => {
-  // const categories: category[] = [
-  //   { key: 0, label: '전체' },
-  //   { key: 1, label: '일상' },
-  //   { key: 2, label: '정보' },
-  //   { key: 3, label: '나눔장터' },
-  //   { key: 4, label: '헬프' },
-  //   { key: 5, label: '육아' },
-  //   { key: 6, label: '공구' },
-  //   { key: 7, label: '후기' },
-  // ];
-  const categories: category[] | null = useRecoilValue(categoryListState);
+  const userInfo = useRecoilValue(userInfoState);
+
+  const categories = [];
+  const categoryList = useRecoilValue(categoryListState);
+
+  if (userInfo?.role === 'ROLE_ADMIN') {
+    if (categoryList !== null) categories.push(...categoryList);
+  } else if (userInfo?.role === 'ROLE_USER') {
+    if (categoryList !== null)
+      categories.push(
+        ...categoryList?.filter((category) => !category.adminOnly),
+      );
+  }
+
+  // const categories: category[] | null = useRecoilValue(categoryListState);
 
   const [label, setLabel] = React.useState(category);
 

@@ -11,7 +11,7 @@ import Switch from '@mui/material/Switch';
 import PhoneNumber from './PhoneNumber';
 import Swal from 'sweetalert2';
 import BoardService from '../../services/BoardService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ariaLabel = { 'aria-label': 'description' };
 
@@ -21,16 +21,23 @@ const ariaLabel = { 'aria-label': 'description' };
 
 const ArticleWrite: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as {
+    type: number;
+    communityId: number | undefined;
+  };
+  const { type, communityId } = state;
+  // console.log('communityId : ' + communityId);
 
-  const communityId = 367;
+  // const communityId = 367;
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
-  const [isDone, setIsDone] = useState(true);
+  const [isDone, setIsDone] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
-  console.log(phoneNumber);
+  // console.log(phoneNumber);
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -71,14 +78,16 @@ const ArticleWrite: React.FC = () => {
   ) => {
     event.preventDefault();
     const formData = new FormData();
+
+    // 이미지 첨부
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append('img', imageFiles[i] as any);
+    }
+
     // formData.append(
     //   'img',
     //   '[' + imageFiles.map((file) => file.toString()).join(',') + ']',
     // ); // 첨부파일
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      formData.append('img', imageFiles[i] as any);
-    }
 
     if (content.length < 5) {
       Swal.fire({
@@ -104,9 +113,12 @@ const ArticleWrite: React.FC = () => {
     // }
 
     formData.append('communityId', String(communityId));
-    formData.append('category', category);
     formData.append('title', title);
     formData.append('contents', content);
+
+    if (type !== 3) {
+      formData.append('category', category);
+    }
 
     if (category === '나눔장터' || category === '공구' || category === '헬프') {
       formData.append('contact', phoneNumber);
@@ -114,23 +126,26 @@ const ArticleWrite: React.FC = () => {
     }
 
     console.log(formData.get('communityId'));
-    console.log(formData.get('category'));
     console.log(typeof formData.get('communityId'));
+    console.log(formData.get('category'));
     console.log(formData.getAll('img'));
     console.log(formData.get('isDone'));
 
-    // await BoardService.createNewArticle(formData)
-    //   .then(() => {
-    //     // 게시판 목록으로 이동
-    //     navigate(`/local_community`);
-    //   })
-    //   .catch((err) => console.log(err));
+    await BoardService.createNewArticle(formData)
+      .then((res) => {
+        console.log(res);
+        // 게시판 목록으로 이동
+        navigate(`/local_community`);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
       <Container>
-        <ArticleCategory category={category} setCategory={setCategory} />
+        {type !== 3 && (
+          <ArticleCategory category={category} setCategory={setCategory} />
+        )}
         <Box
           component="form"
           sx={{
