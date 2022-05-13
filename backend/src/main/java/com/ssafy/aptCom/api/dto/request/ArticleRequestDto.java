@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @Getter
 public class ArticleRequestDto {
 
-    private int communityId;
+    private Integer communityId;
 
     private String category;
 
