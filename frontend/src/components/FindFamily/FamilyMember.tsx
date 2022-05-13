@@ -49,7 +49,7 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
           >
             <AvatarCustom 
               src={member.profileImgUrl} 
-              alt={member.userName} 
+              alt={member.nickname} 
               onClick={() => {changeMember(member)}}
               style={{ cursor: member.findFamily ? "pointer" : "default" }}
             />
@@ -61,7 +61,7 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
           >
             <AvatarCustom 
               src={member.profileImgUrl} 
-              alt={member.userName} 
+              alt={member.nickname} 
               onClick={() => {changeMember(member)}}
               style={{ cursor: member.findFamily ? "pointer" : "default" }}
             />
@@ -71,7 +71,7 @@ const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
           onClick={() => {changeMember(member)}} 
           style={{ cursor: member.findFamily ? "pointer" : "default" }}
         >
-          <MemberName>{member.userName}</MemberName>
+          <MemberName>{member.nickname}</MemberName>
           {
             member.findFamily ?
             <LocationOnIcon style={{ color: "#ffb2a9" }}/> :
