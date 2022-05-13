@@ -31,8 +31,7 @@ const Footer: React.FC<Props> = ({ footerNumber }) => {
       if (userInfo === null) {
         //로그인 후 접근하도록 알림
       } else if (userInfo.communityList.length === 1) {
-        // navigate('/apt_register');
-        navigate('/apt_community');
+        navigate('/apt_register');
       } else {
         //아파트 커뮤니티 게시판으로 연결
         navigate('/apt_community');
