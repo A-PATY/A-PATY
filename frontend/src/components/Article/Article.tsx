@@ -26,7 +26,7 @@ const LogInMain: React.FC = () => {
     contents: '',
     imgs: null,
     contact: null,
-    isDone: false,
+    doneyn: false,
     views: 0,
     likes: 0,
     isLike: true,
