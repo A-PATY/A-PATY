@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +72,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         log.info("imageUrl={}", imageUrl);
 
         Bill bill = Bill.builder()
-                .billImg(imageUrl)
+                .billImg(URLDecoder.decode(imageUrl, "UTF-8"))
                 .build();
 
         billRepository.save(bill);
@@ -99,9 +101,9 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Transactional
     @Override
-    public void billApproval(BillApprovalRequestDto billApprovalRequestDto, User user) {
+    public void billApproval(BillApprovalRequestDto billApprovalRequestDto, User user) throws UnsupportedEncodingException {
 
-        String billImg = billApprovalRequestDto.getBillImg();
+        String billImg = URLDecoder.decode(billApprovalRequestDto.getBillImg(), "UTF-8");
 
         // S3 이미지 삭제
         deleteBillImage(billImg);
@@ -121,12 +123,6 @@ public class ApartmentServiceImpl implements ApartmentService {
         // 유저커뮤니티 정보 저장
         String aptCode = apartment.get().getAptCode();
 
-        userCommunitySave(aptCode, user);
-
-
-    }
-
-    public void userCommunitySave(String aptCode, User user) {
         List<Community> communityList = communityRepository.findAllByCommunityCode(aptCode);
         for (Community communityLis : communityList) {
             UserCommunity userCommunity = UserCommunity.builder()
@@ -136,13 +132,14 @@ public class ApartmentServiceImpl implements ApartmentService {
 
             userCommunityRepository.save(userCommunity);
         }
+
     }
 
     @Transactional
     @Override
-    public void billRejection(BillRejectionRequestDto billRejectionRequestDto, User user) {
+    public void billRejection(BillRejectionRequestDto billRejectionRequestDto, User user) throws UnsupportedEncodingException {
 
-        String billImg = billRejectionRequestDto.getBillImg();
+        String billImg = URLDecoder.decode(billRejectionRequestDto.getBillImg(), "UTF-8");
 
         deleteBillImage(billImg);
 
@@ -157,6 +154,5 @@ public class ApartmentServiceImpl implements ApartmentService {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
     }
-
 
 }

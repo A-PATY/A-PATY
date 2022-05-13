@@ -94,7 +94,6 @@ public class AdminController {
             return ResponseEntity.status(500).body(ErrorMessage.of(500, "Internal Server Error, 고지서 승인 실패"));
         }
 
-
         return ResponseEntity.status(200).body(SuccessMessage.of("승인 성공했습니다."));
 
     }
