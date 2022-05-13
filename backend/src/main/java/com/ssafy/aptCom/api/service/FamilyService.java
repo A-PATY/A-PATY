@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FamilyService {
 
-    List<FamilyDto> getFamilyList(int userId, int aptId, String dong, String ho);
+    List<FamilyDto> getFamilyList(int aptId, String dong, String ho);
 }

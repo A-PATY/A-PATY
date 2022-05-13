@@ -41,7 +41,6 @@ public class FamilyController {
     ) {
         User user = userService.getUserByKakaoUserNumber(loginUser);
 
-        int userId =  user.getId();
         int aptId = 0;
         if(user.getApartment() != null) aptId = user.getApartment().getId();
         String dong = user.getDong();
@@ -54,7 +53,7 @@ public class FamilyController {
             if(aptId == 0 || dong.equals("") || ho.equals("")){
                 return ResponseEntity.status(400).body(ErrorResponseDto.of(400, "입력값이 유효하지 않습니다."));
             }
-            familyList = familyService.getFamilyList(userId, aptId, dong, ho);
+            familyList = familyService.getFamilyList(aptId, dong, ho);
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body(ErrorResponseDto.of(500, "Internal Server Error, 가족정보 조회 실패"));

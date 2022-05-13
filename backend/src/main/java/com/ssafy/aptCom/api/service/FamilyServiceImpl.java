@@ -15,9 +15,9 @@ public class FamilyServiceImpl implements FamilyService {
     @Autowired
     private FamilyRepository familyRepository;
 
-    public List<FamilyDto> getFamilyList(int userId, int aptId, String dong, String ho){
+    public List<FamilyDto> getFamilyList(int aptId, String dong, String ho){
 
-        List<FamilyInterface> list = familyRepository.findFamilyInfo(userId, aptId, dong, ho).orElse(null);
+        List<FamilyInterface> list = familyRepository.findFamilyInfo(aptId, dong, ho).orElse(null);
         List<FamilyDto> familyList = new ArrayList<>();
 
         if(list != null){
@@ -34,7 +34,6 @@ public class FamilyServiceImpl implements FamilyService {
                 familyList.add(dto);
             }
         }
-        System.out.println("familyList size : "+familyList.size());
 
         return familyList;
     }
