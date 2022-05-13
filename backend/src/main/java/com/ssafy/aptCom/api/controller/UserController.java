@@ -5,6 +5,7 @@ import com.ssafy.aptCom.api.dto.request.UserModifyRequestDto;
 import com.ssafy.aptCom.api.dto.response.ErrorMessage;
 import com.ssafy.aptCom.api.dto.response.ProfileImgListDto;
 import com.ssafy.aptCom.api.dto.response.SuccessMessage;
+import com.ssafy.aptCom.api.service.FirebaseService;
 import com.ssafy.aptCom.api.service.ProfileImgService;
 import com.ssafy.aptCom.api.service.UserService;
 import com.ssafy.aptCom.db.entity.ProfileImg;
@@ -34,6 +35,9 @@ public class UserController {
 
     @Autowired
     private ProfileImgService profileImgService;
+
+    @Autowired
+    private FirebaseService firebaseService;
 
     @PostMapping("/auth/users/sign-up")
     @ApiOperation(value = "회원가입", notes = "최초 로그인 시 유저의 추가정보를 입력받아 회원가입을 완료한다.")
@@ -98,6 +102,19 @@ public class UserController {
             User user = userService.getUserByKakaoUserNumber(loginUser);
             userService.userModify(userModifyRequestDto, user, profileInfo);
 
+            String dtoAddress = userModifyRequestDto.getAddress();
+            String userAddress = user.getBaseAddress().getAddress();
+
+            String aptId = String.valueOf(user.getApartment().getId());
+            String dong = user.getDong();
+            String ho = user.getHo();
+            String familyId = aptId + "-" + dong + "-" + ho;
+            String userId = String.valueOf(user.getId());
+
+            if(!dtoAddress.equals(userAddress)){
+                firebaseService.deleteFamilyMember(familyId, userId);
+            }
+
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
@@ -121,9 +138,18 @@ public class UserController {
             @AuthenticationPrincipal final String loginUser) {
 
         try {
+
             User user = userService.getUserByKakaoUserNumber(loginUser);
             userService.deleteAuth(user);
             userService.deleteUser(user);
+
+            String aptId = String.valueOf(user.getApartment().getId());
+            String dong = user.getDong();
+            String ho = user.getHo();
+            String familyId = aptId + "-" + dong + "-" + ho;
+            String userId = String.valueOf(user.getId());
+
+            firebaseService.deleteFamilyMember(familyId, userId);
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
