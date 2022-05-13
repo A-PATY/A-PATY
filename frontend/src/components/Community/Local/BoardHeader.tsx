@@ -7,10 +7,17 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import { useNavigate } from 'react-router-dom';
 
-const LocalHeader: React.FC = () => {
+interface Props {
+  communityId: number | undefined;
+}
+
+const BoardHeader: React.FC<Props> = ({ communityId }) => {
   const navigate = useNavigate();
   const writeArticle = () => {
     navigate('/board/write');
+  };
+  const goToAnony = () => {
+    navigate('/apt_community/anonymous');
   };
   return (
     <>
@@ -18,6 +25,7 @@ const LocalHeader: React.FC = () => {
         <Grid container spacing={0}>
           <GridText item xs={3}>
             <Text>장미동</Text>
+            <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
           </GridText>
           <Grid item xs={5.5}></Grid>
           <GridCustom item xs={3}>
@@ -74,4 +82,4 @@ const TransparentBtn = styled.button`
   background-color: transparent;
   cursor: pointer;
 `;
-export default LocalHeader;
+export default BoardHeader;
