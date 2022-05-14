@@ -1,32 +1,41 @@
+import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Avatar } from '@mui/material';
-import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
-import { articles, article } from '../../types/boardTypes';
-import BoardService from '../../services/BoardService';
-import { useRecoilValue } from 'recoil';
-// import { categoryListState } from '../../features/Board/atom';
-import { category } from '../../types/boardTypes';
+import { article } from '../../types/boardTypes';
+import VolumeDownIcon from '@mui/icons-material/VolumeDown';
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 interface Props {
   detail : article,
-}
+};
 
 const Notification: React.FC<Props> = ({ detail }) => {
+  const navigate = useNavigate();
+  
   const goToDetail = () => {
-    console.log('click')
-  }
+    console.log('click');
+    navigate(`/board/${detail.articleId}`);
+  };
+  
   return (
     <>
       <Container onClick={goToDetail}>
-        <Box>
-          <Avatar src="admin"/>
-          <Wrapper>
-            <Title>{detail.title}</Title>
-            <Content>{detail.contents}</Content>
+        <NotificationIconCustom/>
+        <Contents>
+          <Title>{detail.title}</Title>
+          <Content>{detail.contents}</Content>
+          <Info>
             <Time>{detail.createdAt}</Time>
-          </Wrapper>
-        </Box>
+            {/* 생략 여부 */}
+            <Icons>
+              <VisibilityRoundedIcon/>
+              {detail.views}
+              <ChatBubbleOutlineRoundedIcon/>
+              {detail.commentCount}
+            </Icons>
+          </Info>
+        </Contents>
       </Container>
     </>
   );
@@ -34,24 +43,29 @@ const Notification: React.FC<Props> = ({ detail }) => {
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* align-items: center; */
-  text-align: left;
-  margin: 5px 0;
-  cursor: pointer;
-`;
-
-const Box = styled.div`
-  display: flex;
   flex-direction: row;
-  margin-top: 5px;
+  align-items: flex-start;
+  /* align-items: center; */
+  margin: 35px 0;
+  cursor: pointer;
+
 `;
 
-const Wrapper = styled.div`
+const NotificationIconCustom = styled(VolumeDownIcon)`
+  /* margin: auto 0; */
+  font-size: 28px;
+  color: #ffb2a9;
+  background-color: #fff;
+  border: solid 0.5px #d3d3d3;
+  border-radius: 30px;
+  padding: 8px;
+`;
+
+const Contents = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
+  margin-left: 25px;
+  width: 270px;
 `;
 
 const Title = styled.h3`
@@ -60,16 +74,41 @@ const Title = styled.h3`
   font-weight: 600;
 `;
 
-const Content = styled.h3`
-  margin-top: 5px;
+const Content = styled.p`
   line-height: 20px;
   font-size: 14px;
+  margin-top: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 60px;
+`;
+
+const Info = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 7px;
+  color: rgba(0, 0, 0, 0.6);
 `;
 
 const Time = styled.p`
   font-size: 12px;
-  color: lightgray;
-  margin-top: 5px;
+  line-height: 14px;
+`;
+
+const Icons = styled.div`
+  font-size: 8px;
+  line-height: 8px;
+  display: flex;
+  align-items: center;
+  & .MuiSvgIcon-root {
+    font-size: 12px;
+    margin: 0 3px 0 6px;
+  };
 `;
 
 export default Notification;
