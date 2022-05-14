@@ -84,6 +84,16 @@ class BoardService {
     );
     return response.data;
   }
+
+  public static async changeLike(
+    articleId: string | undefined,
+  ) {
+    const response = await axiosInstance.post(
+      `api/v1/board/${articleId}/like`
+    );
+    return response.data;
+  }
+  
 }
 
 export default BoardService;

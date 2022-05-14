@@ -9,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import BoardService from '../../../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
+import BoardArticle from './BoardArticle';
 
 interface Props {
   data: any;
@@ -97,6 +98,7 @@ const Board: React.FC<Props> = ({
                 <React.Fragment key={i}>
                   {group.result.map((article: article) => {
                     return (
+                      // <BoardArticle article={article} key={article.articleId}/>
                       <ArticleWrapper key={article.articleId}>
                         <Category>
                           {article.category}
@@ -134,7 +136,7 @@ const Board: React.FC<Props> = ({
                             </Info>
                             <Info>{article.views}</Info>
                             <Info className="icon">
-                              {article.isLike ? (
+                              {article.likeYN ? (
                                 <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
                               ) : (
                                 <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
