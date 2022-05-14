@@ -237,7 +237,7 @@ const InfoSpan = styled.span`
   & .MuiSvgIcon-root {
     width: 16px;
     height: 16px;
-    margin: -1px 3px 1px 0;
+    margin: -1px 3px 3px 0;
     vertical-align: middle;
   }
 `;
@@ -263,7 +263,7 @@ const ContentArea = styled.p`
 `;
 
 const ArticleContent = styled.div`
-  padding: 0 20px;
+  margin: 0 20px;
   border-top: 1px solid #eee;
   word-wrap: break-word;
   word-break: break-word;
