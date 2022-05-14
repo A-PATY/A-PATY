@@ -18,20 +18,6 @@ const NotificationList: React.FC = () => {
   });
   
   useEffect(() => {
-    // const fetchArticles = async () => {
-    //   const { articles } = await BoardService.getArticles(
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     null,
-    //   );
-    //   setNotifications(articles);
-    //   console.log(articles);
-    //   return;
-    // };
-    // fetchArticles();
-
     if (categoryId) {
       const fetchArticles = async () => {
         const { articles } = await BoardService.getArticles(
@@ -42,7 +28,6 @@ const NotificationList: React.FC = () => {
           null,
         );
         setNotifications(articles);
-        return;
       };
       fetchArticles();
     };
