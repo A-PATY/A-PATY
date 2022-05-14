@@ -74,10 +74,6 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     event.preventDefault();
     const formData = new FormData();
 
-    for (let i = 0; i < imageFiles.length; i++) {
-      formData.append('img', imageFiles[i] as any);
-    }
-
     if (content.length < 5) {
       Swal.fire({
         icon: 'warning',
@@ -86,6 +82,10 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
         timer: 1500,
       });
       return;
+    }
+
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append('img', imageFiles[i] as any);
     }
 
     // 반복문으로 처리 -> articleData의 type 문제 발생(key도 string, 값도 string으로 하면 될듯)

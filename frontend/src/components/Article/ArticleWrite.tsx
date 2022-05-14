@@ -79,16 +79,6 @@ const ArticleWrite: React.FC = () => {
     event.preventDefault();
     const formData = new FormData();
 
-    // 이미지 첨부
-    for (let i = 0; i < imageFiles.length; i++) {
-      formData.append('img', imageFiles[i] as any);
-    }
-
-    // formData.append(
-    //   'img',
-    //   '[' + imageFiles.map((file) => file.toString()).join(',') + ']',
-    // ); // 첨부파일
-
     if (content.length < 5) {
       Swal.fire({
         icon: 'warning',
@@ -97,6 +87,11 @@ const ArticleWrite: React.FC = () => {
         timer: 1500,
       });
       return;
+    }
+
+    // 이미지 첨부
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append('img', imageFiles[i] as any);
     }
 
     // 반복문으로 처리 -> articleData의 type 문제 발생(key도 string, 값도 string으로 하면 될듯)
