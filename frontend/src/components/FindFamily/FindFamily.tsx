@@ -37,7 +37,7 @@ const FindFamily: React.FC = () => {
   const [familyId, setFamilyId] = useState<string>("");
   const [selectedMember, setSelectedMember] = useState<familyList>({
     userId: 0,  
-    userName: "",
+    nickname: "",
     profileImgUrl: "",
     findFamily: true
   });
@@ -59,7 +59,7 @@ const FindFamily: React.FC = () => {
             if (family[i].userId === userInfo.userId) {
               setSelectedMember({ 
                 userId: userInfo.userId,
-                userName: family[i].userName,
+                nickname: family[i].nickname,
                 profileImgUrl: family[i].profileImgUrl,
                 findFamily: userInfo.findFamily
               });

@@ -9,7 +9,7 @@ export interface article {
   contents: string;
   imgs: img[] | null;
   contact: string | null;
-  isDone: boolean | null;
+  doneyn: boolean | null;
   views: number;
   likes: number;
   isLike: boolean;

@@ -1,7 +1,7 @@
 export interface memberProps {
   member: {
     userId: number;
-    userName: string;
+    nickname: string;
     findFamily: boolean; 
     profileImgUrl: string;
   },
@@ -10,7 +10,7 @@ export interface memberProps {
 
 export interface familyList {
   userId: number;
-  userName: string;
+  nickname: string;
   findFamily: boolean; 
   profileImgUrl: string;
 };

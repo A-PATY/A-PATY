@@ -3,13 +3,18 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
-import { categoryListState } from '../../../features/Board/atom';
+import {
+  categoryListState,
+  adminCategoryChipState,
+  userCategoryChipState,
+} from '../../../features/Board/atom';
 import { userInfoState } from '../../../features/Login/atom';
+import { category } from '../../../types/boardTypes';
 
-interface ChipData {
-  key: number;
-  label: string;
-}
+// interface ChipData {
+//   key: number;
+//   label: string;
+// }
 
 interface Props {
   categoryId: number;
@@ -45,6 +50,8 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   const chipData = [{ categoryId: 0, categoryName: '전체', adminOnly: false }];
 
   const categoryList = useRecoilValue(categoryListState);
+  console.log('categoryList');
+  console.log(categoryList);
 
   if (userInfo?.role === 'ROLE_ADMIN') {
     if (categoryList !== null) chipData.push(...categoryList);
@@ -53,11 +60,13 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
       chipData.push(...categoryList?.filter((category) => !category.adminOnly));
   }
 
-  // filter
-  // if (userInfo?.role === 'ROLE_USER') {
-  //   if (categoryList?.filter((category) => !category.adminOnly) !== undefined) {
-  //     categoryList = categoryList?.filter((category) => !category.adminOnly);
-  //   }
+  // selector -> 오류 떠서 보류
+  // let chipData: category[] | undefined = [];
+  // if (userInfo?.role === 'ROLE_ADMIN') {
+  //   chipData = useRecoilValue(adminCategoryChipState)
+  // } else if (userInfo?.role === 'ROLE_USER') {
+  //   if (categoryList !== null)
+  //     chipData.push(...categoryList?.filter((category) => !category.adminOnly));
   // }
 
   // if (userInfo?.role === 'ROLE_USER') {
@@ -67,16 +76,6 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   //     }
   //   });
   // }
-
-  console.log('chipData :');
-  console.log(chipData);
-
-  // console.log('entireCategory :');
-  // console.log(entireCategory);
-
-  // const chipData = useRecoilValue(categoryListState)?.filter(
-  //   (category) => !category.adminOnly,
-  // );
 
   const handleCategoryClick = (categoryId: number) => {
     console.log('categoryId');

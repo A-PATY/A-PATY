@@ -1,8 +1,8 @@
 import { Global } from '@emotion/react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
 import resetStyles from './styles/resetStyles';
 import commonStyles from './styles/commonStyles';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import MainPage from './pages/MainPage';
 import LogInPage from './pages/LogInPage';
@@ -20,7 +20,57 @@ import NewMemberPage from './pages/NewMemberPage';
 import NotificationPage from './pages/NotificationPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+import AdminPage from './pages/AdminPage';
+import { useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from './features/Login/atom';
+import { getCookie, setCookie } from './hooks/Cookie';
+import { axiosInstance } from './utils/axios';
+
+import UserService from './services/UserService';
+import BoardService from './services/BoardService';
+import { categoryListState } from './features/Board/atom';
+
 const App: React.FC = () => {
+  const setCategoryList = useSetRecoilState(categoryListState);
+  const userInfo = useRecoilValue(userInfoState);
+  const setUserInfo = useSetRecoilState(userInfoState);
+  const accessToken = axiosInstance.defaults.headers.common['Authorization'];
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
+      axiosInstance.defaults.headers.common[
+        'RefreshToken'
+      ] = `Bearer ${refreshToken}`;
+      UserService.getNewToken().then(({ accessToken, refreshToken }) => {
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`;
+        setCookie('apaty_refresh', refreshToken, {
+          maxAge: 60 * 5,
+          path: '/',
+        });
+        BoardService.getCategoryList().then(({ categoryList }) => {
+          // console.log('categoryList : ');
+          // console.log(categoryList);
+          setCategoryList(categoryList);
+        });
+        UserService.getUserInfo().then(({ userInfo }) => {
+          setUserInfo(userInfo);
+        });
+      });
+    }
+
+    if (userInfo === null && accessToken !== undefined) {
+      //악성 유저 처리
+    }
+
+    if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
+      //로그인 후 이용하도록 처리
+    }
+  }, [userInfo]);
+
   return (
     <>
       <Global styles={resetStyles} />
@@ -44,6 +94,7 @@ const App: React.FC = () => {
           <Route path="/board/:article_id/edit" element={<ArticleEditPage />} />
           <Route path="/newMember" element={<NewMemberPage />} />
           <Route path="/notification" element={<NotificationPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

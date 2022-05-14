@@ -26,7 +26,7 @@ const LogInMain: React.FC = () => {
     contents: '',
     imgs: null,
     contact: null,
-    isDone: false,
+    doneyn: false,
     views: 0,
     likes: 0,
     isLike: true,
@@ -43,7 +43,7 @@ const LogInMain: React.FC = () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
         console.log(res);
-        setArticle(res.data);
+        setArticle(res);
       })
       .catch((err) => {
         if (err.response) {

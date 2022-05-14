@@ -36,7 +36,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
 
   const [imageFiles, setImageFiles] = useState<Array<any>>([]); // 이미지는 나중에 구현
 
-  const [isDone, setIsDone] = useState(article.isDone);
+  const [isDone, setIsDone] = useState(article.doneyn);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(
     article.contact,
   );
