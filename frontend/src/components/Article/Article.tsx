@@ -131,7 +131,7 @@ const LogInMain: React.FC = () => {
             <ImageContainer>
               {/* 추후 map 사용 */}
               {article?.imgs?.map((img) => (
-                <Image key={img.imgId} src={img.src} alt="image"></Image>
+                <Image key={img.id} src={img.imgUrl} alt="image"></Image>
               ))}
             </ImageContainer>
             <ArticleInfo>

@@ -21,8 +21,8 @@ export interface article {
 }
 
 export interface img {
-  imgId: number;
-  src: string;
+  id: number;
+  imgUrl: string;
 }
 
 export interface comment {

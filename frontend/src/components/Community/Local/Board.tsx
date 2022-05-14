@@ -65,6 +65,7 @@ const Board: React.FC<Props> = ({
 
     React.useEffect(() => {
       if (!data) {
+        console.log('inView: ' + inView);
         console.log('data가 없음');
         console.log(data);
         return;
@@ -118,8 +119,9 @@ const Board: React.FC<Props> = ({
                           <Contents href={`/board/${article.articleId}`}>
                             {article.contents}
                             {article.imgs?.length !== 0 &&
-                              article.imgs !== null && (
-                                <Image src={article.imgs[0].src} />
+                              article.imgs !== null &&
+                              article.imgs.length !== 0 && (
+                                <Image src={article.imgs[0].imgUrl} />
                               )}
                           </Contents>
                         </Article>
