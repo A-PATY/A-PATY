@@ -22,6 +22,11 @@ const BoardHeader: React.FC<Props> = ({ type, communityId }) => {
   const goToAnony = () => {
     navigate('/apt_community/anonymous');
   };
+
+  const goToNotification = () => {
+    navigate('/notification');
+  };
+
   return (
     <>
       <Container>
@@ -39,7 +44,7 @@ const BoardHeader: React.FC<Props> = ({ type, communityId }) => {
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-              <NotificationsActiveRoundedIcon />
+              <NotificationsActiveRoundedIcon onClick={goToNotification}/>
             </TransparentBtn>
           </GridCustom>
         </Grid>
