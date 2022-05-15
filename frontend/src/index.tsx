@@ -23,18 +23,18 @@ axiosInstance.defaults.withCredentials = true;
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={true} />
-      <Suspense fallback={<p>loading...</p>}>
-        <RecoilRoot>
-          <CookiesProvider>
-            <App />
-          </CookiesProvider>
-        </RecoilRoot>
-      </Suspense>
-    </QueryClientProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={true} />
+    <Suspense fallback={<p>loading...</p>}>
+      <RecoilRoot>
+        <CookiesProvider>
+          <App />
+        </CookiesProvider>
+      </RecoilRoot>
+    </Suspense>
+  </QueryClientProvider>,
+  // </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

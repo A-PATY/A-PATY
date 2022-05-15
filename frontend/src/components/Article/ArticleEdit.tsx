@@ -23,13 +23,6 @@ interface Props {
 const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
 
-  const communityId = 367;
-  // const [category, setCategory] = useState<string>('');
-  // const [title, setTitle] = useState<string>('');
-  // const [content, setContent] = useState<string>('');
-  // const [imageFiles, setImageFiles] = useState<Array<any>>([]);
-  // const [isDone, setIsDone] = useState(true);
-  // const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [category, setCategory] = useState<string>(article.category);
   const [title, setTitle] = useState<string>(article.title);
   const [content, setContent] = useState<string>(article.contents);
@@ -80,14 +73,6 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
   ) => {
     event.preventDefault();
     const formData = new FormData();
-    // formData.append(
-    //   'img',
-    //   '[' + imageFiles.map((file) => file.toString()).join(',') + ']',
-    // ); // 첨부파일
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      formData.append('img', imageFiles[i] as any);
-    }
 
     if (content.length < 5) {
       Swal.fire({
@@ -97,6 +82,10 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
         timer: 1500,
       });
       return;
+    }
+
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append('img', imageFiles[i] as any);
     }
 
     // 반복문으로 처리 -> articleData의 type 문제 발생(key도 string, 값도 string으로 하면 될듯)
@@ -112,7 +101,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     //   formData.append(key, articleData[key]);
     // }
 
-    formData.append('communityId', String(communityId));
+    // formData.append('communityId', String(communityId));
     formData.append('category', category);
     formData.append('title', title);
     formData.append('contents', content);
@@ -122,18 +111,17 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
       formData.append('isDone', String(isDone));
     }
 
-    console.log(formData.get('communityId'));
     console.log(formData.get('category'));
-    console.log(typeof formData.get('communityId'));
     console.log(formData.getAll('img'));
     console.log(formData.get('isDone'));
 
-    // await BoardService.editArticle(article.articleId, formData)
-    //   .then(() => {
-    //     // 게시판 목록으로 이동
-    //     navigate(`/local_community`);
-    //   })
-    //   .catch((err) => console.log(err));
+    await BoardService.editArticle(String(article.articleId), formData)
+      .then((res) => {
+        console.log(res);
+        // 게시판 목록으로 이동
+        navigate(`/local_community`);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

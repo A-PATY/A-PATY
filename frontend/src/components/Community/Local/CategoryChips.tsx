@@ -11,47 +11,15 @@ import {
 import { userInfoState } from '../../../features/Login/atom';
 import { category } from '../../../types/boardTypes';
 
-// interface ChipData {
-//   key: number;
-//   label: string;
-// }
-
 interface Props {
   categoryId: number;
-
   setCategoryId: (value: number) => void;
 }
 
 const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
-  // const [chipData, setChipData] = React.useState<readonly ChipData[]>([
-  //   { key: 0, label: '전체' },
-  //   { key: 1, label: '일상' },
-  //   { key: 2, label: '정보' },
-  //   { key: 3, label: '나눔장터' },
-  //   { key: 4, label: '헬프' },
-  //   { key: 5, label: '육아' },
-  //   { key: 6, label: '공구' },
-  //   { key: 7, label: '후기' },
-  // ]);
-
-  // 0: {categoryId: 1, categoryName: '공지', adminOnly: true}
-  // 1: {categoryId: 2, categoryName: '일상', adminOnly: false}
-  // 2: {categoryId: 3, categoryName: '정보', adminOnly: false}
-  // 3: {categoryId: 4, categoryName: '나눔장터', adminOnly: false}
-  // 4: {categoryId: 5, categoryName: '헬프', adminOnly: false}
-  // 5: {categoryId: 6, categoryName: '육아', adminOnly: false}
-  // 6: {categoryId: 7, categoryName: '교육', adminOnly: false}
-  // 7: {categoryId: 8, categoryName: '공구', adminOnly: false}
-  // 8: {categoryId: 9, categoryName: '후기', adminOnly: false}
-  // length: 9
-
   const userInfo = useRecoilValue(userInfoState);
-
   const chipData = [{ categoryId: 0, categoryName: '전체', adminOnly: false }];
-
   const categoryList = useRecoilValue(categoryListState);
-  console.log('categoryList');
-  console.log(categoryList);
 
   if (userInfo?.role === 'ROLE_ADMIN') {
     if (categoryList !== null) chipData.push(...categoryList);
