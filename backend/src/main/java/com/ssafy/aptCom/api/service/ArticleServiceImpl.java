@@ -216,7 +216,7 @@ public class ArticleServiceImpl implements ArticleService {
         old_article.setTitle(articleUpdateRequestDto.getTitle());
         old_article.setContents(articleUpdateRequestDto.getTitle());
         old_article.setContact(articleUpdateRequestDto.getContact());
-        old_article.setIsDone(articleUpdateRequestDto.getIsDone());
+        old_article.setIsDone((articleUpdateRequestDto.getIsDone() == null) ? false : articleUpdateRequestDto.getIsDone());
         articleRepository.save(old_article);
         log.info("게시글 업데이트 완료");
     }
