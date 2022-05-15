@@ -117,7 +117,7 @@ const ArticleWrite: React.FC = () => {
         ),
       );
 
-      const temp = imageFiles;
+      const temp = [...imageFiles];
       temp.splice(index, 1);
       setImageFiles(temp);
     };
@@ -388,6 +388,7 @@ const DeleteButton = styled(IconButton)`
 const ClearRoundedIconCustom = styled(ClearRoundedIcon)`
   font-size: 12px;
 `;
+
 const SubmitButtonCustom = styled(Button)`
   background-color: #bae6e5;
   margin: 0px 20px
