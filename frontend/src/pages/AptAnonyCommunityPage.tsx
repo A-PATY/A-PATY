@@ -19,9 +19,9 @@ const AptAnonyCommunityPage: React.FC = () => {
   console.log(AptAnonyCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
-  const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
+  const defaultPaginationSize = 10; // 한 번 요청으로 가져올 게시글의 개수
   const [categoryId, setCategoryId] = useState<number>(0);
-  const keyword = '';
+  const [keyword, setKeyword] = useState<string>('');
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     const { articles } = await BoardService.getArticles(
@@ -56,7 +56,12 @@ const AptAnonyCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
-        <BoardHeader type={3} communityId={AptAnonyCommunityId} />
+        <BoardHeader
+          type={3}
+          communityId={AptAnonyCommunityId}
+          keyword={keyword}
+          setKeyword={setKeyword}
+        />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}

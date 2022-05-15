@@ -6,33 +6,71 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import { useNavigate } from 'react-router-dom';
+import { InputBase } from '@mui/material';
+import React, { useState } from 'react';
 
 interface Props {
   type: number;
   communityId: number | undefined;
+  keyword: string;
+  setKeyword: (keyword: string) => void;
 }
 
-const BoardHeader: React.FC<Props> = ({ type, communityId }) => {
+const BoardHeader: React.FC<Props> = ({
+  type,
+  communityId,
+  keyword,
+  setKeyword,
+}) => {
   const navigate = useNavigate();
   const writeArticle = () => {
     navigate('/board/write', {
       state: { type: type, communityId: communityId },
     });
   };
+  const [searchValue, setSearchValue] = useState(keyword);
   const goToAnony = () => {
     navigate('/apt_community/anonymous');
   };
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    setSearchValue(event.target.value);
+  };
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      onSearch();
+      // goSearch();
+      // setSearchwine("")
+    }
+  };
+  const onSearch = () => {
+    console.log('검색합니다.');
+    console.log('searchValue');
+    console.log(searchValue);
+    setKeyword(searchValue);
+  };
+
   return (
     <>
       <Container>
         <Grid container spacing={0}>
-          <GridText item xs={3}>
+          {/* <GridText item xs={3}>
             <Text>장미동</Text>
             <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
-          </GridText>
-          <Grid item xs={5.5}></Grid>
+          </GridText> */}
+          <Grid item xs={8.5}>
+            <Search id="search">
+              <InputBaseCustom
+                placeholder="검색하기"
+                inputProps={{ 'aria-label': 'search' }}
+                value={searchValue}
+                onChange={handleSearchChange}
+                onKeyPress={handleKeyUp}
+              />
+            </Search>
+          </Grid>
           <GridCustom item xs={3}>
-            <TransparentBtn>
+            <TransparentBtn onClick={onSearch}>
               <SearchRoundedIcon />
             </TransparentBtn>
             <TransparentBtn onClick={writeArticle}>
@@ -85,4 +123,21 @@ const TransparentBtn = styled.button`
   background-color: transparent;
   cursor: pointer;
 `;
+
+const InputBaseCustom = styled(InputBase)`
+  width: 100%;
+  padding: 3px 15px;
+  font-size: 14px;
+`;
+
+const Search = styled.div`
+  position: relative;
+  border-radius: 10px;
+  margin: 0px 8px 0px 18px;
+  background-color: rgba(192, 192, 192, 0.2);
+  &:hover {
+    background-color: rgba(192, 192, 192, 0.3);
+  }
+`;
+
 export default BoardHeader;

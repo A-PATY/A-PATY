@@ -10,20 +10,20 @@ import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
 
 const LocalCommunityPage: React.FC = () => {
-  const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo : ');
-  console.log(userInfo);
+  // const userInfo = useRecoilValue(userInfoState);
+  // console.log('userInfo : ');
+  // console.log(userInfo);
 
   // 공통 함수
-  // const LocalCommunityId = useCommunityId(1);
-  const LocalCommunityId = userInfo?.communityList[0].communityId;
+  const LocalCommunityId = useCommunityId(1);
+  // const LocalCommunityId = userInfo?.communityList[0].communityId;
   console.log('LocalCommunityId');
   console.log(LocalCommunityId);
 
   // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
   const defaultPaginationSize = 10; // 한 번 요청으로 가져올 게시글의 개수
   const [categoryId, setCategoryId] = useState<number>(0);
-  const keyword = '';
+  const [keyword, setKeyword] = useState<string>('');
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     // 여기서 조건문 분기하면 될듯
@@ -48,7 +48,7 @@ const LocalCommunityPage: React.FC = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery(
-    [`localArticles-category${categoryId}`, LocalCommunityId],
+    [`localArticles-category${categoryId}`, LocalCommunityId, keyword],
     fetchArticles,
     {
       getNextPageParam: (lastPage) => {
@@ -70,7 +70,12 @@ const LocalCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
-        <BoardHeader type={1} communityId={LocalCommunityId} />
+        <BoardHeader
+          type={1}
+          communityId={LocalCommunityId}
+          keyword={keyword}
+          setKeyword={setKeyword}
+        />
         <BoardList
           categoryId={categoryId}
           setCategoryId={setCategoryId}
