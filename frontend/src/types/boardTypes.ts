@@ -12,7 +12,7 @@ export interface article {
   doneyn: boolean | null;
   views: number;
   likes: number;
-  isLike: boolean;
+  likeYN: boolean;
   createdAt: string;
   author: string;
   commentCount: number;

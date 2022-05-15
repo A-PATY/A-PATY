@@ -50,6 +50,10 @@ const BoardHeader: React.FC<Props> = ({
     setKeyword(searchValue);
   };
 
+  const goToNotification = () => {
+    navigate('/notification');
+  };
+
   return (
     <>
       <Container>
@@ -77,7 +81,7 @@ const BoardHeader: React.FC<Props> = ({
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-              <NotificationsActiveRoundedIcon />
+              <NotificationsActiveRoundedIcon onClick={goToNotification} />
             </TransparentBtn>
           </GridCustom>
         </Grid>
