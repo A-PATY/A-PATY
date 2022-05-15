@@ -8,11 +8,13 @@ import BoardHeader from '../components/Community/Local/BoardHeader';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
+import Header from '../components/common/Header';
 
 const LocalCommunityPage: React.FC = () => {
-  // const userInfo = useRecoilValue(userInfoState);
-  // console.log('userInfo : ');
-  // console.log(userInfo);
+  const userInfo = useRecoilValue(userInfoState);
+  console.log('userInfo : ');
+  console.log(userInfo);
+  const communityName = userInfo?.dongName + ' 커뮤니티';
 
   // 공통 함수
   const LocalCommunityId = useCommunityId(1);
@@ -70,6 +72,7 @@ const LocalCommunityPage: React.FC = () => {
   return (
     <>
       <Container>
+        <Header header={communityName} />
         <BoardHeader
           type={1}
           communityId={LocalCommunityId}

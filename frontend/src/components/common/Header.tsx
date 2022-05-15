@@ -6,7 +6,7 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  header: string;
+  header: string | undefined;
 }
 
 const Header: React.FC<Props> = ({ header }) => {
