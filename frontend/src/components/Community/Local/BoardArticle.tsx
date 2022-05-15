@@ -71,14 +71,14 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
             <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
           </Info>
           <Info>{article.views}</Info>
-          <Info className="icon">
+          <Info className="icon" style={{ cursor: 'pointer'}} onClick={toggleLike}>
             {isLike ? (
-              <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} onClick={toggleLike} />
+              <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
             ) : (
-              <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} onClick={toggleLike} />
+              <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
             )}
           </Info>
-          <Info>{likeCnt}</Info>
+          <Info style={{ cursor: 'pointer'}} onClick={toggleLike}>{likeCnt}</Info>
           <Info className="icon">
             <ChatBubbleOutlineRoundedIcon
               sx={{ fontSize: '8px' }}
