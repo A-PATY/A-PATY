@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import Footer from '../components/common/Footer';
-import BoardList from '../components/Community/Local/BoardList';
-import BoardHeader from '../components/Community/Local/BoardHeader';
-import { userInfoState } from '../features/Login/atom';
-import BoardService from '../services/BoardService';
+import Footer from '../../common/Footer';
+import BoardList from '../Local/BoardList';
+import BoardHeader from '../Local/BoardHeader';
+import { userInfoState } from '../../../features/Login/atom';
+import BoardService from '../../../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
-import useCommunityId from '../hooks/useCommunityId';
+import useCommunityId from '../../../hooks/useCommunityId';
 
 const AptAnonyCommunityPage: React.FC = () => {
   // const userInfo = useRecoilValue(userInfoState);
@@ -44,10 +44,21 @@ const AptAnonyCommunityPage: React.FC = () => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
-    getNextPageParam: (lastPage) =>
-      lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
-  });
+  } = useInfiniteQuery(
+    [`localArticles-category${categoryId}`, AptAnonyCommunityId, keyword],
+    fetchArticles,
+    {
+      getNextPageParam: (lastPage) => {
+        // console.log('lastPage : ');
+        // console.log(lastPage);
+        return lastPage.result.length !== 0
+          ? lastPage.result[lastPage.result.length - 1].articleId
+          : false;
+      },
+      // getNextPageParam: (lastPage) =>
+      //   lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
+    },
+  );
 
   useEffect(() => {
     document.title = '아파트 익명 커뮤니티';
@@ -72,7 +83,6 @@ const AptAnonyCommunityPage: React.FC = () => {
           isFetchingNextPage={isFetchingNextPage}
         />
       </Container>
-      <Footer footerNumber={-1} />
     </>
   );
 };
