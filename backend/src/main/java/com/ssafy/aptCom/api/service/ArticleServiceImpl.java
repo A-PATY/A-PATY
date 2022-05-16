@@ -90,16 +90,16 @@ public class ArticleServiceImpl implements ArticleService {
         // 기존이미지에서 새로운 이미지 제거, 남은 이미지 삭제
         log.info("이미지 db삭제");
         List<String> old_db_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
-        log.info("oiu:{}", old_db_images_url);
+        log.info("기존 db 이미지:{}", old_db_images_url);
 
         for (String old_article_image_url:old_article_imgs_url) {
             old_db_images_url.remove(old_article_image_url);
         }
-
+        log.info("삭제할 db 이미지 url:{}", old_db_images_url);
         if (old_db_images_url.size() > 0) {
             log.info("기존 이미지 db 삭제");
-            for (String old_article_image_url:old_article_imgs_url) {
-                imageRepository.deleteImgByImgUrl(old_article_image_url);
+            for (String old_db_image_url:old_db_images_url) {
+                imageRepository.deleteImgByImgUrl(old_db_image_url);
             }
         }
     }
@@ -213,10 +213,11 @@ public class ArticleServiceImpl implements ArticleService {
         // 기존이미지에서 새로운 이미지 제거, 남은 이미지 삭제
         log.info("이미지 s3삭제");
         List<String> old_db_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
-        log.info("oiu:{}", old_db_images_url);
+        log.info("기존 db 이미지 : {}", old_db_images_url);
 
         for (String old_article_image_url:old_article_imgs_url) {
             old_db_images_url.remove(old_article_image_url);
+            log.info("남은 이미지 : {}", old_db_images_url);
         }
 
         if (old_db_images_url.size() > 0) {
