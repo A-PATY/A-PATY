@@ -19,7 +19,9 @@ public class ArticleUpdateRequestDto {
 
     private String contents;
 
-    ArrayList<MultipartFile> img;
+    ArrayList<String> oldImgs;
+
+    ArrayList<MultipartFile> newImgs;
 
     private String contact;
 
