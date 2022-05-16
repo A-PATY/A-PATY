@@ -8,6 +8,7 @@ import com.ssafy.aptCom.db.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ArticleService {
@@ -16,7 +17,7 @@ public interface ArticleService {
 
     String saveArticleImage(MultipartFile multipartFile, Integer articleId) throws IOException;
 
-    void deleteArticleImagesDB(Integer articleId);
+    void deleteArticleImagesDB(ArrayList<String> old_article_imgs_url, Integer articleId);
 
     void deleteArticleImages(List<String> old_images_url) throws IOException;
 
@@ -28,7 +29,7 @@ public interface ArticleService {
 
     Integer createArticle(ArticleRequestDto articleRequestDto, User user);
 
-    void deleteArticleImagesS3(Integer articleId) throws IOException;
+    void deleteArticleImagesS3(ArrayList<String> old_article_imgs_url, Integer articleId) throws IOException;
 
     void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto);
 

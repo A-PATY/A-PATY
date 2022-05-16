@@ -86,8 +86,22 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Transactional
     @Override
-    public void deleteArticleImagesDB(Integer articleId) {
-        imageRepository.deleteAllImgByArticleId(articleId);
+    public void deleteArticleImagesDB(ArrayList<String> old_article_imgs_url, Integer articleId) {
+        // 기존이미지에서 새로운 이미지 제거, 남은 이미지 삭제
+        log.info("이미지 db삭제");
+        List<String> old_db_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
+        log.info("oiu:{}", old_db_images_url);
+
+        for (String old_article_image_url:old_article_imgs_url) {
+            old_db_images_url.remove(old_article_image_url);
+        }
+
+        if (old_db_images_url.size() > 0) {
+            log.info("기존 이미지 db 삭제");
+            for (String old_article_image_url:old_article_imgs_url) {
+                imageRepository.deleteImgByImgUrl(old_article_image_url);
+            }
+        }
     }
 
     @Transactional
@@ -132,10 +146,11 @@ public class ArticleServiceImpl implements ArticleService {
 
         // getCommunityId() 0이면 null로 community 넣기(공지용)
         Community community = null;
-        Category category = categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory());
         if (articleRequestDto.getCommunityId() != 0) {
             community = communityRepository.getOne(articleRequestDto.getCommunityId());
         }
+
+        Category category = categoryRepository.findCategoryByCategoryName(articleRequestDto.getCategory());
 
         // is_done 은 null일 경우 0으로 수동으로 default 잡아주어야
         Article article = Article.builder()
@@ -194,15 +209,19 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Transactional
     @Override
-    public void deleteArticleImagesS3(Integer articleId) throws IOException {
-        // 기존이미지 불러온 후 삭제
+    public void deleteArticleImagesS3(ArrayList<String> old_article_imgs_url, Integer articleId) throws IOException {
+        // 기존이미지에서 새로운 이미지 제거, 남은 이미지 삭제
         log.info("이미지 s3삭제");
-        List<String> old_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
-        log.info("oiu:{}", old_images_url);
+        List<String> old_db_images_url = imageRepository.findAllImgUrlByArticleId(articleId);
+        log.info("oiu:{}", old_db_images_url);
 
-        if (old_images_url.size() > 0) {
+        for (String old_article_image_url:old_article_imgs_url) {
+            old_db_images_url.remove(old_article_image_url);
+        }
+
+        if (old_db_images_url.size() > 0) {
             log.info("기존 이미지 S3 삭제");
-            deleteArticleImages(old_images_url);
+            deleteArticleImages(old_db_images_url);
         }
     }
 
@@ -211,6 +230,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public void updateArticle(Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) {
         Article old_article = articleRepository.getOne(articleId);
+        log.info("update할 article id : {}", old_article.getId());
         Category category = categoryRepository.findCategoryByCategoryName(articleUpdateRequestDto.getCategory());
         old_article.setCategory(category);
         old_article.setTitle(articleUpdateRequestDto.getTitle());
