@@ -16,8 +16,7 @@ import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-const LogInMain: React.FC = () => {
-  // const [articleId, setArticleId] = React.useState(0)
+const Article: React.FC = () => {
   const navigate = useNavigate();
 
   const [article, setArticle] = React.useState<article>({
@@ -40,7 +39,6 @@ const LogInMain: React.FC = () => {
   const { article_id } = useParams<{ article_id: string }>();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
-  // console.log(useParams());
 
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
@@ -147,7 +145,6 @@ const LogInMain: React.FC = () => {
           <ArticleContent>
             <ContentArea>{article?.contents}</ContentArea>
             <ImageContainer>
-              {/* 추후 map 사용 */}
               {article?.imgs?.map((img) => (
                 <Image key={img.id} src={img.imgUrl} alt="image"></Image>
               ))}
@@ -330,4 +327,4 @@ const Buttons = styled.a`
   }
 `;
 
-export default LogInMain;
+export default Article;
