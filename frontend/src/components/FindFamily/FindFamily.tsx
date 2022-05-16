@@ -51,6 +51,7 @@ const FindFamily: React.FC = () => {
     FamilyService.getFamilyList()
       .then((data) => {
         const family = data.familyList;
+        console.log(data.familyList);
         setFamilyId(data.familyId);
         setFamilyList(data.familyList);
         
@@ -95,7 +96,10 @@ const FindFamily: React.FC = () => {
 
   // 지도상의 좌표 변화
   useEffect(() => {
-    mapLocation(aptLocation.lat, aptLocation.lng);
+    if (memberLocation.lat !== 0 && memberLocation.lng !== 0) {
+      // console.log(memberLocation.lat, memberLocation.lng)
+      mapLocation(aptLocation.lat, aptLocation.lng);
+    }
   }, [memberLocation, range]);  
   
 
@@ -108,9 +112,14 @@ const FindFamily: React.FC = () => {
 
   const mapLocation = (aptlat: number, aptlng: number) => {
     const container = document.getElementById('map');
-    const center = new kakao.maps.LatLng(aptlat, aptlng)
+    const center = new kakao.maps.LatLng(aptlat, aptlng);
+
+    // 추가
+    // console.log('멤버 위치', memberLocation.lat, memberLocation.lng)
+    const member = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);
+    
     const options = {  
-      center: center,
+      center: member,
       level: 3,
     };
 
@@ -130,7 +139,7 @@ const FindFamily: React.FC = () => {
     );
 
     const distance = Math.round(getDistance(memberLocation.lat, memberLocation.lng, aptlat, aptlng));
-    const imgurl = "http://localhost:3000/img/sheep.png"  // 임시 selectedMember.profileUrl
+    const imgurl = selectedMember.profileImgUrl 
     const content = '<div class="customoverlay" style="position: relative">' + 
     '<div style="z-index: 1; position: absolute; bottom: -1px; left: -10px; width: 0px; height: 0px; border-top: 20px solid #fff; border-left: 10px solid transparent; border-right: 10px solid transparent; box-shadow: 0 5px 5px -5px gray;"></div>' + 
     '<img src="' + imgurl + '" alt="profile" style="position: absolute; bottom: 8px; left: -23px; z-index: 2; width: 45px; border-radius: 40px; object-fit: fill;"/>'+
@@ -146,9 +155,11 @@ const FindFamily: React.FC = () => {
           yAnchor: 1 
         });
       };
-    };
+      map.setCenter(member)
+    } else {
+      map.setCenter(center);  // ----
+    }
 
-    map.setCenter(center);
     circle.setMap(map);
   };
 
