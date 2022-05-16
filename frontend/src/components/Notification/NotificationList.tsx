@@ -27,6 +27,9 @@ const NotificationList: React.FC = () => {
           categoryId,
           null,
         );
+        articles.sort((a, b) => {
+          return +new Date(b.createdAt) - +new Date(a.createdAt)
+        })
         setNotifications(articles);
       };
       fetchArticles();
