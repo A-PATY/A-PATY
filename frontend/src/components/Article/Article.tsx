@@ -45,6 +45,7 @@ const LogInMain: React.FC = () => {
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
+        console.log(res);
         setArticle(res);
         setIsLike(res.likeyn);
         setlikeCnt(res.likes);
@@ -89,7 +90,7 @@ const LogInMain: React.FC = () => {
       if (result.isConfirmed) {
         BoardService.deleteArticle(article_id)
           .then(() => {
-            navigate(`/local_community`);
+            navigate(-1);
           })
           .catch((err) => console.log(err.response));
       }
@@ -100,14 +101,14 @@ const LogInMain: React.FC = () => {
     BoardService.changeLike(article_id)
       .then(() => {
         setIsLike(!isLike);
-        
+
         if (isLike) {
-          setlikeCnt(likeCnt-1);
+          setlikeCnt(likeCnt - 1);
         } else {
-          setlikeCnt(likeCnt+1);
-        };
+          setlikeCnt(likeCnt + 1);
+        }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -144,21 +145,27 @@ const LogInMain: React.FC = () => {
               </InfoFunction>
             </WrapInfo>
           </ArticleHead>
+
           <ArticleContent>
+            {article?.contact !== null && (
+              <ContactInfo>
+                <ContactHead>연락처</ContactHead> {article?.contact}
+              </ContactInfo>
+            )}
             <ContentArea>{article?.contents}</ContentArea>
             <ImageContainer>
-              {/* 추후 map 사용 */}
               {article?.imgs?.map((img) => (
                 <Image key={img.id} src={img.imgUrl} alt="image"></Image>
               ))}
             </ImageContainer>
+
             <ArticleInfo>
               <Buttons>
-                {
-                  isLike ? 
-                  <ThumbUpIcon onClick={toggleLike}/> :
-                  <ThumbUpOutlinedIcon onClick={toggleLike}/>
-                }
+                {isLike ? (
+                  <ThumbUpIcon onClick={toggleLike} />
+                ) : (
+                  <ThumbUpOutlinedIcon onClick={toggleLike} />
+                )}
                 {likeCnt}
               </Buttons>
               <Buttons>
@@ -297,6 +304,7 @@ const ImageContainer = styled.p`
   position: relative;
   display: inline-block;
   margin-top: 24px;
+  margin-bottom: 30px;
 `;
 
 const Image = styled.img`
@@ -305,7 +313,6 @@ const Image = styled.img`
 
 const ArticleInfo = styled.div`
   position: relative;
-  margin-top: 30px;
   padding: 20px 0;
   border-top: 1px solid #eee;
 `;
@@ -328,6 +335,18 @@ const Buttons = styled.a`
     height: 16px;
     margin-top: -9px;
   }
+`;
+
+const ContactInfo = styled.div`
+  position: relative;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+`;
+
+const ContactHead = styled.span`
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 export default LogInMain;
