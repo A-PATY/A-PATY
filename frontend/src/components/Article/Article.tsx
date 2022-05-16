@@ -15,32 +15,15 @@ import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useRecoilState } from 'recoil';
+import { presentArticleState } from '../../features/Board/atom';
 
 const LogInMain: React.FC = () => {
-  // const [articleId, setArticleId] = React.useState(0)
   const navigate = useNavigate();
-
-  const [article, setArticle] = React.useState<article>({
-    articleId: 0,
-    category: '',
-    title: '',
-    contents: '',
-    imgs: null,
-    contact: null,
-    doneyn: false,
-    views: 0,
-    likes: 0,
-    likeYN: true,
-    createdAt: '',
-    commentCount: 0,
-    author: '',
-    profileImgUrl: '',
-    commentsList: [],
-  });
+  const [article, setArticle] = useRecoilState(presentArticleState);
   const { article_id } = useParams<{ article_id: string }>();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
-  // console.log(useParams());
 
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
@@ -71,7 +54,7 @@ const LogInMain: React.FC = () => {
   }, [fetchArticle]);
 
   const editArticle = () => {
-    navigate(`/board/${article.articleId}/edit`, {
+    navigate(`/board/${article?.articleId}/edit`, {
       state: { article: article },
     });
   };
@@ -178,6 +161,7 @@ const LogInMain: React.FC = () => {
             artielcId={String(article?.articleId)}
             comments={article?.commentsList}
             commentCount={article?.commentCount}
+            fetchArticle={fetchArticle}
           />
         </Wrapper>
       </Section>

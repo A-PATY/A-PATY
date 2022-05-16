@@ -22,8 +22,9 @@ interface CommentProps {
 
 interface CommentsProps {
   artielcId: string;
-  comments: comment[];
-  commentCount: number;
+  comments: comment[] | undefined;
+  commentCount: number | undefined;
+  fetchArticle: () => void;
 }
 
 // 개별 댓글
@@ -46,6 +47,7 @@ const Comments: React.FC<CommentsProps> = ({
   artielcId,
   comments,
   commentCount,
+  fetchArticle,
 }) => {
   const navigate = useNavigate();
 
@@ -70,7 +72,9 @@ const Comments: React.FC<CommentsProps> = ({
     BoardService.createComment(artielcId, comment)
       .then(() => {
         // 현재 글 상세페이지 업데이트
-        navigate(`/board/${artielcId}`);
+        setContent('');
+        fetchArticle();
+        // navigate(`/board/${artielcId}`);
       })
       .catch((err) => console.log(err));
   };
@@ -78,19 +82,19 @@ const Comments: React.FC<CommentsProps> = ({
   const deleteComment = (commentId: number) => {
     console.log('삭제');
     console.log(commentId);
-    // BoardService.deleteComment(artielcId, String(commentId))
-    //   .then(() => {
-    //     // 현재 글 상세페이지 업데이트
-    //     navigate(`/board/${artielcId}`);
-    //   })
-    //   .catch((err) => console.log(err));
+    BoardService.deleteComment(artielcId, String(commentId))
+      .then(() => {
+        // 현재 글 상세페이지 업데이트
+        fetchArticle();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
       <Container>
         <CommentsHead>댓글 {commentCount}</CommentsHead>
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <Comment
             key={comment.commentId}
             comment={comment}
@@ -115,6 +119,7 @@ const Comments: React.FC<CommentsProps> = ({
             type="text"
             placeholder="댓글을 남겨주세요"
             maxLength={100}
+            value={content}
             onChange={handleContentChange}
           ></Input>
           <IconCustom onClick={onSubmit} />
