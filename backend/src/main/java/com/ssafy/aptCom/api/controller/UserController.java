@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -87,6 +88,7 @@ public class UserController {
 
     }
 
+    @Transactional
     @PutMapping("/users/{profile-info}")
     @ApiOperation(value = "회원 정보 수정", notes = "토큰 검증 후 해당 유저 상세 정보 수정")
     @ApiResponses({
@@ -101,20 +103,20 @@ public class UserController {
 
         try {
             User user = userService.getUserByKakaoUserNumber(loginUser);
-            userService.userModify(userModifyRequestDto, user, profileInfo);
 
             String dtoAddress = userModifyRequestDto.getAddress();
             String userAddress = user.getBaseAddress().getAddress();
             String aptId = String.valueOf(user.getApartment().getId());
 
             if(!dtoAddress.equals(userAddress)){
-
                 String dong = user.getDong();
                 String ho = user.getHo();
                 String familyId = aptId + "-" + dong + "-" + ho;
                 String userId = String.valueOf(user.getId());
                 firebaseService.deleteFamilyMember(familyId, userId);
             }
+
+            userService.userModify(userModifyRequestDto, user, profileInfo);
 
         } catch (Exception e) {
             log.info(e.getMessage());
@@ -128,6 +130,7 @@ public class UserController {
 
     }
 
+    @Transactional
     @DeleteMapping("/users")
     @ApiOperation(value = "회원 탈퇴", notes = "토큰 검증 후 해당 유저 삭제")
     @ApiResponses({

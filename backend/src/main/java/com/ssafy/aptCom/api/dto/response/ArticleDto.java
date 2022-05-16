@@ -52,7 +52,8 @@ public class ArticleDto {
         ArticleDto res = new ArticleDto();
 
         res.setArticleId(article.getId());
-        res.setCategory(article.getCategory().getCategoryName());
+        if(article.getCategory() != null)
+            res.setCategory(article.getCategory().getCategoryName());
         res.setTitle(article.getTitle());
         res.setContents(article.getContents());
         res.setImgs(ImageDto.of(article.getImages()));
@@ -69,7 +70,7 @@ public class ArticleDto {
 
         // 커뮤니티 타입에 따라 article의 Author 사용자명 변경
         String type1 = "", type2 = "";
-        if(article.getCategory().getId() != 1) {
+        if(article.getCategory() == null || article.getCategory().getId() != 1) {
             type1 = article.getCommunity().getCommunityType();
             type2 = article.getCommunity().getCommunityType2();
         }
