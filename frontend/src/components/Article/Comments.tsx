@@ -8,15 +8,11 @@ import { comment } from '../../types/boardTypes';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import LockIcon from '@mui/icons-material/Lock';
+import { Article } from '@mui/icons-material';
 
 interface CommentProps {
-  comment: {
-    profileImgUrl: string;
-    commentAuthor: string;
-    commentContent: string;
-    commentCreatedAt: string;
-    commentId: number;
-  };
+  comment: comment;
   deleteComment: (commentId: number) => void;
 }
 
@@ -29,16 +25,43 @@ interface CommentsProps {
 
 // 개별 댓글
 const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
+  const calculateTime = (time: string) => {
+    const today = new Date();
+    const timeValue = new Date(time);
+    const betweenTime = Math.floor(
+      (today.getTime() - timeValue.getTime()) / 1000 / 60,
+    );
+
+    if (betweenTime < 1) return '방금전';
+    if (betweenTime < 60) {
+      return `${betweenTime}분전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60);
+    if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일전`;
+    }
+
+    return time;
+  };
   return (
     <CommentSection>
       <Author>
         <AvatarCustom src={comment.profileImgUrl} alt="profile" />
         <AuthorName>{comment.commentAuthor}</AuthorName>
+        {comment.secret === true && <LockIconCustom></LockIconCustom>}
+
         <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
         {/* <DeleteOutlinedIcon onClick={deleteComment} /> */}
       </Author>
+
       <Content>{comment.commentContent}</Content>
-      <Time>{comment.commentCreatedAt}</Time>
+      <Time>{calculateTime(comment.commentCreatedAt)}</Time>
     </CommentSection>
   );
 };
@@ -198,6 +221,20 @@ const Delete = styled(DeleteOutlinedIcon)`
   color: #a6a6a6;
   font-size: 18px;
   cursor: pointer;
+`;
+
+const LockIconCustom = styled(LockIcon)`
+  padding-left: 5px;
+  color: #a6a6a6;
+  font-size: 18px;
+`;
+
+const LockDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
 `;
 
 const WriteComment = styled.div`
