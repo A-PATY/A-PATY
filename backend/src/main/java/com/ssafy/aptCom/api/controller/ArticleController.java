@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -73,14 +74,18 @@ public class ArticleController {
     @PutMapping(value ="/{article-id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateArticle(@PathVariable("article-id") Integer articleId, ArticleUpdateRequestDto articleUpdateRequestDto) throws IOException {
 
-
-        List<MultipartFile> multipartFiles = articleUpdateRequestDto.getImg();
+        ArrayList<String> old_article_imgs_url = articleUpdateRequestDto.getOldImgs();
+        ArrayList<MultipartFile> multipartFiles = articleUpdateRequestDto.getNewImgs();
         log.info("multipartFiles : {} ", multipartFiles);
 
         try {
-            articleService.deleteArticleImagesS3(articleId);
-            articleService.deleteArticleImagesDB(articleId);
+            // 기존 이미지 확인
+            if (old_article_imgs_url != null) {
+                articleService.deleteArticleImagesS3(old_article_imgs_url, articleId);
+                articleService.deleteArticleImagesDB(old_article_imgs_url, articleId);
+            }
 
+            // 새 이미지 등록
             if (multipartFiles != null) {
                 articleService.saveArticleImages(multipartFiles, articleId);
             }
