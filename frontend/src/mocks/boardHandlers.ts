@@ -57,15 +57,16 @@ const articles: article[] = [
       '이렇게 가까이에서 까치를 관찰한건 처음이에요! 털이 나름 복슬복슬',
     imgs: [
       {
-        imgId: 1,
-        src: 'https://i.pinimg.com/550x/0a/55/ce/0a55cee83ccb25a90b7deda9a995bbe8.jpg',
+        id: 1,
+        imgUrl:
+          'https://i.pinimg.com/550x/0a/55/ce/0a55cee83ccb25a90b7deda9a995bbe8.jpg',
       },
     ],
     contact: null,
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: true,
+    likeYN: true,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 흑장미',
@@ -101,7 +102,7 @@ const articles: article[] = [
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: true,
+    likeYN: true,
     createdAt: '2022-04-15 15:03',
     author: '101동 102호 흑장미',
     commentCount: 3,
@@ -132,12 +133,12 @@ const articles: article[] = [
     category: '나눔장터',
     title: '달려오세요',
     contents: '인형 나눔해요',
-    imgs: [{ imgId: 1, src: `\img\sheep.png` }],
+    imgs: [{ id: 1, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -149,12 +150,12 @@ const articles: article[] = [
     category: '나눔장터',
     title: '달려오세요',
     contents: '인형 나눔해요',
-    imgs: [{ imgId: 2, src: `\img\sheep.png` }],
+    imgs: [{ id: 2, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -166,12 +167,12 @@ const articles: article[] = [
     category: '공구',
     title: '가지고 싶어요 ㅠㅠㅠ',
     contents: '인형 공구해요',
-    imgs: [{ imgId: 3, src: `\img\sheep.png` }],
+    imgs: [{ id: 3, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -188,7 +189,7 @@ const articles: article[] = [
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -205,7 +206,7 @@ const articles: article[] = [
     doneyn: false,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -222,7 +223,7 @@ const articles: article[] = [
     doneyn: true,
     views: 13,
     likes: 15,
-    isLike: false,
+    likeYN: false,
     createdAt: '2022-04-15 15:03',
     commentCount: 3,
     author: '101동 102호 백장미',
@@ -315,6 +316,28 @@ export const boardHandlers = [
           success: true,
           message: '정상적으로 처리되었습니다.',
           data: article,
+        }),
+      );
+    },
+  ),
+
+  rest.post(
+    `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/board/:articleId/like`,
+    async (request: any, response, context) => {
+      const { articleId } = request.params;
+
+      if (!articleId) {
+        return response(
+          context.json({
+            status : 400,
+            message : "입력값이 유효하지 않습니다."
+          }),
+        );
+      }
+
+      return response(
+        context.json({
+          message : "좋아요 완료되었습니다..",
         }),
       );
     },

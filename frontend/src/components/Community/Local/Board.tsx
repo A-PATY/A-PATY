@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { article } from '../../../types/boardTypes';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
-import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import Chip from '@mui/material/Chip';
-import BoardService from '../../../services/BoardService';
-import { useInfiniteQuery } from 'react-query';
+// import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+// import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+// import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
+// import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+// import Chip from '@mui/material/Chip';
+// import BoardService from '../../../services/BoardService';
+// import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
+import BoardArticle from './BoardArticle';
 
 interface Props {
   data: any;
@@ -65,6 +66,7 @@ const Board: React.FC<Props> = ({
 
     React.useEffect(() => {
       if (!data) {
+        console.log('inView: ' + inView);
         console.log('data가 없음');
         console.log(data);
         return;
@@ -97,59 +99,60 @@ const Board: React.FC<Props> = ({
                 <React.Fragment key={i}>
                   {group.result.map((article: article) => {
                     return (
-                      <ArticleWrapper key={article.articleId}>
-                        <Category>
-                          {article.category}
-                          {(article.category === '나눔장터' ||
-                            article.category === '공구') &&
-                          article.doneyn === true ? (
-                            <Info className="isDone">완료</Info>
-                          ) : undefined}
-                          {(article.category === '나눔장터' ||
-                            article.category === '공구') &&
-                          article.doneyn === false ? (
-                            <Info className="isNotDone">진행 중</Info>
-                          ) : undefined}
-                        </Category>
-                        <Article>
-                          <Title href={`/board/${article.articleId}`}>
-                            {article.title}
-                          </Title>
-                          <Contents href={`/board/${article.articleId}`}>
-                            {article.contents}
-                            {article.imgs?.length !== 0 &&
-                              article.imgs !== null && (
-                                <Image src={article.imgs[0].src} />
-                              )}
-                          </Contents>
-                        </Article>
-                        <ArticleInfoWrapper>
-                          <ArticleInfo>
-                            <Info>{article.createdAt}</Info>
-                            <Info>{article.author}</Info>
-                          </ArticleInfo>
-                          <ArticleInfo>
-                            <Info className="icon">
-                              <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
-                            </Info>
-                            <Info>{article.views}</Info>
-                            <Info className="icon">
-                              {article.isLike ? (
-                                <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
-                              ) : (
-                                <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
-                              )}
-                            </Info>
-                            <Info>{article.likes}</Info>
-                            <Info className="icon">
-                              <ChatBubbleOutlineRoundedIcon
-                                sx={{ fontSize: '8px' }}
-                              />
-                            </Info>
-                            <Info>{article.commentCount}</Info>
-                          </ArticleInfo>
-                        </ArticleInfoWrapper>
-                      </ArticleWrapper>
+                      <BoardArticle article={article} key={article.articleId}/>
+                      // <ArticleWrapper key={article.articleId}>
+                      //   <Category>
+                      //     {article.category}
+                      //     {(article.category === '나눔장터' ||
+                      //       article.category === '공구') &&
+                      //     article.doneyn === true ? (
+                      //       <Info className="isDone">완료</Info>
+                      //     ) : undefined}
+                      //     {(article.category === '나눔장터' ||
+                      //       article.category === '공구') &&
+                      //     article.doneyn === false ? (
+                      //       <Info className="isNotDone">진행 중</Info>
+                      //     ) : undefined}
+                      //   </Category>
+                      //   <Article>
+                      //     <Title href={`/board/${article.articleId}`}>
+                      //       {article.title}
+                      //     </Title>
+                      //     <Contents href={`/board/${article.articleId}`}>
+                      //       {article.contents}
+                      //       {article.imgs?.length !== 0 &&
+                      //         article.imgs !== null && (
+                      //           <Image src={article.imgs[0].src} />
+                      //         )}
+                      //     </Contents>
+                      //   </Article>
+                      //   <ArticleInfoWrapper>
+                      //     <ArticleInfo>
+                      //       <Info>{article.createdAt}</Info>
+                      //       <Info>{article.author}</Info>
+                      //     </ArticleInfo>
+                      //     <ArticleInfo>
+                      //       <Info className="icon">
+                      //         <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
+                      //       </Info>
+                      //       <Info>{article.views}</Info>
+                      //       <Info className="icon">
+                      //         {article.likeYN ? (
+                      //           <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
+                      //         ) : (
+                      //           <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
+                      //         )}
+                      //       </Info>
+                      //       <Info>{article.likes}</Info>
+                      //       <Info className="icon">
+                      //         <ChatBubbleOutlineRoundedIcon
+                      //           sx={{ fontSize: '8px' }}
+                      //         />
+                      //       </Info>
+                      //       <Info>{article.commentCount}</Info>
+                      //     </ArticleInfo>
+                      //   </ArticleInfoWrapper>
+                      // </ArticleWrapper>
                     );
                   })}
                 </React.Fragment>

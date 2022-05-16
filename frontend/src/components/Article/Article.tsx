@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { article } from '../../types/boardTypes';
 import styled from '@emotion/styled';
@@ -10,13 +10,13 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-const LogInMain: React.FC = () => {
-  // const [articleId, setArticleId] = React.useState(0)
+const Article: React.FC = () => {
   const navigate = useNavigate();
 
   const [article, setArticle] = React.useState<article>({
@@ -29,7 +29,7 @@ const LogInMain: React.FC = () => {
     doneyn: false,
     views: 0,
     likes: 0,
-    isLike: true,
+    likeYN: true,
     createdAt: '',
     commentCount: 0,
     author: '',
@@ -37,13 +37,15 @@ const LogInMain: React.FC = () => {
     commentsList: [],
   });
   const { article_id } = useParams<{ article_id: string }>();
-  // console.log(useParams());
+  const [isLike, setIsLike] = useState<boolean>(false);
+  const [likeCnt, setlikeCnt] = useState<number>(0);
 
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
-        console.log(res);
         setArticle(res);
+        setIsLike(res.likeyn);
+        setlikeCnt(res.likes);
       })
       .catch((err) => {
         if (err.response) {
@@ -92,6 +94,20 @@ const LogInMain: React.FC = () => {
     });
   };
 
+  const toggleLike = () => {
+    BoardService.changeLike(article_id)
+      .then(() => {
+        setIsLike(!isLike);
+        
+        if (isLike) {
+          setlikeCnt(likeCnt-1);
+        } else {
+          setlikeCnt(likeCnt+1);
+        };
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <>
       <Section>
@@ -129,15 +145,18 @@ const LogInMain: React.FC = () => {
           <ArticleContent>
             <ContentArea>{article?.contents}</ContentArea>
             <ImageContainer>
-              {/* 추후 map 사용 */}
               {article?.imgs?.map((img) => (
-                <Image key={img.imgId} src={img.src} alt="image"></Image>
+                <Image key={img.id} src={img.imgUrl} alt="image"></Image>
               ))}
             </ImageContainer>
             <ArticleInfo>
               <Buttons>
-                <ThumbUpOutlinedIcon />
-                {article?.likes}
+                {
+                  isLike ? 
+                  <ThumbUpIcon onClick={toggleLike}/> :
+                  <ThumbUpOutlinedIcon onClick={toggleLike}/>
+                }
+                {likeCnt}
               </Buttons>
               <Buttons>
                 <ChatBubbleOutlineIcon />
@@ -308,4 +327,4 @@ const Buttons = styled.a`
   }
 `;
 
-export default LogInMain;
+export default Article;

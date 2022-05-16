@@ -12,7 +12,7 @@ export interface article {
   doneyn: boolean | null;
   views: number;
   likes: number;
-  isLike: boolean;
+  likeYN: boolean;
   createdAt: string;
   author: string;
   commentCount: number;
@@ -21,8 +21,8 @@ export interface article {
 }
 
 export interface img {
-  imgId: number;
-  src: string;
+  id: number;
+  imgUrl: string;
 }
 
 export interface comment {
