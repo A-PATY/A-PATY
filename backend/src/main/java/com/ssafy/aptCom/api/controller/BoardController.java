@@ -198,6 +198,7 @@ public class BoardController {
             articleDtoList = articleService.getArticles(user, communityId, lastArticleId, size, categoryId, keyword);
 
         } catch (Exception e){
+            //e.printStackTrace();
             return ResponseEntity.status(500).body(ErrorResponseDto.of(500,"Internal Server Error, 게시판 조회 실패"));
         }
 
