@@ -7,7 +7,7 @@ const AdminPage: React.FC = () => {
   }, []);
   return (
     <>
-      <AdminBillConfirm></AdminBillConfirm>
+      <AdminBillConfirm />
     </>
   );
 };

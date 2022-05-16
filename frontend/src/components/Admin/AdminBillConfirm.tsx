@@ -13,9 +13,13 @@ import { bill } from '../../types/adminTypes';
 import useBillList from '../../hooks/useBillList';
 
 import AdminService from '../../services/AdminService';
+import { billInfoState } from '../../features/Bill/atom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const AdminBillConfirm: React.FC = () => {
-  const billList = useBillList();
+  useBillList();
+  const billList = useRecoilValue(billInfoState);
+  const setBillInfo = useSetRecoilState(billInfoState);
 
   const handleListItemClick =
     (bilImage: string) =>
@@ -33,7 +37,6 @@ const AdminBillConfirm: React.FC = () => {
         denyButtonText: '반려',
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log(bilImageName);
           AdminService.approveBill({
             kakaoId: bilImageName[0],
             aptId: bilImageName[1],
@@ -43,7 +46,7 @@ const AdminBillConfirm: React.FC = () => {
             billImg: bilImage,
           }).finally(() => {
             AdminService.getBillList().then(({ bills }) => {
-              // setBillList(bills);
+              setBillInfo(bills);
             });
           });
         } else if (result.isDenied) {
