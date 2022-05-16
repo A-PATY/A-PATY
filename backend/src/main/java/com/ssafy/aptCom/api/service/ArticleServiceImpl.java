@@ -214,7 +214,7 @@ public class ArticleServiceImpl implements ArticleService {
         Category category = categoryRepository.findCategoryByCategoryName(articleUpdateRequestDto.getCategory());
         old_article.setCategory(category);
         old_article.setTitle(articleUpdateRequestDto.getTitle());
-        old_article.setContents(articleUpdateRequestDto.getTitle());
+        old_article.setContents(articleUpdateRequestDto.getContents());
         old_article.setContact(articleUpdateRequestDto.getContact());
         old_article.setIsDone((articleUpdateRequestDto.getIsDone() == null) ? false : articleUpdateRequestDto.getIsDone());
         articleRepository.save(old_article);
