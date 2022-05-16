@@ -22,6 +22,8 @@ interface Props {
 
 const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
+  console.log(article);
+  console.log(article.category);
 
   const [category, setCategory] = useState<string>(article.category);
   const [title, setTitle] = useState<string>(article.title);
@@ -119,7 +121,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
       .then((res) => {
         console.log(res);
         // 게시판 목록으로 이동
-        navigate(`/local_community`);
+        navigate(-1);
       })
       .catch((err) => console.log(err));
   };

@@ -130,7 +130,7 @@ const ArticleWrite: React.FC = () => {
       .then((res) => {
         console.log(res);
         // 게시판 목록으로 이동
-        navigate(`/local_community`);
+        navigate(-1);
       })
       .catch((err) => console.log(err));
   };
