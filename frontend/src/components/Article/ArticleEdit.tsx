@@ -38,7 +38,11 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     article.contact,
   );
 
-  console.log(imageList);
+  useEffect(() => {
+    if (article.imgs === null) {
+      setImageList([]);
+    }
+  }, []);
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -55,10 +59,11 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
 
     let fileURLs: string[] = [];
 
-    if (fileArr !== null) {
+    if (fileArr !== null && imageList !== null) {
       const temp = [];
       let file;
-      let filesLength = fileArr.length > 10 ? 10 : fileArr.length;
+      let filesLength =
+        fileArr.length + imageList.length > 10 ? 10 : fileArr.length;
 
       for (let i = 0; i < filesLength; i++) {
         file = fileArr[i];
@@ -155,13 +160,17 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
       return;
     }
 
-    if (imageFiles.length > 0) {
-      for (let i = 0; i < imageFiles.length; i++) {
-        formData.append('img', imageFiles[i] as any);
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append('newImgs', imageFiles[i] as any);
+    }
+
+    if (imageList !== null) {
+      if (imageList.length === 0) {
+        formData.append('oldImgs', '[]');
       }
-    } else if (imageList !== null && imageList.length > 0) {
+
       for (let i = 0; i < imageList.length; i++) {
-        formData.append('img', imageList[i].imgUrl);
+        formData.append('oldImgs', imageList[i].imgUrl);
       }
     }
 
@@ -262,23 +271,20 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           }}
         >
           <ImageList cols={10}>
-            {imageFiles.length === 0 &&
-              imageList !== null &&
+            {imageList !== null &&
               imageList.map((image) => (
-                <>
-                  <ImageListItem key={image.id}>
-                    <ImgCustom
-                      src={image.imgUrl}
-                      alt={image.imgUrl}
-                      loading="lazy"
-                    />
-                    <DeleteButton
-                      onClick={handleDeleteButtonClickOfImageList(image.id)}
-                    >
-                      <ClearRoundedIconCustom />
-                    </DeleteButton>
-                  </ImageListItem>
-                </>
+                <ImageListItem key={image.imgUrl}>
+                  <ImgCustom
+                    src={image.imgUrl}
+                    alt={`${image.id}`}
+                    loading="lazy"
+                  />
+                  <DeleteButton
+                    onClick={handleDeleteButtonClickOfImageList(image.id)}
+                  >
+                    <ClearRoundedIconCustom />
+                  </DeleteButton>
+                </ImageListItem>
               ))}
             {previewImageFiles.map((item, index) => (
               <ImageListItem key={item}>
