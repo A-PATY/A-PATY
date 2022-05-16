@@ -87,7 +87,7 @@ const FindFamily: React.FC = () => {
 
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success);
+    geolocation.watchPosition(success, () => {},{ enableHighAccuracy: true });
   }, [familyId]);
 
   useEffect(() => {
@@ -199,7 +199,7 @@ const FindFamily: React.FC = () => {
   // geolocation 콜백함수 + firebase 좌표 등록
   const success = (position: any) => {
     const { latitude, longitude } = position.coords;
-    
+    console.log('내 위치',latitude, longitude)
     if (familyId) {
       const docRef = doc(firestore, "families", familyId);
       if (userInfo !== null) {
@@ -238,7 +238,8 @@ const FindFamily: React.FC = () => {
       <motion.div 
         drag="y"
         dragConstraints={{ top: 0, bottom: 180 }}
-        style={{ zIndex: "1", marginTop: "90%" }}
+        style={{ zIndex: "1", marginTop: "calc(100vh - 340px)" }}
+        
         dragElastic={0}
       >
         <FamilyListContainer>
