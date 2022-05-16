@@ -4,13 +4,24 @@ import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import { useNavigate } from 'react-router-dom';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 interface Props {
-  header: string | undefined;
+  value: number;
+  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-const Header: React.FC<Props> = ({ header }) => {
+const AptTabHeader: React.FC<Props> = ({ value, handleChange }) => {
   const navigate = useNavigate();
+  function a11yProps(index: number) {
+    return {
+      'id': `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
   return (
     <>
       <Container>
@@ -19,11 +30,30 @@ const Header: React.FC<Props> = ({ header }) => {
           spacing={0}
           sx={{ height: '70px', alignContent: 'center' }}
         >
-          <GridIcon item xs={3}>
+          <GridIcon item xs={1}>
             <ArrowBackIosRoundedIconCustom onClick={() => navigate(-1)} />
           </GridIcon>
-          <GridText item xs={6}>
-            <Text>{header}</Text>
+          <GridText item xs={11}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '90%' }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                textColor="secondary"
+                indicatorColor="secondary"
+                aria-label="basic tabs example"
+              >
+                <Tab
+                  label="전체 소통"
+                  {...a11yProps(0)}
+                  sx={{ width: '50%' }}
+                />
+                <Tab
+                  label="익명 소통"
+                  {...a11yProps(1)}
+                  sx={{ width: '50%' }}
+                />
+              </Tabs>
+            </Box>
           </GridText>
         </Grid>
       </Container>
@@ -62,4 +92,4 @@ const GridText = styled(Grid)`
 `;
 
 const Text = styled.p``;
-export default Header;
+export default AptTabHeader;

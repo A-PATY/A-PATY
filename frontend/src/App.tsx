@@ -10,7 +10,6 @@ import AptRegisterPage from './pages/AptRegisterPage';
 import MyPage from './pages/MyPage';
 import LocalCommunityPage from './pages/LocalCommunityPage';
 import AptCommunityPage from './pages/AptCommunityPage';
-import AptAnonyCommunityPage from './pages/AptAnonyCommunityPage';
 import ArticlePage from './pages/ArticlePage';
 import FindFamilyPage from './pages/FindFamilyPage';
 import ArticleWritePage from './pages/ArticleWritePage';
@@ -23,7 +22,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AdminPage from './pages/AdminPage';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userInfoState } from './features/Login/atom';
+import { userInfoState, updatedUser } from './features/Login/atom';
 import { getCookie, setCookie } from './hooks/Cookie';
 import { axiosInstance } from './utils/axios';
 
@@ -31,7 +30,13 @@ import UserService from './services/UserService';
 import BoardService from './services/BoardService';
 import { categoryListState } from './features/Board/atom';
 
+import { db } from './firebase';
+import { ref, set, onValue, onDisconnect } from 'firebase/database';
+
 const App: React.FC = () => {
+  // 확인!!! -------------
+  const userId = useRecoilValue(updatedUser);
+
   const setCategoryList = useSetRecoilState(categoryListState);
   const userInfo = useRecoilValue(userInfoState);
   const setUserInfo = useSetRecoilState(userInfoState);
@@ -71,6 +76,23 @@ const App: React.FC = () => {
     }
   }, [userInfo]);
 
+  useEffect(() => {
+    const connectRef = ref(db, '.info/connected');
+    
+    onValue(connectRef, (snapshot) => {
+      if (snapshot.val() === true && userInfo?.userId) {
+        set(ref(db, `/status/${userInfo?.userId}`), {
+          state: 'online',
+          nickname: userInfo?.nickname
+        });
+      }
+
+      onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set(
+        'offline',
+      );
+    });
+  },[userId]);
+
   return (
     <>
       <Global styles={resetStyles} />
@@ -83,10 +105,6 @@ const App: React.FC = () => {
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/local_community" element={<LocalCommunityPage />} />
           <Route path="/apt_community" element={<AptCommunityPage />} />
-          <Route
-            path="/apt_community/anonymous"
-            element={<AptAnonyCommunityPage />}
-          />
           <Route path="/board/:article_id" element={<ArticlePage />} />
           <Route path="/oauth/callback/kakao" element={<KakaoCallbackPage />} />
           <Route path="/find_family" element={<FindFamilyPage />} />

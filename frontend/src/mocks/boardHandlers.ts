@@ -57,8 +57,9 @@ const articles: article[] = [
       '이렇게 가까이에서 까치를 관찰한건 처음이에요! 털이 나름 복슬복슬',
     imgs: [
       {
-        imgId: 1,
-        src: 'https://i.pinimg.com/550x/0a/55/ce/0a55cee83ccb25a90b7deda9a995bbe8.jpg',
+        id: 1,
+        imgUrl:
+          'https://i.pinimg.com/550x/0a/55/ce/0a55cee83ccb25a90b7deda9a995bbe8.jpg',
       },
     ],
     contact: null,
@@ -132,7 +133,7 @@ const articles: article[] = [
     category: '나눔장터',
     title: '달려오세요',
     contents: '인형 나눔해요',
-    imgs: [{ imgId: 1, src: `\img\sheep.png` }],
+    imgs: [{ id: 1, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,
@@ -149,7 +150,7 @@ const articles: article[] = [
     category: '나눔장터',
     title: '달려오세요',
     contents: '인형 나눔해요',
-    imgs: [{ imgId: 2, src: `\img\sheep.png` }],
+    imgs: [{ id: 2, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,
@@ -166,7 +167,7 @@ const articles: article[] = [
     category: '공구',
     title: '가지고 싶어요 ㅠㅠㅠ',
     contents: '인형 공구해요',
-    imgs: [{ imgId: 3, src: `\img\sheep.png` }],
+    imgs: [{ id: 3, imgUrl: `\img\sheep.png` }],
     contact: '010-1111-2222',
     doneyn: false,
     views: 13,

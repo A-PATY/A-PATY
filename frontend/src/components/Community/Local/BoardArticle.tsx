@@ -8,57 +8,52 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import BoardService from '../../../services/BoardService';
 
 interface Props {
-  article : article
+  article: article;
 }
 
 const BoardArticle: React.FC<Props> = ({ article }) => {
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
-  
+
   useEffect(() => {
     setIsLike(article.likeYN);
     setlikeCnt(article.likes);
   }, [article]);
-  
+
   const toggleLike = () => {
     BoardService.changeLike(article.articleId.toString())
       .then(() => {
         setIsLike(!isLike);
-        
+
         if (isLike) {
-          setlikeCnt(likeCnt-1);
+          setlikeCnt(likeCnt - 1);
         } else {
-          setlikeCnt(likeCnt+1);
-        };
+          setlikeCnt(likeCnt + 1);
+        }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   return (
     <ArticleWrapper key={article.articleId}>
       <Category>
         {article.category}
-        {(article.category === '나눔장터' ||
-          article.category === '공구') &&
+        {(article.category === '나눔장터' || article.category === '공구') &&
         article.doneyn === true ? (
           <Info className="isDone">완료</Info>
         ) : undefined}
-        {(article.category === '나눔장터' ||
-          article.category === '공구') &&
+        {(article.category === '나눔장터' || article.category === '공구') &&
         article.doneyn === false ? (
           <Info className="isNotDone">진행 중</Info>
         ) : undefined}
       </Category>
       <Article>
-        <Title href={`/board/${article.articleId}`}>
-          {article.title}
-        </Title>
+        <Title href={`/board/${article.articleId}`}>{article.title}</Title>
         <Contents href={`/board/${article.articleId}`}>
           {article.contents}
-          {article.imgs?.length !== 0 &&
-            article.imgs !== null && (
-              <Image src={article.imgs[0].src} />
-            )}
+          {article.imgs?.length !== 0 && article.imgs !== null && (
+            <Image src={article.imgs[0].imgUrl} />
+          )}
         </Contents>
       </Article>
       <ArticleInfoWrapper>
@@ -80,15 +75,13 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
           </Info>
           <Info style={{ cursor: 'pointer'}} onClick={toggleLike}>{likeCnt}</Info>
           <Info className="icon">
-            <ChatBubbleOutlineRoundedIcon
-              sx={{ fontSize: '8px' }}
-            />
+            <ChatBubbleOutlineRoundedIcon sx={{ fontSize: '8px' }} />
           </Info>
           <Info>{article.commentCount}</Info>
         </ArticleInfo>
       </ArticleInfoWrapper>
     </ArticleWrapper>
-  )
+  );
 };
 
 const ArticleWrapper = styled.div`

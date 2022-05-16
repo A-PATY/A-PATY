@@ -66,6 +66,7 @@ const Board: React.FC<Props> = ({
 
     React.useEffect(() => {
       if (!data) {
+        console.log('inView: ' + inView);
         console.log('data가 없음');
         console.log(data);
         return;
