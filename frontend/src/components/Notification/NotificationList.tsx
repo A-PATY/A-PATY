@@ -18,23 +18,21 @@ const NotificationList: React.FC = () => {
   });
   
   useEffect(() => {
-    if (categoryId) {
-      const fetchArticles = async () => {
-        const { articles } = await BoardService.getArticles(
-          0,
-          0,
-          0,
-          categoryId,
-          null,
-        );
-        articles.sort((a, b) => {
-          return +new Date(b.createdAt) - +new Date(a.createdAt)
-        })
-        setNotifications(articles);
-      };
-      fetchArticles();
+    const fetchArticles = async () => {
+      const { articles } = await BoardService.getArticles(
+        0,
+        0,
+        0,
+        categoryId,
+        null,
+      );
+      articles.sort((a, b) => {
+        return +new Date(b.createdAt) - +new Date(a.createdAt)
+      })
+      setNotifications(articles);
     };
-  }, []);
+    fetchArticles();
+  }, [categoryId]);
 
   return (
     <>
