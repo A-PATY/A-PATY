@@ -74,6 +74,7 @@ const AptAnonyCommunityPage: React.FC = () => {
           setKeyword={setKeyword}
         />
         <BoardList
+          type={3}
           categoryId={categoryId}
           setCategoryId={setCategoryId}
           data={data}

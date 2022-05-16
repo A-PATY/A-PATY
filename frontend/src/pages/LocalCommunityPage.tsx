@@ -80,6 +80,7 @@ const LocalCommunityPage: React.FC = () => {
           setKeyword={setKeyword}
         />
         <BoardList
+          type={1}
           categoryId={categoryId}
           setCategoryId={setCategoryId}
           data={data}

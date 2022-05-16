@@ -113,6 +113,7 @@ const AptCommunityPage: React.FC = () => {
               setKeyword={setKeyword}
             />
             <BoardList
+              type={2}
               categoryId={categoryId}
               setCategoryId={setCategoryId}
               data={data}
