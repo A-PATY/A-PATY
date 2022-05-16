@@ -6,12 +6,14 @@ import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import BoardService from '../../../services/BoardService';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   article: article;
 }
 
 const BoardArticle: React.FC<Props> = ({ article }) => {
+  const navigate = useNavigate();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
 
@@ -34,6 +36,10 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
       .catch((err) => console.log(err));
   };
 
+  const goToArticle = () => {
+    navigate(`/board/${article.articleId}`);
+  };
+
   return (
     <ArticleWrapper key={article.articleId}>
       <Category>
@@ -47,9 +53,9 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
           <Info className="isNotDone">진행 중</Info>
         ) : undefined}
       </Category>
-      <Article>
-        <Title href={`/board/${article.articleId}`}>{article.title}</Title>
-        <Contents href={`/board/${article.articleId}`}>
+      <Article onClick={goToArticle}>
+        <Title>{article.title}</Title>
+        <Contents>
           {article.contents}
           {article.imgs?.length !== 0 && article.imgs !== null && (
             <Image src={article.imgs[0].imgUrl} />
@@ -95,7 +101,9 @@ const Category = styled.span`
   font-size: 12px;
 `;
 
-const Article = styled.div``;
+const Article = styled.div`
+  cursor: pointer;
+`;
 
 const Title = styled.a`
   display: block;
