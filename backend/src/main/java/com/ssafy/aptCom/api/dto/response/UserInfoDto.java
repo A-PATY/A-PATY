@@ -28,6 +28,8 @@ public class UserInfoDto {
 
     private String aptName;
 
+    private int aptId;
+
     private String dong;
 
     private String ho;
@@ -57,6 +59,7 @@ public class UserInfoDto {
             res.setDongName(address.orElse(new BaseAddress(null, null, null, null)).getDongName());
             res.setRiName(address.orElse(new BaseAddress(null, null, null, null)).getRiName());
             res.setAptName(apt.orElse(new Apartment(null)).getAptName());
+            res.setAptId(apt.orElse(new Apartment(null)).getId());
             res.setDong(user.getDong());
             res.setHo(user.getHo());
             res.setProfileImgId(profileImg.get().getId());
