@@ -320,4 +320,26 @@ export const boardHandlers = [
       );
     },
   ),
+
+  rest.post(
+    `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/board/:articleId/like`,
+    async (request: any, response, context) => {
+      const { articleId } = request.params;
+
+      if (!articleId) {
+        return response(
+          context.json({
+            status : 400,
+            message : "입력값이 유효하지 않습니다."
+          }),
+        );
+      }
+
+      return response(
+        context.json({
+          message : "좋아요 완료되었습니다..",
+        }),
+      );
+    },
+  ),
 ];
