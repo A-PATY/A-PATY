@@ -10,7 +10,7 @@ import { useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 import { categoryListState } from '../../features/Board/atom';
 import { db } from '../../firebase';
-import { ref, set, get, child, onValue, onDisconnect } from 'firebase/database';
+import { ref, set, onValue, onDisconnect } from 'firebase/database';
 import { getCookie, setCookie } from '../../hooks/Cookie';
 
 const KakaoCallbackMain: React.FC = () => {
@@ -47,20 +47,6 @@ const KakaoCallbackMain: React.FC = () => {
             });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
-
-              const connectRef = ref(db, '.info/connected');
-              onValue(connectRef, (snapshot) => {
-                if (snapshot.val() === true) {
-                  // firebase 저장하기
-                  set(ref(db, `/status/${userInfo?.userId}`), {
-                    state: 'online',
-                  });
-                }
-
-                onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set(
-                  'offline',
-                ); // offline
-              });
 
               Swal.fire({
                 title: '로그인하였습니다.',
@@ -101,20 +87,6 @@ const KakaoCallbackMain: React.FC = () => {
           } else {
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
-
-              const connectRef = ref(db, '.info/connected');
-              onValue(connectRef, (snapshot) => {
-                if (snapshot.val() === true) {
-                  set(ref(db, `/status/${userInfo?.userId}`), {
-                    state: 'online',
-                    nickname: userInfo?.nickname
-                  });
-                }
-
-                onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set(
-                  'offline',
-                ); // offline
-              });
 
               Swal.fire({
                 title: '로그인하였습니다.',

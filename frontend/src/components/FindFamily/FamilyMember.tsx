@@ -8,24 +8,19 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocationOffIcon from '@mui/icons-material/LocationOff';
 
 import { db } from '../../firebase';
-import { ref, get, child, onChildChanged } from 'firebase/database';
-
+import { ref, get, child, onChildChanged, onValue } from 'firebase/database';
 
 const FamilyMember: React.FC<memberProps> = ({ member, changeMember }) => {
   const statusRef = ref(db, `/status/${member.userId}`);
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  
+
   useEffect(() => {
-    get(child(ref(db), `/status/${member.userId}/state`)).then((snapshot) => {
+    onValue(child(statusRef, 'state'), snapshot => {
       if (snapshot.exists()) {
         checkConnection(snapshot.val());
       } else {
         console.log("No data available");
       };
-    }).catch(err => console.error(err));
-
-    onChildChanged(statusRef, (data) => {
-      checkConnection(data.val());
     });
   }, []);
 
