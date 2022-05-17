@@ -119,6 +119,7 @@ public class UserController {
             userService.userModify(userModifyRequestDto, user, profileInfo);
 
         } catch (Exception e) {
+            log.info("error" , e);
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
 
