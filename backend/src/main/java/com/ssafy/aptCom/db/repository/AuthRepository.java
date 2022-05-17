@@ -20,9 +20,7 @@ public interface AuthRepository extends JpaRepository<Auth, Long> {
 
     List<Auth> findAllByUserId(int userId);
 
-    @Transactional
-    @Modifying
-    @Query("delete from Auth a where a.user = :id")
+    @Query(value = "DELETE FROM auth WHERE user_id = :id", nativeQuery = true)
     void deleteAllByUserId(@Param("id") int id);
 
 }

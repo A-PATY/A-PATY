@@ -174,24 +174,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void userDelete(User user) {
-        // Auth 삭제
-        authRepository.deleteAllByUserId(user.getId());
-
-        // User Community 삭제
-        userCommunityRepository.deleteAllByUserId(user.getId());
-
-        // Likes 삭제
-        likesRepository.deleteAllByUserId(user.getId());
-
-        // Comment 삭제
-        commentRepository.deleteAllByUserId(user.getId());
-
-        // Image, Article 삭제
-        List<Article> articles = articleRepository.findAllByUserId(user.getId());
-        for (Article article : articles) {
-            imageRepository.deleteAllImgByArticleId(article.getId());
-            articleRepository.deleteById(article.getId());
-        }
 
         // User 삭제
         userRepository.delete(user);
