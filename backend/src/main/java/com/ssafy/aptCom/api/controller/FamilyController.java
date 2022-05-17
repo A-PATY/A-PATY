@@ -41,8 +41,10 @@ public class FamilyController {
     ) {
         User user = userService.getUserByKakaoUserNumber(loginUser);
 
-        int aptId = 0;
-        if(user.getApartment() != null) aptId = user.getApartment().getId();
+        if(user.getApartment() == null) {
+            return ResponseEntity.status(400).body(ErrorResponseDto.of(400, "입력값이 유효하지 않습니다."));
+        }
+        int aptId = user.getApartment().getId();
         String dong = user.getDong();
         String ho = user.getHo();
 

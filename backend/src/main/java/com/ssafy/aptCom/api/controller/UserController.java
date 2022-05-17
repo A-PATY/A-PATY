@@ -109,16 +109,18 @@ public class UserController {
 
             String dtoAddress = userModifyRequestDto.getAddress();
             String userAddress = user.getBaseAddress().getAddress();
-            String aptId = String.valueOf(user.getApartment().getId());
 
-            if(!dtoAddress.equals(userAddress)){
-                String dong = user.getDong();
-                String ho = user.getHo();
-                String familyId = aptId + "-" + dong + "-" + ho;
-                String userId = String.valueOf(user.getId());
-                firebaseService.deleteFamilyMember(familyId, userId);
+            if(user.getApartment() != null) {
+                String aptId = String.valueOf(user.getApartment().getId());
+                if (!dtoAddress.equals(userAddress)) {
+                    String dong = user.getDong();
+                    String ho = user.getHo();
+                    String familyId = aptId + "-" + dong + "-" + ho;
+                    String userId = String.valueOf(user.getId());
+
+                    firebaseService.deleteFamilyMember(familyId, userId);
+                }
             }
-
             userService.userModify(userModifyRequestDto, user, profileInfo);
 
         } catch (Exception e) {
@@ -147,17 +149,19 @@ public class UserController {
             @AuthenticationPrincipal final String loginUser) {
 
         try {
-
             User user = userService.getUserByKakaoUserNumber(loginUser);
+
+            if(user.getApartment() != null) {
+                String aptId = String.valueOf(user.getApartment().getId());
+                String dong = user.getDong();
+                String ho = user.getHo();
+                String familyId = aptId + "-" + dong + "-" + ho;
+                String userId = String.valueOf(user.getId());
+
+                firebaseService.deleteFamilyMember(familyId, userId);
+            }
             userService.userDelete(user);
 
-            String aptId = String.valueOf(user.getApartment().getId());
-            String dong = user.getDong();
-            String ho = user.getHo();
-            String familyId = aptId + "-" + dong + "-" + ho;
-            String userId = String.valueOf(user.getId());
-
-            firebaseService.deleteFamilyMember(familyId, userId);
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
