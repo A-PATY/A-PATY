@@ -186,6 +186,7 @@ const AptRegister: React.FC<Props> = ({
 };
 
 const CustomBox = styled(Box)`
+  overflow: auto;
   position: absolute;
   top: 50%;
   left: 50%;
