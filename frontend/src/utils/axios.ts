@@ -91,11 +91,11 @@ axiosInstance.interceptors.response.use(
               });
             }
           });
+        } else {
+          window.location.href = '/';
+          //리프레시 토큰 없는 경우
+        };
       }
-    } else {
-      window.location.href = '/';
-      //리프레시 토큰 없는 경우
-    }
     return Promise.reject(error);
   },
 );
