@@ -17,6 +17,9 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import IconButton from '@mui/material/IconButton';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import { useRecoilValue } from 'recoil';
+import { presentCommunityTypeState } from '../../features/Board/atom';
+
 const ariaLabel = { 'aria-label': 'description' };
 
 interface Props {
@@ -27,6 +30,10 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
   console.log(article);
   console.log(article.category);
+
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+  console.log('presentCommunityType');
+  console.log(presentCommunityType);
 
   const [category, setCategory] = useState<string>(article.category);
   const [title, setTitle] = useState<string>(article.title);
@@ -147,6 +154,26 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     event.preventDefault();
     const formData = new FormData();
 
+    if (category !== null && category === '') {
+      Swal.fire({
+        icon: 'warning',
+        text: '주제를 골라주세요',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
+    if (title.length < 1) {
+      Swal.fire({
+        icon: 'warning',
+        text: '제목을 입력해주세요',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
     if (content.length < 5) {
       Swal.fire({
         icon: 'warning',
@@ -180,10 +207,12 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     //   formData.append(key, articleData[key]);
     // }
 
-    // formData.append('communityId', String(communityId));
-    formData.append('category', category);
     formData.append('title', title);
     formData.append('contents', content);
+
+    if (category !== null) {
+      formData.append('category', category);
+    }
 
     if (category === '나눔장터' || category === '공구' || category === '헬프') {
       formData.append('contact', String(phoneNumber));
@@ -206,7 +235,9 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
   return (
     <>
       <Container>
-        <ArticleCategory category={category} setCategory={setCategory} />
+        {article.category !== null && (
+          <ArticleCategory category={category} setCategory={setCategory} />
+        )}
         <Box
           component="form"
           sx={{

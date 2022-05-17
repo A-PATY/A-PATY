@@ -132,7 +132,7 @@ const ArticleWrite: React.FC = () => {
     event.preventDefault();
     const formData = new FormData();
 
-    if (category === '') {
+    if (type !== 3 && category === '') {
       Swal.fire({
         icon: 'warning',
         text: '주제를 골라주세요',
