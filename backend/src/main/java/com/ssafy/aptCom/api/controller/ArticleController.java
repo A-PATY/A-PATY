@@ -54,7 +54,7 @@ public class ArticleController {
             User user = userService.getUserByKakaoUserNumber(loginUser);
 
             if (user == null) {
-                return ResponseEntity.status(403).body(ErrorMessage.of(403, "Unauthorized User 로그인 해주세요"));
+                return ResponseEntity.status(401).body(ErrorMessage.of(401, "Unauthorized User 로그인 해주세요"));
             }
 
             Integer articleId = articleService.createArticle(articleRequestDto, user);
