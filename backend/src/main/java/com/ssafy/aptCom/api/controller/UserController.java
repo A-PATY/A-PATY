@@ -77,9 +77,9 @@ public class UserController {
 
         try {
             profileImgList = profileImgService.getProfileImgList();
-            log.info("profileImgList", profileImgList);
+            log.info("profileImgList : {}", profileImgList);
         } catch (Exception e) {
-            log.info("error", e);
+            log.info("error : {}", e);
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
 
@@ -121,7 +121,7 @@ public class UserController {
             userService.userModify(userModifyRequestDto, user, profileInfo);
 
         } catch (Exception e) {
-            log.info("error" , e);
+            log.info("error: {}" , e);
             log.info(e.getMessage());
             log.info(String.valueOf(e.getClass()));
 
