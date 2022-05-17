@@ -10,6 +10,21 @@ const commonStyles = css`
     font-style: normal;
   }
 
+  @font-face {
+    font-family: 'MinSans-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/MinSans-Bold.woff')
+      format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Yeongdo-Rg';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/Yeongdo-Rg.woff')
+      format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
   html {
     scroll-behavior: smooth;
     height: 100%;

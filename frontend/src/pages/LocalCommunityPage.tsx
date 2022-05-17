@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../features/Login/atom';
+import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
 import BoardHeader from '../components/Community/Local/BoardHeader';
@@ -11,6 +12,7 @@ import useCommunityId from '../hooks/useCommunityId';
 import Header from '../components/common/Header';
 
 const LocalCommunityPage: React.FC = () => {
+  const setCommunityType = useSetRecoilState(presentCommunityTypeState);
   const userInfo = useRecoilValue(userInfoState);
   console.log('userInfo : ');
   console.log(userInfo);
@@ -67,6 +69,7 @@ const LocalCommunityPage: React.FC = () => {
 
   useEffect(() => {
     document.title = '지역 커뮤니티';
+    setCommunityType(1);
   }, []);
 
   return (
@@ -80,6 +83,7 @@ const LocalCommunityPage: React.FC = () => {
           setKeyword={setKeyword}
         />
         <BoardList
+          type={1}
           categoryId={categoryId}
           setCategoryId={setCategoryId}
           data={data}

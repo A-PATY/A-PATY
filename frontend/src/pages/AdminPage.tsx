@@ -22,7 +22,7 @@ const AdminPage: React.FC = () => {
       showConfirmButton: false,
       timer: 2000,
     });
-    navigate('/');
+    window.location.href = '/';
   }
   return (
     <>

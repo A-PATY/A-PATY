@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from '../features/Login/atom';
+import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
 import BoardHeader from '../components/Community/Local/BoardHeader';
-import { userInfoState } from '../features/Login/atom';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
@@ -13,6 +14,8 @@ import AptAnonyCommunity from '../components/Community/Apt/AptAnonyCommunity';
 import AptTabHeader from '../components/Community/Apt/AptTabHeader';
 
 const AptCommunityPage: React.FC = () => {
+  const setCommunityType = useSetRecoilState(presentCommunityTypeState);
+
   // const userInfo = useRecoilValue(userInfoState);
   // console.log('userInfo : ');
   // console.log(userInfo);
@@ -74,6 +77,7 @@ const AptCommunityPage: React.FC = () => {
 
     return (
       <div
+        style={{ height: '100%' }}
         role="tabpanel"
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
@@ -81,7 +85,7 @@ const AptCommunityPage: React.FC = () => {
         {...other}
       >
         {value === index && (
-          <Box>
+          <Box sx={{ height: '100%' }}>
             {children}
             {/* <Typography>{children}</Typography> */}
           </Box>
@@ -98,13 +102,14 @@ const AptCommunityPage: React.FC = () => {
 
   useEffect(() => {
     document.title = '아파트 커뮤니티';
+    setCommunityType(2);
   }, []);
 
   return (
     <>
-      <Container>
-        <Box sx={{ width: '100%' }}>
-          <AptTabHeader value={value} handleChange={handleChange} />
+      <Container id="Container">
+        <AptTabHeader value={value} handleChange={handleChange} />
+        <Box sx={{ width: '100%', height: 'calc(100% - 70px)' }} id="Box">
           <TabPanel value={value} index={0}>
             <BoardHeader
               type={2}
@@ -113,6 +118,7 @@ const AptCommunityPage: React.FC = () => {
               setKeyword={setKeyword}
             />
             <BoardList
+              type={2}
               categoryId={categoryId}
               setCategoryId={setCategoryId}
               data={data}
@@ -135,6 +141,14 @@ const AptCommunityPage: React.FC = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% - 70px);
+  height: calc(100% - 75px);
+  // overflow-y: auto;
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
+  // &::-webkit-scrollbar-track {
+  //   background-color: transparent;
+  // }
 `;
+
 export default AptCommunityPage;

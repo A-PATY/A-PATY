@@ -307,7 +307,7 @@ const MyPageMain: React.FC = () => {
           showConfirmButton: false,
           timer: 2000,
         });
-        navigate('/');
+        window.location.href = '/';
       })
       .catch(({ message }) => {
         Swal.fire({

@@ -69,7 +69,7 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
             key={data.categoryId}
             onClick={() => handleCategoryClick(data.categoryId)}
           >
-            <Chip
+            <ChipCustom
               label={data.categoryName}
               style={
                 data.categoryId === categoryId
@@ -108,6 +108,9 @@ const PaperCustom = styled(Paper)`
 
 const ListItem = styled.li`
   margin: 3px;
+`;
+
+const ChipCustom = styled(Chip)`
   cursor: pointer;
 `;
 
