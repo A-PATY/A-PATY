@@ -6,6 +6,7 @@ import com.ssafy.aptCom.common.jwt.JwtAuthenticationEntryPoint;
 import com.ssafy.aptCom.common.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,11 +14,18 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 
 @Configuration
@@ -27,15 +35,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//
+//    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    public SecurityConfig(TokenProvider tokenProvider, JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-
+//    public SecurityConfig(TokenProvider tokenProvider, JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    public SecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+//        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+//        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 
     }
 
@@ -47,10 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                    .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                     .formLogin().disable()
                     .authorizeRequests()
@@ -68,6 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/v1/auth/users/log-out").hasAnyRole("USER","ADMIN")
                     .antMatchers("/api/v1/auth/users/category-list").hasAnyRole("USER","ADMIN")
                     .anyRequest().permitAll()
+                .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인 후 이용 가능합니다."))
+                    .accessDeniedHandler((request, response, accessDeniedException) -> response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다."))
 //                .and()
 //                    .logout()
 //                    .logoutSuccessUrl("/")
