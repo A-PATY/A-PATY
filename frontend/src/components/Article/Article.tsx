@@ -15,27 +15,15 @@ import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { presentArticleState } from '../../features/Board/atom';
+import { userInfoState } from '../../features/Login/atom';
 
 const Article: React.FC = () => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoState);
+  const [article, setArticle] = useRecoilState(presentArticleState);
 
-  const [article, setArticle] = React.useState<article>({
-    articleId: 0,
-    category: '',
-    title: '',
-    contents: '',
-    imgs: null,
-    contact: null,
-    doneyn: false,
-    views: 0,
-    likes: 0,
-    likeYN: true,
-    createdAt: '',
-    commentCount: 0,
-    author: '',
-    profileImgUrl: '',
-    commentsList: [],
-  });
   const { article_id } = useParams<{ article_id: string }>();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
@@ -43,6 +31,7 @@ const Article: React.FC = () => {
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
+        console.log(res);
         setArticle(res);
         setIsLike(res.likeyn);
         setlikeCnt(res.likes);
@@ -68,7 +57,7 @@ const Article: React.FC = () => {
   }, [fetchArticle]);
 
   const editArticle = () => {
-    navigate(`/board/${article.articleId}/edit`, {
+    navigate(`/board/${article?.articleId}/edit`, {
       state: { article: article },
     });
   };
@@ -87,7 +76,7 @@ const Article: React.FC = () => {
       if (result.isConfirmed) {
         BoardService.deleteArticle(article_id)
           .then(() => {
-            navigate(`/local_community`);
+            navigate(-1);
           })
           .catch((err) => console.log(err.response));
       }
@@ -98,14 +87,39 @@ const Article: React.FC = () => {
     BoardService.changeLike(article_id)
       .then(() => {
         setIsLike(!isLike);
-        
+
         if (isLike) {
-          setlikeCnt(likeCnt-1);
+          setlikeCnt(likeCnt - 1);
         } else {
-          setlikeCnt(likeCnt+1);
-        };
+          setlikeCnt(likeCnt + 1);
+        }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
+  };
+
+  const calculateTime = (time: string) => {
+    const today = new Date();
+    const timeValue = new Date(time);
+    const betweenTime = Math.floor(
+      (today.getTime() - timeValue.getTime()) / 1000 / 60,
+    );
+
+    if (betweenTime < 1) return '방금전';
+    if (betweenTime < 60) {
+      return `${betweenTime}분전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60);
+    if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일전`;
+    }
+
+    return time;
   };
 
   return (
@@ -120,13 +134,14 @@ const Article: React.FC = () => {
             </Category>
             <Title>{article?.title}</Title>
             <AuthorBox>
-              <AvatarCustom alt="profile" src="" />
+              <AvatarCustom alt="profile" src={article?.profileImgUrl} />
               <Name>{article?.author}</Name>
             </AuthorBox>
             <WrapInfo>
               <InfoSpan>
                 <AccessTimeIcon />
-                {article?.createdAt}
+                {article?.createdAt !== undefined &&
+                  calculateTime(article?.createdAt)}
               </InfoSpan>
               <InfoSpan>
                 <VisibilityOutlinedIcon />
@@ -136,26 +151,35 @@ const Article: React.FC = () => {
                 <ChatBubbleOutlineIcon />
                 {article?.commentCount}
               </InfoSpan>
-              <InfoFunction>
-                <EditOutlinedIcon onClick={editArticle} />
-                <DeleteOutlinedIcon onClick={deleteArticle} />
-              </InfoFunction>
+              {userInfo?.userId === article?.authorId && (
+                <InfoFunction>
+                  <EditOutlinedIcon onClick={editArticle} />
+                  <DeleteOutlinedIcon onClick={deleteArticle} />
+                </InfoFunction>
+              )}
             </WrapInfo>
           </ArticleHead>
+
           <ArticleContent>
+            {article?.contact !== null && (
+              <ContactInfo>
+                <ContactHead>연락처</ContactHead> {article?.contact}
+              </ContactInfo>
+            )}
             <ContentArea>{article?.contents}</ContentArea>
             <ImageContainer>
               {article?.imgs?.map((img) => (
                 <Image key={img.id} src={img.imgUrl} alt="image"></Image>
               ))}
             </ImageContainer>
+
             <ArticleInfo>
               <Buttons>
-                {
-                  isLike ? 
-                  <ThumbUpIcon onClick={toggleLike}/> :
-                  <ThumbUpOutlinedIcon onClick={toggleLike}/>
-                }
+                {isLike ? (
+                  <ThumbUpIcon onClick={toggleLike} />
+                ) : (
+                  <ThumbUpOutlinedIcon onClick={toggleLike} />
+                )}
                 {likeCnt}
               </Buttons>
               <Buttons>
@@ -168,6 +192,7 @@ const Article: React.FC = () => {
             artielcId={String(article?.articleId)}
             comments={article?.commentsList}
             commentCount={article?.commentCount}
+            fetchArticle={fetchArticle}
           />
         </Wrapper>
       </Section>
@@ -294,6 +319,7 @@ const ImageContainer = styled.p`
   position: relative;
   display: inline-block;
   margin-top: 24px;
+  margin-bottom: 30px;
 `;
 
 const Image = styled.img`
@@ -302,7 +328,6 @@ const Image = styled.img`
 
 const ArticleInfo = styled.div`
   position: relative;
-  margin-top: 30px;
   padding: 20px 0;
   border-top: 1px solid #eee;
 `;
@@ -325,6 +350,18 @@ const Buttons = styled.a`
     height: 16px;
     margin-top: -9px;
   }
+`;
+
+const ContactInfo = styled.div`
+  position: relative;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+`;
+
+const ContactHead = styled.span`
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 export default Article;

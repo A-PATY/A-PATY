@@ -132,6 +132,26 @@ const ArticleWrite: React.FC = () => {
     event.preventDefault();
     const formData = new FormData();
 
+    if (type !== 3 && category === '') {
+      Swal.fire({
+        icon: 'warning',
+        text: '주제를 골라주세요',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
+    if (title.length < 1) {
+      Swal.fire({
+        icon: 'warning',
+        text: '제목을 입력해주세요',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
     if (content.length < 5) {
       Swal.fire({
         icon: 'warning',

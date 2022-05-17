@@ -8,36 +8,68 @@ import { comment } from '../../types/boardTypes';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import LockIcon from '@mui/icons-material/Lock';
+import { Article } from '@mui/icons-material';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
+import { presentCommunityTypeState } from '../../features/Board/atom';
 
 interface CommentProps {
-  comment: {
-    profileImgUrl: string;
-    commentAuthor: string;
-    commentContent: string;
-    commentCreatedAt: string;
-    commentId: number;
-  };
+  comment: comment;
   deleteComment: (commentId: number) => void;
 }
 
 interface CommentsProps {
   artielcId: string;
-  comments: comment[];
-  commentCount: number;
+  comments: comment[] | undefined;
+  commentCount: number | undefined;
+  fetchArticle: () => void;
 }
 
 // 개별 댓글
 const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
+  const userInfo = useRecoilValue(userInfoState);
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+  console.log('presentCommunityType');
+  console.log(presentCommunityType);
+
+  const calculateTime = (time: string) => {
+    const today = new Date();
+    const timeValue = new Date(time);
+    const betweenTime = Math.floor(
+      (today.getTime() - timeValue.getTime()) / 1000 / 60,
+    );
+
+    if (betweenTime < 1) return '방금전';
+    if (betweenTime < 60) {
+      return `${betweenTime}분전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60);
+    if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일전`;
+    }
+
+    return time;
+  };
   return (
     <CommentSection>
       <Author>
         <AvatarCustom src={comment.profileImgUrl} alt="profile" />
         <AuthorName>{comment.commentAuthor}</AuthorName>
-        <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
-        {/* <DeleteOutlinedIcon onClick={deleteComment} /> */}
+        {comment.secret === true && <LockIconCustom></LockIconCustom>}
+        {userInfo?.userId === comment.commentAuthorId && (
+          <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
+        )}
       </Author>
+
       <Content>{comment.commentContent}</Content>
-      <Time>{comment.commentCreatedAt}</Time>
+      <Time>{calculateTime(comment.commentCreatedAt)}</Time>
     </CommentSection>
   );
 };
@@ -46,6 +78,7 @@ const Comments: React.FC<CommentsProps> = ({
   artielcId,
   comments,
   commentCount,
+  fetchArticle,
 }) => {
   const navigate = useNavigate();
 
@@ -70,7 +103,9 @@ const Comments: React.FC<CommentsProps> = ({
     BoardService.createComment(artielcId, comment)
       .then(() => {
         // 현재 글 상세페이지 업데이트
-        navigate(`/board/${artielcId}`);
+        setContent('');
+        fetchArticle();
+        // navigate(`/board/${artielcId}`);
       })
       .catch((err) => console.log(err));
   };
@@ -78,19 +113,19 @@ const Comments: React.FC<CommentsProps> = ({
   const deleteComment = (commentId: number) => {
     console.log('삭제');
     console.log(commentId);
-    // BoardService.deleteComment(artielcId, String(commentId))
-    //   .then(() => {
-    //     // 현재 글 상세페이지 업데이트
-    //     navigate(`/board/${artielcId}`);
-    //   })
-    //   .catch((err) => console.log(err));
+    BoardService.deleteComment(artielcId, String(commentId))
+      .then(() => {
+        // 현재 글 상세페이지 업데이트
+        fetchArticle();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
       <Container>
         <CommentsHead>댓글 {commentCount}</CommentsHead>
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <Comment
             key={comment.commentId}
             comment={comment}
@@ -115,6 +150,7 @@ const Comments: React.FC<CommentsProps> = ({
             type="text"
             placeholder="댓글을 남겨주세요"
             maxLength={100}
+            value={content}
             onChange={handleContentChange}
           ></Input>
           <IconCustom onClick={onSubmit} />
@@ -193,6 +229,20 @@ const Delete = styled(DeleteOutlinedIcon)`
   color: #a6a6a6;
   font-size: 18px;
   cursor: pointer;
+`;
+
+const LockIconCustom = styled(LockIcon)`
+  padding-left: 5px;
+  color: #a6a6a6;
+  font-size: 18px;
+`;
+
+const LockDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
 `;
 
 const WriteComment = styled.div`
