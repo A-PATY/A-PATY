@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from '../features/Login/atom';
+import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/Local/BoardList';
 import BoardHeader from '../components/Community/Local/BoardHeader';
-import { userInfoState } from '../features/Login/atom';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
@@ -13,6 +14,8 @@ import AptAnonyCommunity from '../components/Community/Apt/AptAnonyCommunity';
 import AptTabHeader from '../components/Community/Apt/AptTabHeader';
 
 const AptCommunityPage: React.FC = () => {
+  const setCommunityType = useSetRecoilState(presentCommunityTypeState);
+
   // const userInfo = useRecoilValue(userInfoState);
   // console.log('userInfo : ');
   // console.log(userInfo);
@@ -98,6 +101,7 @@ const AptCommunityPage: React.FC = () => {
 
   useEffect(() => {
     document.title = '아파트 커뮤니티';
+    setCommunityType(2);
   }, []);
 
   return (
@@ -113,6 +117,7 @@ const AptCommunityPage: React.FC = () => {
               setKeyword={setKeyword}
             />
             <BoardList
+              type={2}
               categoryId={categoryId}
               setCategoryId={setCategoryId}
               data={data}

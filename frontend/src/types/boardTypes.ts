@@ -4,20 +4,21 @@ export interface articles {
 
 export interface article {
   articleId: number;
-  category: string;
-  title: string;
-  contents: string;
-  imgs: img[] | null;
-  contact: string | null;
-  doneyn: boolean | null;
-  views: number;
-  likes: number;
-  likeYN: boolean;
-  createdAt: string;
   author: string;
+  authorId: number;
+  category: string;
   commentCount: number;
-  profileImgUrl: string;
   commentsList: comment[];
+  contact: string | null;
+  contents: string;
+  createdAt: string;
+  doneyn: boolean | null;
+  imgs: img[] | null;
+  likes: number;
+  likeyn: boolean;
+  profileImgUrl: string;
+  title: string;
+  views: number;
 }
 
 export interface img {
@@ -32,6 +33,7 @@ export interface comment {
   commentCreatedAt: string;
   secret: boolean;
   commentAuthor: string;
+  commentAuthorId: number;
   profileImgUrl: string;
 }
 

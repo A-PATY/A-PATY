@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { category } from '../../types/boardTypes';
+import { category, article } from '../../types/boardTypes';
 
 export const categoryListState = atom<category[] | null>({
   key: 'categoryListState',
@@ -31,4 +31,14 @@ export const userCategoryChipState = selector({
       return userCategoryChip;
     }
   },
+});
+
+export const presentArticleState = atom<article | null>({
+  key: 'presentArticleState',
+  default: null,
+});
+
+export const presentCommunityTypeState = atom<number | null>({
+  key: 'presentCommunityTypeState',
+  default: null,
 });
