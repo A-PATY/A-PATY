@@ -19,7 +19,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { presentArticleState } from '../../features/Board/atom';
 import { userInfoState } from '../../features/Login/atom';
 
-const LogInMain: React.FC = () => {
+const Article: React.FC = () => {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoState);
   const [article, setArticle] = useRecoilState(presentArticleState);
@@ -364,4 +364,4 @@ const ContactHead = styled.span`
   font-weight: 700;
 `;
 
-export default LogInMain;
+export default Article;
