@@ -77,6 +77,7 @@ const AptCommunityPage: React.FC = () => {
 
     return (
       <div
+        style={{ height: '100%' }}
         role="tabpanel"
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
@@ -84,7 +85,7 @@ const AptCommunityPage: React.FC = () => {
         {...other}
       >
         {value === index && (
-          <Box>
+          <Box sx={{ height: '100%' }}>
             {children}
             {/* <Typography>{children}</Typography> */}
           </Box>
@@ -106,9 +107,9 @@ const AptCommunityPage: React.FC = () => {
 
   return (
     <>
-      <Container>
-        <Box sx={{ width: '100%' }}>
-          <AptTabHeader value={value} handleChange={handleChange} />
+      <Container id="Container">
+        <AptTabHeader value={value} handleChange={handleChange} />
+        <Box sx={{ width: '100%', height: 'calc(100% - 70px)' }} id="Box">
           <TabPanel value={value} index={0}>
             <BoardHeader
               type={2}
@@ -140,6 +141,14 @@ const AptCommunityPage: React.FC = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% - 70px);
+  height: calc(100% - 75px);
+  // overflow-y: auto;
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
+  // &::-webkit-scrollbar-track {
+  //   background-color: transparent;
+  // }
 `;
+
 export default AptCommunityPage;
