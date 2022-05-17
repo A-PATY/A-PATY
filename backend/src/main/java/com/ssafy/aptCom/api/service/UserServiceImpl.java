@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
         user.setNickname(signUpRequestDto.getNickname());
         user.setProfileImg(profileImg);
         user.setBaseAddress(baseAddress);
+        user.setUserName(signUpRequestDto.getName());
 
         return userRepository.save(user);
 
