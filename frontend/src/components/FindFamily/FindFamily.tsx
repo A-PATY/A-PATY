@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import Slider from '@mui/material/Slider';
 import { motion } from 'framer-motion';
 import { firestore } from '../../firebase';
-import { getDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc, addDoc } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 
@@ -30,7 +30,7 @@ const marks = [
 ];
 
 const FindFamily: React.FC = () => {
-  const userInfo = useRecoilValue<UserInfo | null>(userInfoState);
+  const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
   
   const [range, setRange] = useState<number>(100);
   const [familyList, setFamilyList] = useState<familyList[]>([]); 
@@ -51,7 +51,7 @@ const FindFamily: React.FC = () => {
     FamilyService.getFamilyList()
       .then((data) => {
         const family = data.familyList;
-        console.log(data.familyList);
+        // console.log(data.familyList);
         setFamilyId(data.familyId);
         setFamilyList(data.familyList);
         
@@ -76,7 +76,7 @@ const FindFamily: React.FC = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         if (err.response.status === 400) {
           console.log('가입된 아파트가 없습니다');
         } else if (err.response.status === 500) {
@@ -87,7 +87,7 @@ const FindFamily: React.FC = () => {
 
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success, () => {},{ enableHighAccuracy: true });
+    geolocation.watchPosition(success, () => {}, { enableHighAccuracy: true });
   }, [familyId]);
 
   useEffect(() => {
@@ -97,7 +97,6 @@ const FindFamily: React.FC = () => {
   // 지도상의 좌표 변화
   useEffect(() => {
     if (memberLocation.lat !== 0 && memberLocation.lng !== 0) {
-      // console.log(memberLocation.lat, memberLocation.lng)
       mapLocation(aptLocation.lat, aptLocation.lng);
     }
   }, [memberLocation, range]);  
@@ -107,15 +106,20 @@ const FindFamily: React.FC = () => {
     const index = marks.findIndex((mark) => mark.value === value);
     setRange(marks[index].range);
 
+    // 범위 설정 firestore에 추가
+    const docRef = doc(firestore, "families", familyId);
+    if (userInfo !== null) {
+      updateDoc(docRef, {
+        range : marks[index].range
+      });
+    }
+
     return marks.findIndex((mark) => mark.value === value) + 1;
   };
 
   const mapLocation = (aptlat: number, aptlng: number) => {
     const container = document.getElementById('map');
     const center = new kakao.maps.LatLng(aptlat, aptlng);
-
-    // 추가
-    // console.log('멤버 위치', memberLocation.lat, memberLocation.lng)
     const member = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);
     
     const options = {  
@@ -154,6 +158,31 @@ const FindFamily: React.FC = () => {
           content: content,
           yAnchor: 1 
         });
+
+        ///------------------------- 알림에 집어넣기 => 벗어나서 1번 넣으면 다시 넣지 않아야 함... (알림 무한반복 문제)
+        // 그리고 위치 허용한 사람의 경우에만 밑의 과정을 실행할 것
+        // 범위를 설정할 것(고정값 store에 저장) 
+        for (let member of familyList) {
+          if (member.userId !== userInfo.userId) {
+            // console.log(member.userId)
+            const notifyRef = doc(firestore, `notifications`, member.userId.toString() + 'family')
+            // const col = collection()
+            setDoc(notifyRef, {  //addDoc(notifyRef, {
+              family : {
+                [userInfo.userId] : {
+                  time: new Date(),
+                  nickname: userInfo.nickname
+                }
+              }
+              // [userInfo.userId] : {
+              //   time: new Date(),
+              //   nickname: userInfo.nickname
+              // }
+            })
+            
+          }
+        }
+
       };
       map.setCenter(member)
     } else {
@@ -199,9 +228,10 @@ const FindFamily: React.FC = () => {
   // geolocation 콜백함수 + firebase 좌표 등록
   const success = (position: any) => {
     const { latitude, longitude } = position.coords;
-    console.log('내 위치',latitude, longitude)
+
     if (familyId) {
       const docRef = doc(firestore, "families", familyId);
+      
       if (userInfo !== null) {
         updateDoc(docRef, {
           [userInfo.userId]: {  
