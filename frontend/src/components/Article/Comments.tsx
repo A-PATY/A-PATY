@@ -33,6 +33,11 @@ const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
   console.log('presentCommunityType');
   console.log(presentCommunityType);
 
+  const authorName =
+    presentCommunityType === 3
+      ? comment.commentAuthor[0] + '*'
+      : comment.commentAuthor;
+
   const calculateTime = (time: string) => {
     const today = new Date();
     const timeValue = new Date(time);
@@ -61,7 +66,7 @@ const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
     <CommentSection>
       <Author>
         <AvatarCustom src={comment.profileImgUrl} alt="profile" />
-        <AuthorName>{comment.commentAuthor}</AuthorName>
+        <AuthorName>{authorName}</AuthorName>
         {comment.secret === true && <LockIconCustom></LockIconCustom>}
         {userInfo?.userId === comment.commentAuthorId && (
           <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
