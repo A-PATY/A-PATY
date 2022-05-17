@@ -16,7 +16,7 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
   const [likeCnt, setlikeCnt] = useState<number>(0);
 
   useEffect(() => {
-    setIsLike(article.likeYN);
+    setIsLike(article.likeyn);
     setlikeCnt(article.likes);
   }, [article]);
 
@@ -66,14 +66,20 @@ const BoardArticle: React.FC<Props> = ({ article }) => {
             <VisibilityRoundedIcon sx={{ fontSize: '8px' }} />
           </Info>
           <Info>{article.views}</Info>
-          <Info className="icon" style={{ cursor: 'pointer'}} onClick={toggleLike}>
+          <Info
+            className="icon"
+            style={{ cursor: 'pointer' }}
+            onClick={toggleLike}
+          >
             {isLike ? (
               <ThumbUpRoundedIcon sx={{ fontSize: '8px' }} />
             ) : (
               <ThumbUpOutlinedIcon sx={{ fontSize: '8px' }} />
             )}
           </Info>
-          <Info style={{ cursor: 'pointer'}} onClick={toggleLike}>{likeCnt}</Info>
+          <Info style={{ cursor: 'pointer' }} onClick={toggleLike}>
+            {likeCnt}
+          </Info>
           <Info className="icon">
             <ChatBubbleOutlineRoundedIcon sx={{ fontSize: '8px' }} />
           </Info>

@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import LockIcon from '@mui/icons-material/Lock';
 import { Article } from '@mui/icons-material';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 interface CommentProps {
   comment: comment;
@@ -25,6 +27,8 @@ interface CommentsProps {
 
 // 개별 댓글
 const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
+  const userInfo = useRecoilValue(userInfoState);
+
   const calculateTime = (time: string) => {
     const today = new Date();
     const timeValue = new Date(time);
@@ -55,9 +59,9 @@ const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
         <AvatarCustom src={comment.profileImgUrl} alt="profile" />
         <AuthorName>{comment.commentAuthor}</AuthorName>
         {comment.secret === true && <LockIconCustom></LockIconCustom>}
-
-        <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
-        {/* <DeleteOutlinedIcon onClick={deleteComment} /> */}
+        {userInfo?.userId === comment.commentAuthorId && (
+          <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
+        )}
       </Author>
 
       <Content>{comment.commentContent}</Content>

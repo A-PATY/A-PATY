@@ -15,12 +15,15 @@ import ArticleComments from './Comments';
 import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { presentArticleState } from '../../features/Board/atom';
+import { userInfoState } from '../../features/Login/atom';
 
 const LogInMain: React.FC = () => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoState);
   const [article, setArticle] = useRecoilState(presentArticleState);
+
   const { article_id } = useParams<{ article_id: string }>();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCnt, setlikeCnt] = useState<number>(0);
@@ -148,10 +151,12 @@ const LogInMain: React.FC = () => {
                 <ChatBubbleOutlineIcon />
                 {article?.commentCount}
               </InfoSpan>
-              <InfoFunction>
-                <EditOutlinedIcon onClick={editArticle} />
-                <DeleteOutlinedIcon onClick={deleteArticle} />
-              </InfoFunction>
+              {userInfo?.userId === article?.authorId && (
+                <InfoFunction>
+                  <EditOutlinedIcon onClick={editArticle} />
+                  <DeleteOutlinedIcon onClick={deleteArticle} />
+                </InfoFunction>
+              )}
             </WrapInfo>
           </ArticleHead>
 
