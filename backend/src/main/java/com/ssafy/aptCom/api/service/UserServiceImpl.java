@@ -132,9 +132,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteAuth(User user) {
-        Optional<Auth> auth = authRepository.findByUserId(user.getId());
-
-        authRepository.deleteById(auth.get().getId());
+        authRepository.deleteAllByUserId(user.getId());
     }
 
     @Transactional
@@ -177,20 +175,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void userDelete(User user) {
         // Auth 삭제
-        Optional<Auth> auth = authRepository.findByUserId(user.getId());
-        authRepository.deleteById(auth.get().getId());
+        authRepository.deleteAllByUserId(user.getId());
 
         // User Community 삭제
-//        BaseAddress baseAddress = user.getBaseAddress();
-//        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
-//        userCommunityRepository.deleteByCommunity(community);
-        userCommunityRepository.deleteByUserId(user.getId());
+        userCommunityRepository.deleteAllByUserId(user.getId());
 
         // Likes 삭제
-        likesRepository.deleteByUserId(user.getId());
+        likesRepository.deleteAllByUserId(user.getId());
 
         // Comment 삭제
-        commentRepository.deleteByUserId(user.getId());
+        commentRepository.deleteAllByUserId(user.getId());
 
         // Image, Article 삭제
         List<Article> articles = articleRepository.findAllByUserId(user.getId());
