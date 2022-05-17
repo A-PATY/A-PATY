@@ -13,6 +13,7 @@ import { Article } from '@mui/icons-material';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
 import { presentCommunityTypeState } from '../../features/Board/atom';
+import { presentArticleState } from '../../features/Board/atom';
 
 interface CommentProps {
   comment: comment;
@@ -32,10 +33,11 @@ const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
   console.log('presentCommunityType');
   console.log(presentCommunityType);
+  const articleAuthor = useRecoilValue(presentArticleState)?.authorId;
 
   const authorName =
     presentCommunityType === 3
-      ? comment.commentAuthor[0] + '*'
+      ? comment.commentAuthor[0] + '*'.repeat(comment.commentAuthor.length - 1)
       : comment.commentAuthor;
 
   const calculateTime = (time: string) => {
@@ -72,8 +74,14 @@ const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
           <Delete onClick={() => deleteComment(comment.commentId)}></Delete>
         )}
       </Author>
+      {comment.secret === false ||
+      userInfo?.userId === comment.commentAuthorId ||
+      userInfo?.userId === articleAuthor ? (
+        <Content>{comment.commentContent}</Content>
+      ) : (
+        <Content>비밀 댓글입니다.</Content>
+      )}
 
-      <Content>{comment.commentContent}</Content>
       <Time>{calculateTime(comment.commentCreatedAt)}</Time>
     </CommentSection>
   );
