@@ -52,7 +52,7 @@ const Main: React.FC = () => {
             <PhoneFrameContainer>
               <PhoneFrameWrapper>
                 <PhoneFrame>
-                  <PhoneInner src="\img\phoneinner.png" />
+                  <PhoneInner src="\img\service.png" />
                   {/* <PhoneHeader>
                     <LeftGrid>
                       <LeftArrow></LeftArrow>
