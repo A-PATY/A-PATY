@@ -76,7 +76,7 @@ const Main: React.FC = () => {
                 <IntroductionBanner>
                   <IntroductionPictureContainer>
                     <IntroductionPictureWrapper>
-                      <IntroductionPicture src="\img\spt1.jpeg" />
+                      <IntroductionPicture src="\img\apt.jpeg" />
                     </IntroductionPictureWrapper>
                   </IntroductionPictureContainer>
                 </IntroductionBanner>
@@ -88,8 +88,27 @@ const Main: React.FC = () => {
               <ApartmentRoundedIconCustom />
               <IntroductionText>A : PATY는 무슨 서비스인가요?</IntroductionText>
             </IntroductionQuestion>
+            <IntroductionAnswer>
+              <IntroductionAnswerH2>
+                아파트 주민들을 위한 커뮤니티 공간
+              </IntroductionAnswerH2>
+            </IntroductionAnswer>
           </IntroductionTextContainer>
         </SecondSection>
+        <ThirdSection>
+          <FirstAdvantageDescriptionWrapper>
+            <FirstAdvantageDescriptionOne>
+              <FirstAdvantageDescriptionOneH3>
+                <FirstAdvantageDescriptionOneStrong>
+                  첫번째 특장점
+                </FirstAdvantageDescriptionOneStrong>
+                {/* <FirstAdvantageDescriptionOneBr /> */}
+                <br />
+                특장점 요약
+              </FirstAdvantageDescriptionOneH3>
+            </FirstAdvantageDescriptionOne>
+          </FirstAdvantageDescriptionWrapper>
+        </ThirdSection>
         <ServiceButtonWrapper>
           <ButtonCustom onClick={handleButtonCustomClick}>
             A : PATY 시작하기
@@ -335,12 +354,14 @@ const IntroductionBanner = styled.div`
   bottom: -20%;
   left: 0;
 `;
+
 const IntroductionPictureContainer = styled.div`
   transform: translateY(12%);
   height: 600px;
   width: 100%;
   position: relative;
 `;
+
 const IntroductionPictureWrapper = styled.div`
   position: relative;
   overflow: hidden;
@@ -362,6 +383,7 @@ const IntroductionPicture = styled.img`
   transition: opacity 0.25s linear;
   will-change: opacity;
 `;
+
 const IntroductionTextContainer = styled.div`
   position: absolute;
   left: 50%;
@@ -385,6 +407,14 @@ const IntroductionQuestion = styled.div`
   margin-bottom: 0.75rem;
 `;
 
+const IntroductionAnswer = styled.div``;
+
+const IntroductionAnswerH2 = styled.h2`
+  font-family: 'MinSans-Regular';
+  font-size: 1.5rem;
+  line-height: 120%;
+`;
+
 const ApartmentRoundedIconCustom = styled(ApartmentRoundedIcon)`
   width: 24px;
   height: 24px;
@@ -393,4 +423,33 @@ const ApartmentRoundedIconCustom = styled(ApartmentRoundedIcon)`
 const IntroductionText = styled.div`
   margin-left: 0.25rem;
 `;
+
+const ThirdSection = styled.div`
+  display: flex;
+  margin: 0px auto;
+  height: 100%;
+  flex-direction: column;
+  text-align: center;
+  padding: 3.5rem 1.625rem;
+`;
+
+const FirstAdvantageDescriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const FirstAdvantageDescriptionOne = styled.div``;
+
+const FirstAdvantageDescriptionOneH3 = styled.h3`
+  font-family: 'MinSans-Regular';
+  font-size: 1.25rem;
+  line-height: 120%;
+`;
+
+const FirstAdvantageDescriptionOneStrong = styled.strong`
+  color: #ffb2a9;
+`;
+
 export default Main;

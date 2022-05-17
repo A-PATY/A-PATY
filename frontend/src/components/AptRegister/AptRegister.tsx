@@ -15,9 +15,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Swal from 'sweetalert2';
 import {
+  aptInfo,
   doroJuso,
   kakaoMapSearchKeywordResponse,
 } from '../../types/aptRegisterTypes';
+import AptRegisterService from '../../services/AptRegisterService';
 
 interface Props {
   setAptId: (aptId: number) => void;
@@ -31,13 +33,21 @@ const AptRegister: React.FC<Props> = ({
   setDoroJuso,
 }) => {
   const userInfo = useRecoilValue(userInfoState);
-  const aptList = useAptList();
+  const [aptList, setAptList] = useState<aptInfo[] | null>();
   const [aptOpen, setAptOpen] = useState<boolean>(false);
   const [doroJusoList, setDoroJusoList] = useState<doroJuso[] | null>(null);
   const [searchAptName, setSearchAptName] = useState<string>('');
   const handleOpen = () => setAptOpen(true);
   const kakao = (window as any).kakao;
   const ps = new kakao.maps.services.Places();
+
+  useEffect(() => {
+    AptRegisterService.getAptList()
+      .then(({ aptList }) => {
+        setAptList(aptList);
+      })
+      .catch((error) => {});
+  }, [userInfo]);
 
   useEffect(() => {
     if (searchAptName !== '') {
