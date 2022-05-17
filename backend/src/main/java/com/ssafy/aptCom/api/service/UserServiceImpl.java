@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         } else if (profileInfo.equals("address")) {
             // 지역 + 아파트 커뮤니티 삭제
-            userCommunityRepository.deleteByUserId(user.getId());
+            userCommunityRepository.deleteAllByUserId(user.getId());
             BaseAddress baseAddress = getAddress(userModifyRequestDto.getAddress());
             user.setBaseAddress(baseAddress);
             user.setBillStatus("미제출");

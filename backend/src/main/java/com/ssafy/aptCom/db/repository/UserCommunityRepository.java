@@ -16,10 +16,9 @@ public interface UserCommunityRepository extends JpaRepository<UserCommunity, Lo
 
     void deleteByUserId(int userId);
 
-    void deleteAllCommunity(Community community);
-
     @Transactional
     @Modifying
     @Query("delete from UserCommunity u where u.user = :id")
     void deleteAllByUserId(@Param("id") int id);
+
 }
