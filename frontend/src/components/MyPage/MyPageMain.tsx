@@ -7,8 +7,9 @@ import Button from '@mui/material/Button';
 import ProfileImageList from './ProfileImageList';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userInfoState } from '../../features/Login/atom';
+import { userInfoState, updatedUser } from '../../features/Login/atom';
 import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { UserInfo } from '../../types/loginTypes';
@@ -22,7 +23,31 @@ import UserLocation from '../../hooks/useUserLocation';
 import { useNavigate } from 'react-router-dom';
 import { getCookie, removeCookie } from '../../hooks/Cookie';
 
+import { firestore } from '../../firebase';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc, addDoc } from 'firebase/firestore';
+
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
+const marks = [
+  {
+    value: 33,
+    label: '100',
+    range: 100,
+  },
+  {
+    value: 66,
+    label: '200',
+    range: 200,
+  },
+  {
+    value: 100,
+    label: '400',
+    range: 400,
+  },
+];
+
+function valuetext(value: number) {
+  return `${value}`;
+};
 
 const MyPageMain: React.FC = () => {
   const itemData = useProfileImageList();
@@ -41,6 +66,11 @@ const MyPageMain: React.FC = () => {
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   let { x, y } = UserLocation();
 
+  const [range, setRange] = useState({ value: 33, range: 100});
+  const [intialValue, setintialValue] = useState<number>(33);
+  const userId = useRecoilValue(updatedUser);
+  const familyId = userInfo?.aptId.toString() + "-" + userInfo?.dong + "-" + userInfo?.ho
+  
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -103,6 +133,17 @@ const MyPageMain: React.FC = () => {
         });
     }
   }, [profileImgId, userInfo?.profileImgId]);
+
+  useEffect(() => {
+    if (userInfo && userInfo.aptName) {
+      const docRef = doc(firestore, "families", familyId);
+      
+      getDoc(docRef).then(res => {
+        const index = marks.findIndex((mark) => mark.range === res.get('range'));
+        setintialValue(marks[index].value);
+      })
+    }
+  }, [userId]);
 
   const handleClose = () => {
     setOpen(false);
@@ -319,6 +360,30 @@ const MyPageMain: React.FC = () => {
       });
   };
 
+  const valueLabelFormat = (value: number) => {
+    const index = marks.findIndex((mark) => mark.value === value);
+    const selectedRange = marks[index].range
+    
+    if (selectedRange !== range.range) {
+      setRange({
+        value: marks[index].value,
+        range: selectedRange
+      });
+
+      if (familyId) {
+        const docRef = doc(firestore, "families", familyId);
+        getDoc(docRef).then(res => {
+          if (userInfo !== null && res.get('range') !== selectedRange) {
+            updateDoc(docRef, {
+              range : selectedRange
+            });
+          }
+        })
+      }
+    }
+    return marks.findIndex((mark) => mark.value === value) + 1;
+  };
+
   return (
     <>
       <Container>
@@ -403,6 +468,20 @@ const MyPageMain: React.FC = () => {
               />
             </FindFamilyButton>
           </StyledTextFieldWrapper>
+
+          <StyledTextFieldWrapper style={{ display: userInfo?.findFamily ? "" : "none" }}>
+            <FindFamilyButton>
+              아파트 범위(m){''}
+              <SliderCustom
+              key={`slider-${intialValue}`}
+              defaultValue={intialValue}
+              getAriaValueText={valuetext}
+              valueLabelFormat={valueLabelFormat}
+              step={null}
+              marks={marks}
+            />
+            </FindFamilyButton>
+          </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>
             <LogOutButton onClick={handleLogOutButtonClick}>
               로그아웃
@@ -479,7 +558,7 @@ const AutoFixHighIconCustom = styled(BorderColorRoundedIcon)`
 const StyledTextFieldWrapper = styled.div`
   margin-top: 10px;
 
-  &:nth-of-type(5) {
+  &:nth-of-type(6) {
     margin-top: 30px;
   }
 `;
@@ -536,6 +615,31 @@ const GpsIconWrapper = styled.div`
 
   &.error {
     cursor: not-allowed;
+  }
+`;
+
+const SliderCustom = styled(Slider)`
+  width: 100px;
+  margin-top: 20px;
+  margin-right: 18px;
+  color: #9c27b0;
+  & .MuiSlider-thumb {
+    width: 15px;
+    height: 15px;
+  }
+  & .MuiSlider-thumb.Mui-focusVisible {
+    box-shadow: 0 0 0 8px #f4f1f580;
+  }
+  & .MuiSlider-thumb:hover {
+    box-shadow: 0 0 0 8px #f4f1f580;
+  }
+  & .Mui-focusVisible {
+    box-shadow: none;
+  }
+  & .MuiSlider-markLabel {
+    color: #fff;
+    font-size: 10px;
+    line-height: 0.4;
   }
 `;
 
