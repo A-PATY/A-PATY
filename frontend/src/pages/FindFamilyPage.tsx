@@ -7,25 +7,37 @@ import Header from '../components/common/Header';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../features/Login/atom';
 import { UserInfo } from '../types/loginTypes';
+import { getCookie } from '../hooks/Cookie';
+import Swal from 'sweetalert2';
 
 const FindFamilyPage: React.FC = () => {
   const userInfo = useRecoilValue<UserInfo | null>(userInfoState);
 
   useEffect(() => {
-    document.title = "가족 위치 찾기";
+    document.title = '가족 위치 찾기';
+  }, []);
+
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (refreshToken === undefined) {
+      Swal.fire({
+        title: '로그인 후 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
+    }
   }, []);
 
   return (
     <>
       <Container>
-        <Header header="가족 찾기"/>
-        {
-          userInfo?.aptName ?
-          <FindFamily /> :
-          <BeforeAptRegister/>
-        }
+        <Header header="가족 찾기" />
+        {userInfo?.aptName ? <FindFamily /> : <BeforeAptRegister />}
       </Container>
-      <Footer footerNumber={3}/>
+      <Footer footerNumber={3} />
     </>
   );
 };

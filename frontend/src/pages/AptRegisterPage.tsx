@@ -5,10 +5,26 @@ import styled from '@emotion/styled';
 import Footer from '../components/common/Footer';
 import Header from '../components/common/Header';
 import AptCertify from '../components/AptRegister/AptCertify';
+import { getCookie } from '../hooks/Cookie';
+import Swal from 'sweetalert2';
 
 const AptRegisterPage: React.FC = () => {
   useEffect(() => {
     document.title = '아파트 커뮤니티';
+  }, []);
+
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (refreshToken === undefined) {
+      Swal.fire({
+        title: '로그인 후 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
+    }
   }, []);
 
   const [aptId, setAptId] = useState<number>(-1);
