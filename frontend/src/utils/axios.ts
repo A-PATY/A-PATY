@@ -1,6 +1,8 @@
 import { getCookie, setCookie } from './../hooks/Cookie';
 import axios from 'axios';
 import UserService from '../services/UserService';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const createDataAxsioInstance = () => {
   const dataAxsioInstance = axios.create({
@@ -53,7 +55,7 @@ axiosInstance.interceptors.response.use(
 
     const originalRequest = config;
 
-    if (status === 401 || status === 403) {
+    if (status === 403 || status === 401) {
       const refreshToken = getCookie('apaty_refresh');
 
       if (refreshToken !== undefined) {
@@ -73,14 +75,26 @@ axiosInstance.interceptors.response.use(
               path: '/',
             });
 
-            return axiosInstance(originalRequest);
+            axiosInstance(originalRequest);
+
+            return;
           })
           .catch((error) => {
             if (error.status === 400) {
               //리프레시 토큰 만료 강제 로그아웃 처리
+              Swal.fire({
+                title: '서비스 이용 시간이 만료되었습니다.',
+                text: '계속 이용을 원하시면 로그인해주세요.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+              });
             }
           });
       }
+    } else {
+      window.location.href = '/';
+      //리프레시 토큰 없는 경우
     }
     return Promise.reject(error);
   },

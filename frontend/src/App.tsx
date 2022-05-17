@@ -52,6 +52,7 @@ const App: React.FC = () => {
         axiosInstance.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${accessToken}`;
+
         setCookie('apaty_refresh', refreshToken, {
           maxAge: 60 * 5,
           path: '/',
@@ -71,27 +72,26 @@ const App: React.FC = () => {
       //악성 유저 처리
     }
 
-    if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
-      //로그인 후 이용하도록 처리
-    }
+    // if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
+    //   //로그인 후 이용하도록 처리
+    //   navigate('/');
+    // }
   }, [userInfo]);
 
   useEffect(() => {
     const connectRef = ref(db, '.info/connected');
-    
+
     onValue(connectRef, (snapshot) => {
       if (snapshot.val() === true && userInfo?.userId) {
         set(ref(db, `/status/${userInfo?.userId}`), {
           state: 'online',
-          nickname: userInfo?.nickname
+          nickname: userInfo?.nickname,
         });
       }
 
-      onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set(
-        'offline',
-      );
+      onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set('offline');
     });
-  },[userId]);
+  }, [userId]);
 
   return (
     <>
