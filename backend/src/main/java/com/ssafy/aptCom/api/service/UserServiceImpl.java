@@ -181,9 +181,10 @@ public class UserServiceImpl implements UserService {
         authRepository.deleteById(auth.get().getId());
 
         // User Community 삭제
-        BaseAddress baseAddress = user.getBaseAddress();
-        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
-        userCommunityRepository.deleteByCommunity(community);
+//        BaseAddress baseAddress = user.getBaseAddress();
+//        Community community = communityRepository.findCommunityByCommunityCode(baseAddress.getAddress());
+//        userCommunityRepository.deleteByCommunity(community);
+        userCommunityRepository.deleteByUserId(user.getId());
 
         // Likes 삭제
         likesRepository.deleteByUserId(user.getId());
