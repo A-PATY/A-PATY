@@ -283,7 +283,8 @@ const MyPageMain: React.FC = () => {
           showConfirmButton: false,
           timer: 2000,
         });
-        navigate('/');
+        removeCookie('apaty_refresh', { path: '/' });
+        window.location.replace('/');
       })
       .catch(({ message }) => {
         Swal.fire({

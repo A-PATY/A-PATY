@@ -71,11 +71,6 @@ const App: React.FC = () => {
     if (userInfo === null && accessToken !== undefined) {
       //악성 유저 처리
     }
-
-    // if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
-    //   //로그인 후 이용하도록 처리
-    //   navigate('/');
-    // }
   }, [userInfo]);
 
   useEffect(() => {
