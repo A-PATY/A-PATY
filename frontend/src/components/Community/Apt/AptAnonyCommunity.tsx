@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { presentCommunityTypeState } from '../../../features/Board/atom';
 import Footer from '../../common/Footer';
 import BoardList from '../Local/BoardList';
 import BoardHeader from '../Local/BoardHeader';
@@ -10,6 +11,9 @@ import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../../../hooks/useCommunityId';
 
 const AptAnonyCommunityPage: React.FC = () => {
+  const setCommunityType = useSetRecoilState(presentCommunityTypeState);
+  const type = useRecoilValue(presentCommunityTypeState);
+
   // const userInfo = useRecoilValue(userInfoState);
   // console.log('userInfo : ');
   // console.log(userInfo);
@@ -62,6 +66,8 @@ const AptAnonyCommunityPage: React.FC = () => {
 
   useEffect(() => {
     document.title = '아파트 익명 커뮤니티';
+    console.log('아파트 익명 커뮤니티');
+    setCommunityType(3);
   }, []);
 
   return (

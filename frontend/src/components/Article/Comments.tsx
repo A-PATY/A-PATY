@@ -12,6 +12,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { Article } from '@mui/icons-material';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
+import { presentCommunityTypeState } from '../../features/Board/atom';
 
 interface CommentProps {
   comment: comment;
@@ -28,6 +29,9 @@ interface CommentsProps {
 // 개별 댓글
 const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
   const userInfo = useRecoilValue(userInfoState);
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+  console.log('presentCommunityType');
+  console.log(presentCommunityType);
 
   const calculateTime = (time: string) => {
     const today = new Date();

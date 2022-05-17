@@ -37,3 +37,8 @@ export const presentArticleState = atom<article | null>({
   key: 'presentArticleState',
   default: null,
 });
+
+export const presentCommunityTypeState = atom<number | null>({
+  key: 'presentCommunityTypeState',
+  default: null,
+});
