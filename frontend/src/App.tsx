@@ -123,8 +123,7 @@ const App: React.FC = () => {
   const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
   const setAptLocationState = useSetRecoilState(aptLocationState);
   
-  const [beforeUser, setBeforeUser] = useState();
-
+  const [beforeUser, setBeforeUser] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
     if (userId) {
@@ -159,11 +158,10 @@ const App: React.FC = () => {
   // 내 위치 저장하기
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success, () => {}, { timeout: 10000 });  // enableHighAccuracy: true,
+    geolocation.watchPosition(success, () => {}, { timeout: Infinity });  // enableHighAccuracy: true,
   }, [familyId, range]);
 
   useEffect(() => {
-    // console.log("범위 전환 후 위치 전환")
     // console.log(userLocation)
     if (userLocation.lat !== 0 && userLocation.lng !== 0) {
       // console.log('app에서의 range 벗어나는지 확인 여부');
@@ -181,7 +179,7 @@ const App: React.FC = () => {
         getDoc(docRef).then((res) => {
           const loc = res.get(userInfo?.userId.toString());
           const distance = getDistance(latitude, longitude, loc.lat, loc.lng);
-          // console.log(dist)
+          // console.log(dist);
           if (distance > 5) {
             updateDoc(docRef, {
               [userInfo.userId]: {  
@@ -193,6 +191,12 @@ const App: React.FC = () => {
             setUserLocation({
               lat: latitude,
               lng: longitude
+            });
+
+            // 이전 기록 남기기
+            setBeforeUser({
+              lat: loc.lat,
+              lng: loc.lng
             });
           }
         });
@@ -210,47 +214,93 @@ const App: React.FC = () => {
   const mapLocation = (aptlat: number, aptlng: number) => {
     
     const distance = Math.round(getDistance(userLocation.lat, userLocation.lng, aptlat, aptlng));
-    // console.log("설정된 범위는??", range)
     
-    if (distance <= range) {  
-      console.log('범위 안입니다!!')
+    const beforeDistance = Math.round(getDistance(beforeUser.lat, beforeUser.lng, aptlat, aptlng));
+    // console.log("설정된 범위는??", range)
+    const nowPos = distance - range
+    const beforePos = beforeDistance - range
+    if (nowPos > 0 && beforePos > 0)
+
+    if (distance <= range) { 
+      // console.log('범위 안입니다!!');
       if (userLocation.lat && userLocation.lng) {
-        ///------------------------- 알림에 집어넣기 => 벗어나서 1번 넣으면 다시 넣지 않아야 함... (알림 무한반복 문제)
-        // 그리고 위치 허용한 사람의 경우에만 밑의 과정을 실행할 것
         // console.log('가족리스트', familyList)
         for (let member of familyList) {
           // console.log(userInfo?.userId)
           if (userInfo?.userId && member.userId !== userInfo?.userId) {
-            const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-            
-            // getDoc(notifyRef).then((data) => {
-            //   const contents = data.get(userInfo?.userId.toString());
-
-            // });    
+            const notifyRef = doc(firestore, `notifications`, member.userId.toString());
             const time = new Date();
-            updateDoc(notifyRef, { 
-              [time.toString()] : {
-                userId : userInfo?.userId,
-                time: time,
-                nickname: userInfo?.nickname,
-                content: "아파트 단지에 들어왔습니다."
-              }
-              // [userInfo?.userId] : {
-              //   time: new Date(),
-              //   nickname: userInfo?.nickname,
-              //   content: "아파트 단지에 들어왔습니다."
-              // }
-            })
+            
+            getDoc(notifyRef).then((data) => {
+              if (data.exists()) {
+                updateDoc(notifyRef, { 
+                  [time.toString()] : {
+                    userId : userInfo?.userId,
+                    time: time,
+                    nickname: userInfo?.nickname,
+                    content: "아파트 단지에 들어왔습니다."
+                  }
+                  // [userInfo?.userId] : {
+                  //   time: new Date(),
+                  //   nickname: userInfo?.nickname,
+                  //   content: "아파트 단지에 들어왔습니다."
+                  // }
+                });
+              } else {
+                setDoc(notifyRef, { 
+                  [time.toString()] : {
+                    userId : userInfo?.userId,
+                    time: time,
+                    nickname: userInfo?.nickname,
+                    content: "아파트 단지에 들어왔습니다."
+                  }
+                });
+              };
+            });    
+            // updateDoc(notifyRef, { 
+            //   [time.toString()] : {
+            //     userId : userInfo?.userId,
+            //     time: time,
+            //     nickname: userInfo?.nickname,
+            //     content: "아파트 단지에 들어왔습니다."
+            //   }
+            //   // [userInfo?.userId] : {
+            //   //   time: new Date(),
+            //   //   nickname: userInfo?.nickname,
+            //   //   content: "아파트 단지에 들어왔습니다."
+            //   // }
+            // });
           }
         };
       };
     } else {
-      console.log("범위 밖입니다!!");
+      // console.log("범위 밖입니다!!");
       for (let member of familyList) {
         if (userInfo?.userId && member.userId !== userInfo?.userId) {
           const notifyRef = doc(firestore, `notifications`, member.userId.toString())
           const time = new Date();
 
+          getDoc(notifyRef).then((data) => {
+            if (data.exists()) {
+              updateDoc(notifyRef, { 
+                [time.toString()] : {
+                  userId : userInfo?.userId,
+                  time: time,
+                  nickname: userInfo?.nickname,
+                  content: "아파트 단지에서 벗어났습니다."
+                }
+              });
+            } else {
+              setDoc(notifyRef, { 
+                [time.toString()] : {
+                  userId : userInfo?.userId,
+                  time: time,
+                  nickname: userInfo?.nickname,
+                  content: "아파트 단지에서 벗어났습니다."
+                }
+              });
+            };
+          });    
           updateDoc(notifyRef, {  // updateDoc(notifyRef, {
             [time.toString()] : {  // [userInfo?.userId]
               userId : userInfo?.userId,
@@ -258,7 +308,7 @@ const App: React.FC = () => {
               nickname: userInfo.nickname,
               content: "아파트 단지에서 벗어났습니다."
             }
-          })
+          });
         }
       }
     }

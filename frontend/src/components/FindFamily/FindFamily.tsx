@@ -165,7 +165,8 @@ const FindFamily: React.FC = () => {
       onSnapshot(docRef, (document) => { 
         console.log('snapshot 빈도')
         const user = document.get(member.toString());
-        if (user) {
+        if (user && (memberLocation.lat !== user.lat || memberLocation.lng !== user.lng)) {
+          console.log('memberLocation 저장 빈도')
           setMemberLocation({ 
             lat: user.lat, 
             lng: user.lng 
