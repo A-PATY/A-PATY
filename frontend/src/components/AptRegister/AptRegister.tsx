@@ -41,6 +41,35 @@ const AptRegister: React.FC<Props> = ({
   const kakao = (window as any).kakao;
   const ps = new kakao.maps.services.Places();
 
+  const [billStatus, setBillStatus] = useState<string>('');
+  const [aptButtonDisabled, setAptButtonDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (userInfo !== null) {
+      if (userInfo.billStatus === '미제출') {
+        setAptButtonDisabled(false);
+        setBillStatus('우리 아파트 찾기');
+      }
+
+      if (userInfo.billStatus === '승인 대기중') {
+        setAptButtonDisabled(true);
+        setBillStatus('고지서 인증 승인 대기중입니다.');
+      }
+
+      if (userInfo.billStatus === '반려') {
+        setAptButtonDisabled(false);
+        setBillStatus('우리 아파트 찾기');
+        Swal.fire({
+          title: '고지서 인증이 반려되었습니다.',
+          text: '유효한 정보로 고지서 인증을 해주세요.',
+          icon: 'info',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     AptRegisterService.getAptList()
       .then(({ aptList }) => {
@@ -132,8 +161,12 @@ const AptRegister: React.FC<Props> = ({
           <Phrase>더 유용한 정보를 주민끼리 공유할 수 있어요.</Phrase>
           <Phrase>우리 아파트를 찾아 가입해보세요!</Phrase>
         </InfoContainer>
-        <AptButton variant="contained" onClick={handleOpen}>
-          우리 아파트 찾기
+        <AptButton
+          disabled={aptButtonDisabled}
+          variant="contained"
+          onClick={handleOpen}
+        >
+          {billStatus}
         </AptButton>
         <List style={{ maxHeight: '100%', overflow: 'auto' }}>
           {doroJusoList !== null &&
