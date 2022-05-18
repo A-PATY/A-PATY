@@ -16,6 +16,9 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import IconButton from '@mui/material/IconButton';
+import { useRecoilValue } from 'recoil';
+import { presentCommunityTypeState } from '../../features/Board/atom';
+
 const ariaLabel = { 'aria-label': 'description' };
 
 // interface articleData {
@@ -30,7 +33,10 @@ const ArticleWrite: React.FC = () => {
     communityId: number | undefined;
   };
   const { type, communityId } = state;
-  // console.log('communityId : ' + communityId);
+
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+  console.log('presentCommunityType');
+  console.log(presentCommunityType);
 
   // const communityId = 367;
   const [category, setCategory] = useState<string>('');
@@ -132,7 +138,7 @@ const ArticleWrite: React.FC = () => {
     event.preventDefault();
     const formData = new FormData();
 
-    if (type !== 3 && category === '') {
+    if (presentCommunityType !== 3 && category === '') {
       Swal.fire({
         icon: 'warning',
         text: '주제를 골라주세요',
@@ -184,7 +190,7 @@ const ArticleWrite: React.FC = () => {
     formData.append('title', title);
     formData.append('contents', content);
 
-    if (type !== 3) {
+    if (presentCommunityType !== 3) {
       formData.append('category', category);
     }
 
@@ -211,7 +217,7 @@ const ArticleWrite: React.FC = () => {
   return (
     <>
       <Container>
-        {type !== 3 && (
+        {presentCommunityType !== 3 && (
           <ArticleCategory category={category} setCategory={setCategory} />
         )}
         <Box
