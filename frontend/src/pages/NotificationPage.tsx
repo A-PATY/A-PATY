@@ -8,7 +8,7 @@ import { getCookie } from '../hooks/Cookie';
 
 const NotificationPage: React.FC = () => {
   useEffect(() => {
-    document.title = '공지사항';
+    document.title = '알림';
   }, []);
 
   const refreshToken = getCookie('apaty_refresh');
@@ -28,7 +28,7 @@ const NotificationPage: React.FC = () => {
   return (
     <>
       <Container>
-        <Header header="공지사항" />
+        <Header header="" />
         <NotificationList />
       </Container>
       <Footer footerNumber={-1} />
