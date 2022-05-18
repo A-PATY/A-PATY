@@ -135,7 +135,7 @@ const AptRegister: React.FC<Props> = ({
         <AptButton variant="contained" onClick={handleOpen}>
           우리 아파트 찾기
         </AptButton>
-        <List>
+        <List style={{ maxHeight: '100%', overflow: 'auto' }}>
           {doroJusoList !== null &&
             doroJusoList.length !== 0 &&
             doroJusoList.map((doroJuso) => {
@@ -186,6 +186,7 @@ const AptRegister: React.FC<Props> = ({
 };
 
 const CustomBox = styled(Box)`
+  overflow: auto;
   position: absolute;
   top: 50%;
   left: 50%;

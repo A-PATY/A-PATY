@@ -10,8 +10,24 @@ import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
 import Header from '../components/common/Header';
+import { getCookie } from '../hooks/Cookie';
+import Swal from 'sweetalert2';
 
 const LocalCommunityPage: React.FC = () => {
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (refreshToken === undefined) {
+      Swal.fire({
+        title: '로그인 후 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
+    }
+  }, []);
+
   const setCommunityType = useSetRecoilState(presentCommunityTypeState);
   const userInfo = useRecoilValue(userInfoState);
   console.log('userInfo : ');

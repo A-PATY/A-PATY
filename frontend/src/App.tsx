@@ -39,6 +39,8 @@ import { familyList, location } from './types/familyTypes';
 
 import { getDistance } from './utils/getDistance';
 import { aptLocationState } from './features/Family/atom';
+import Swal from 'sweetalert2';
+
 
 const App: React.FC = () => {
   // 확인!!! -------------
@@ -76,13 +78,26 @@ const App: React.FC = () => {
 
     if (userInfo === null && accessToken !== undefined) {
       //악성 유저 처리
+      Swal.fire({
+        title: '회원 정보가 제대로 입력되지 않았습니다.',
+        text: '탈퇴 후 재가입하여 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
     }
 
-    // if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
-    //   //로그인 후 이용하도록 처리
-    //   navigate('/');
+    // if (refreshToken === undefined && window.location.pathname !== '/') {
+    //   Swal.fire({
+    //     title: '로그인 후 서비스 이용해주세요.',
+    //     icon: 'success',
+    //     showConfirmButton: false,
+    //     timer: 2000,
+    //   });
+    //   window.location.replace('/');
     // }
-  }, [userInfo]);
+  }, []);
 
   useEffect(() => {
     const connectRef = ref(db, '.info/connected');

@@ -4,10 +4,25 @@ import styled from '@emotion/styled';
 import ArticleWrite from '../components/Article/ArticleWrite';
 import ArticleHeader from '../components/Article/ArticleHeader';
 import { useLocation } from 'react-router-dom';
+import { getCookie } from '../hooks/Cookie';
+import Swal from 'sweetalert2';
 
 const ArticleWritePage: React.FC = () => {
   useEffect(() => {
     document.title = '게시글 작성';
+  }, []);
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (refreshToken === undefined) {
+      Swal.fire({
+        title: '로그인 후 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
+    }
   }, []);
 
   const location = useLocation();

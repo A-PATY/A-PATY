@@ -10,6 +10,8 @@ import { article } from '../../../types/boardTypes';
 // import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
 import BoardArticle from './BoardArticle';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 interface Props {
   data: any;
@@ -99,7 +101,7 @@ const Board: React.FC<Props> = ({
                 <React.Fragment key={i}>
                   {group.result.map((article: article) => {
                     return (
-                      <BoardArticle article={article} key={article.articleId}/>
+                      <BoardArticle article={article} key={article.articleId} />
                       // <ArticleWrapper key={article.articleId}>
                       //   <Category>
                       //     {article.category}
@@ -172,9 +174,16 @@ const Board: React.FC<Props> = ({
             </div> */}
             <ObservationComponent />
             <Notice>
-              {isFetching && !isFetchingNextPage
-                ? '글을 가져오는 중입니다..'
-                : null}
+              {isFetching && !isFetchingNextPage ? (
+                <>
+                  <Stack spacing={1}>
+                    <Skeleton />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="rectangular" width={350} height={300} />
+                  </Stack>
+                </>
+              ) : null}
             </Notice>
           </>
         </Wrapper>

@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from './../hooks/Cookie';
+import { getCookie, removeCookie, setCookie } from './../hooks/Cookie';
 import axios from 'axios';
 import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
@@ -90,12 +90,14 @@ axiosInstance.interceptors.response.use(
                 timer: 2000,
               });
             }
+            removeCookie('apaty_refresh', { path: '/' });
+            window.location.href = '/';
           });
-        } else {
-          window.location.href = '/';
-          //리프레시 토큰 없는 경우
-        };
+      } else {
+        window.location.href = '/';
+        //리프레시 토큰 없는 경우
       }
+    }
     return Promise.reject(error);
   },
 );

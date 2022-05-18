@@ -3,10 +3,26 @@ import Article from '../components/Article/Article';
 import Footer from '../components/common/Footer';
 import styled from '@emotion/styled';
 import Header from '../components/common/Header';
+import { getCookie } from '../hooks/Cookie';
+import Swal from 'sweetalert2';
 
 const ArticlePage: React.FC = () => {
   useEffect(() => {
     document.title = '게시글 상세 조회';
+  }, []);
+
+  const refreshToken = getCookie('apaty_refresh');
+
+  useEffect(() => {
+    if (refreshToken === undefined) {
+      Swal.fire({
+        title: '로그인 후 서비스 이용해주세요.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.replace('/');
+    }
   }, []);
 
   return (
