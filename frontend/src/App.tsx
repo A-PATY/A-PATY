@@ -190,7 +190,7 @@ const App: React.FC = () => {
           const loc = res.get(userInfo?.userId.toString());
           const dist = getDistance(latitude, longitude, loc.lat, loc.lng);
           // console.log(dist)
-          if (dist > 10) {
+          if (dist > 5) {
             updateDoc(docRef, {
               [userInfo.userId]: {  
                 lat: latitude,
