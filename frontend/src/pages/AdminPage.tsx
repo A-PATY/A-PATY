@@ -1,16 +1,17 @@
+import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import Swal from 'sweetalert2';
 import AdminBillConfirm from '../components/Admin/AdminBillConfirm';
+import Footer from '../components/common/Footer';
+import Header from '../components/common/Header';
 import { userInfoState } from '../features/Login/atom';
 
 const AdminPage: React.FC = () => {
   useEffect(() => {
     document.title = '관리자 페이지';
   }, []);
-
-  let navigate = useNavigate();
 
   const userInfo = useRecoilValue(userInfoState);
 
@@ -26,9 +27,17 @@ const AdminPage: React.FC = () => {
   }
   return (
     <>
-      <AdminBillConfirm />
+      <Container>
+        <Header header="고지서 관리" />
+        <AdminBillConfirm />
+      </Container>
+      <Footer footerNumber={-1} />
     </>
   );
 };
-
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 70px);
+`;
 export default AdminPage;

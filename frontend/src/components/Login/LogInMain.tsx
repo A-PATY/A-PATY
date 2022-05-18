@@ -30,7 +30,7 @@ const LogInMain: React.FC = () => {
     <>
       <Container>
         <BoxCustom>
-          <Image src="\img\\main.gif"></Image>
+          <Image src="\img\\party.gif"></Image>
         </BoxCustom>
         <KakaoImage
           onClick={handleButtomCustomClick}
