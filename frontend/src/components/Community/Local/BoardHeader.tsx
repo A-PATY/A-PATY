@@ -72,7 +72,7 @@ const BoardHeader: React.FC<Props> = ({
         // console.log('firestore 알림 존재?',document.exists())
         if (document.exists()) {
           const alarm = document.data();
-          console.log('firestore의 알림!!', alarm);
+          // console.log('firestore의 알림!!', alarm);
           // notifications.push(alarm);
           setNotifications([...notifications, alarm]);
           // console.log(notifications);
@@ -182,8 +182,8 @@ const Search = styled.div`
 const BadgeCustom = styled(Badge)`
   & span {
     font-size: 10px;
-    min-width: 15px;
-    height: 15px;
+    min-width: 12px;
+    height: 12px;
     padding: 0;
   };
 `;
