@@ -287,7 +287,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               id="outlined-multiline-static"
               placeholder="내용을 입력해주세요."
               multiline
-              rows={18}
+              rows={10}
               value={content}
               onChange={changeContent}
             />

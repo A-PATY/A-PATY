@@ -137,7 +137,7 @@ const Comments: React.FC<CommentsProps> = ({
   return (
     <>
       <Container>
-        <CommentsHead>댓글 {commentCount}</CommentsHead>
+        {/* <CommentsHead>댓글 {commentCount}</CommentsHead> */}
         {comments?.map((comment) => (
           <Comment
             key={comment.commentId}
@@ -175,8 +175,8 @@ const Comments: React.FC<CommentsProps> = ({
 
 const Container = styled.div`
   margin: 0 0 -1px;
-  padding: 23px 0 24px;
-  border-top: 1px solid #eee;
+  // padding: 23px 0 24px;
+  // border-top: 1px solid #eee;
 `;
 
 const CommentsHead = styled.h3`

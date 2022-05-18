@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../features/Login/atom';
 import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
@@ -9,8 +9,6 @@ import BoardHeader from '../components/Community/Local/BoardHeader';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
-import Box from '@mui/material/Box';
-import AptAnonyCommunity from '../components/Community/Apt/AptAnonyCommunity';
 import AptTabHeader from '../components/Community/Apt/AptTabHeader';
 import { getCookie } from '../hooks/Cookie';
 import Swal from 'sweetalert2';
@@ -30,24 +28,31 @@ const AptCommunityPage: React.FC = () => {
     }
   }, []);
 
-  const setCommunityType = useSetRecoilState(presentCommunityTypeState);
+  const [communityType, setCommunityType] = useRecoilState(
+    presentCommunityTypeState,
+  );
 
-  // const userInfo = useRecoilValue(userInfoState);
-  // console.log('userInfo : ');
-  // console.log(userInfo);
+  const userInfo = useRecoilValue(userInfoState);
+  console.log('userInfo : ');
+  console.log(userInfo);
 
-  // 공통 함수
-  const AptCommunityId = useCommunityId(2);
-  console.log(AptCommunityId);
+  // 현재 communityId
+  const aptCommunityId = useCommunityId(2);
+  const aptAnonyCommunityId = useCommunityId(3);
+  const [communityId, setCommunityId] = useState<number | undefined>(
+    aptCommunityId,
+  );
+  console.log('communityId');
+  console.log(communityId);
 
-  // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
-  const defaultPaginationSize = 10; // 한 번 요청으로 가져올 게시글의 개수
+  // 게시판 목록 조회
+  const defaultPaginationSize = 1; // 한 번 요청으로 가져올 게시글의 개수
   const [categoryId, setCategoryId] = useState<number>(0);
   const [keyword, setKeyword] = useState<string>('');
 
   const fetchArticles = async ({ pageParam = 0 }) => {
     const { articles } = await BoardService.getArticles(
-      AptCommunityId,
+      communityId,
       pageParam,
       defaultPaginationSize,
       categoryId,
@@ -67,7 +72,7 @@ const AptCommunityPage: React.FC = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery(
-    [`localArticles-category${categoryId}`, AptCommunityId, keyword],
+    [`localArticles-category${categoryId}`, communityId, keyword],
     fetchArticles,
     {
       getNextPageParam: (lastPage) => {
@@ -82,38 +87,18 @@ const AptCommunityPage: React.FC = () => {
     },
   );
 
-  interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-  }
-
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        style={{ height: '100%' }}
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ height: '100%' }}>
-            {children}
-            {/* <Typography>{children}</Typography> */}
-          </Box>
-        )}
-      </div>
-    );
-  }
-
+  // 아파트/ 아파트익명 탭
   const [value, setValue] = useState(0);
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    if (communityType === 2) {
+      setCommunityType(3);
+      setCommunityId(aptAnonyCommunityId);
+      console.log('익명 전환');
+    } else if (communityType === 3) {
+      setCommunityType(2);
+      setCommunityId(aptCommunityId);
+    }
   };
 
   useEffect(() => {
@@ -125,29 +110,22 @@ const AptCommunityPage: React.FC = () => {
     <>
       <Container id="Container">
         <AptTabHeader value={value} handleChange={handleChange} />
-        <Box sx={{ width: '100%', height: 'calc(100% - 70px)' }} id="Box">
-          <TabPanel value={value} index={0}>
-            <BoardHeader
-              type={2}
-              communityId={AptCommunityId}
-              keyword={keyword}
-              setKeyword={setKeyword}
-            />
-            <BoardList
-              type={2}
-              categoryId={categoryId}
-              setCategoryId={setCategoryId}
-              data={data}
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetching={isFetching}
-              isFetchingNextPage={isFetchingNextPage}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <AptAnonyCommunity />
-          </TabPanel>
-        </Box>
+        <BoardHeader
+          type={2}
+          communityId={communityId}
+          keyword={keyword}
+          setKeyword={setKeyword}
+        />
+        <BoardList
+          type={2}
+          categoryId={categoryId}
+          setCategoryId={setCategoryId}
+          data={data}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+        />
       </Container>
       <Footer footerNumber={2} />
     </>
