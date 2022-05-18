@@ -110,7 +110,7 @@ public class UserController {
             String dtoAddress = userModifyRequestDto.getAddress();
             String userAddress = user.getBaseAddress().getAddress();
 
-            if(user.getApartment() != null) {
+            if(user.getApartment() != null && dtoAddress != null) {
                 String aptId = String.valueOf(user.getApartment().getId());
                 if (!dtoAddress.equals(userAddress)) {
                     String dong = user.getDong();
