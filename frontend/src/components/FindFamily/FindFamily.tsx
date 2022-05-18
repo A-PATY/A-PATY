@@ -35,6 +35,7 @@ const marks = [
 const FindFamily: React.FC = () => {
   const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
   const aptLocate = useRecoilValue<location | null>(aptLocationState)!;
+
   const familyId = userInfo?.aptId.toString() + "-" + userInfo?.dong + "-" + userInfo?.ho
   const [range, setRange] = useState<number>(100);
   const [familyList, setFamilyList] = useState<familyList[]>([]); 
@@ -47,8 +48,8 @@ const FindFamily: React.FC = () => {
   });
 
   const [memberLocation, setMemberLocation] = useState<location>({ lat: 0, lng: 0 });
+  // const [aptLocation, setAptLocation] = useState<location>(aptLocate); 
   // const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });
-  const [aptLocation, setAptLocation] = useState<location>(aptLocate); 
   
   const { kakao } = window as any;
   
@@ -80,7 +81,9 @@ const FindFamily: React.FC = () => {
         // });
         
         getDoc(docRef).then(res => {
+          // console.log('index 확인!!!')
           const index = marks.findIndex((mark) => mark.range === res.get('range'));
+          // console.log("인덱스 확인",index)
           setRange(marks[index].range);
         });
       })
@@ -92,14 +95,17 @@ const FindFamily: React.FC = () => {
 
   // 지도상의 좌표 변화
   useEffect(() => {
-    if (memberLocation.lat !== 0 && memberLocation.lng !== 0) {
-      mapLocation(aptLocation.lat, aptLocation.lng, range);
+    if (aptLocate && memberLocation) {
+      if (memberLocation.lat !== 0 && memberLocation.lng !== 0) {
+        mapLocation(aptLocate.lat, aptLocate.lng, range);
+      }
     }
-  }, [memberLocation, range]);  
+  }, [memberLocation, range, aptLocate]);  
   
 
   const [rangeIn, setRangeIn] = useState<boolean>(false);
   const [rangeOut, setRangeOut] = useState<boolean>(false);
+
   const mapLocation = (aptlat: number, aptlng: number, inputRange: number) => {
     // console.log('현재 멤버는?', memberLocation.lat, memberLocation.lng)
     if (selectedMember.userId) {  // memberLocation.lat !== 0 && memberLocation.lng !== 0
@@ -145,102 +151,17 @@ const FindFamily: React.FC = () => {
             yAnchor: 1 
           });
         };
-        // 맞는 공식!!!!!!
-        for (let member of familyList) {
-            if (member.userId !== userInfo.userId) {
-              // console.log("알림에 넣음")
-              const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-              getDoc(notifyRef).then((data) => {
-                const contents = data.get(userInfo?.userId.toString())
-                console.log(userInfo?.userId)
-                // console.log(data.get(userInfo?.userId.toString()).content)
-                // 만약 이미 안에 들어가지 않은 경우라면, 넣어주기
-                if (data.exists()) {
-                  if (contents.content !== "아파트 단지에 들어왔습니다.") {
-                    console.log("같지 않으면 넣음")
-                    setDoc(notifyRef, {  //addDoc(notifyRef, {
-                      [userInfo.userId] : {
-                        time: new Date(),
-                        nickname: userInfo.nickname,
-                        content: "아파트 단지에 들어왔습니다."
-                      }
-                    });
-                  }
-                } else {
-                  setDoc(notifyRef, {  //addDoc(notifyRef, {
-                    [userInfo.userId] : {
-                      time: new Date(),
-                      nickname: userInfo.nickname,
-                      content: "아파트 단지에 들어왔습니다."
-                    }
-                  });
-                }
-              })
-              // setDoc(notifyRef, {  //addDoc(notifyRef, {
-              //   [userInfo.userId] : {
-              //     time: new Date(),
-              //     nickname: userInfo.nickname,
-              //     content: "아파트 단지에 들어왔습니다."
-              //   }
-              // })
-              
-            }
-          }
+  
         map.setCenter(member);
       } else {
-        for (let member of familyList) {
-          if (member.userId !== userInfo.userId) {
-            // console.log(member.userId)
-            const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-            setDoc(notifyRef, {  //addDoc(notifyRef, {
-              // family : {
-              //   [userInfo.userId] : {
-              //     time: new Date(),
-              //     nickname: userInfo.nickname
-              //   }
-              // }
-              [userInfo.userId] : {
-                time: new Date(),
-                nickname: userInfo.nickname,
-                content: "아파트 단지에서 벗어났습니다."
-              }
-            })
-            
-          }
-        }
         map.setCenter(center);  // ----
-      }
+      };
   
       circle.setMap(map);
-
     } else {
 
     }
   };
-
-  // const findAptLocation = (address: string) => {
-  //   const geocoder = new kakao.maps.services.Geocoder();
-    
-  //   geocoder.addressSearch(address, (result: any, status: string) => {
-  //     const docRef = doc(firestore, "families", familyId);
-  //     // const member = selectedMember.userId;
-  //     const member = userInfo.userId
-
-  //     getDoc(docRef).then(res => {
-  //       const index = marks.findIndex((mark) => mark.range === res.get('range'));
-  //       setRange(marks[index].range);
-        
-  //       if (status === kakao.maps.services.Status.OK) {
-  //         setAptLocation({
-  //           lat: result[0].y,
-  //           lng: result[0].x,
-  //         });
-  //         mapLocation(result[0].y, result[0].x, marks[index].range); // 추후 확인!
-  //       }
-  //     })
-      
-  //   });
-  // };
 
   // firebase 불러오기
   const getMemberData = () => {
