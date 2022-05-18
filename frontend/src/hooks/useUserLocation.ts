@@ -5,12 +5,38 @@ const UserLocation = () => {
   const [x, setX] = useState<number>(0);
   const [y, setY] = useState<number>(0);
 
+  const [permissions, setPermissions] = useState<string>('');
+
+  navigator.permissions
+    .query({ name: 'geolocation' })
+    .then(function (permissionStatus) {
+      setPermissions(permissionStatus.state);
+      //console.log('geolocation permission state is ', permissionStatus.state);
+      permissionStatus.onchange = function () {
+        setPermissions(this.state);
+        //console.log('geolocation permission state has changed to ', this.state);
+      };
+    });
+
+  // console.log(permissions);
+  // useEffect(() => {
+  //   navigator.permissions.query({ name: 'geolocation' }).then(({ state }) => {
+  //     setPermissions(permissions);
+  //   });
+  // }, [permissions]);
+
   useEffect(() => {
+    if (permissions === 'denied') {
+      setX(0);
+      setY(0);
+    }
+
     const getLocation = () => {
       let lat: number, long: number;
 
       if (navigator.geolocation) {
         // GPS를 지원하면
+
         navigator.geolocation.getCurrentPosition(
           function (position) {
             lat = position.coords.latitude;
@@ -28,7 +54,7 @@ const UserLocation = () => {
             });
           },
           {
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             maximumAge: 0,
             timeout: Infinity,
           },
@@ -45,7 +71,7 @@ const UserLocation = () => {
     };
 
     getLocation();
-  }, []);
+  }, [permissions]);
   return { x, y };
 };
 

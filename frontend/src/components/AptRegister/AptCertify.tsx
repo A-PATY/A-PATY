@@ -13,9 +13,10 @@ import { userInfoState } from '../../features/Login/atom';
 interface Props {
   aptId: number;
   doroJuso: string;
+  setDoroJuso: (aptName: string) => void;
 }
 
-const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
+const AptCertify: React.FC<Props> = ({ aptId, doroJuso, setDoroJuso }) => {
   const [showError, setShowError] = useState<boolean>(false);
   const [aptNameError, setAptNameError] = useState<boolean>(false);
   const [aptName, setAptName] = useState<string>('');
@@ -110,7 +111,7 @@ const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
           UserService.getUserInfo().then(({ userInfo }) => {
             setUserInfo(userInfo);
           });
-          window.location.reload();
+          setDoroJuso('');
         })
         .catch(({ message }) => {
           Swal.fire({

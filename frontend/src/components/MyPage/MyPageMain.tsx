@@ -24,7 +24,14 @@ import { useNavigate } from 'react-router-dom';
 import { getCookie, removeCookie } from '../../hooks/Cookie';
 
 import { firestore } from '../../firebase';
-import { getDoc, updateDoc, doc, onSnapshot, setDoc, addDoc } from 'firebase/firestore';
+import {
+  getDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+  addDoc,
+} from 'firebase/firestore';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 const marks = [
@@ -47,7 +54,7 @@ const marks = [
 
 function valuetext(value: number) {
   return `${value}`;
-};
+}
 
 const MyPageMain: React.FC = () => {
   const itemData = useProfileImageList();
@@ -64,14 +71,32 @@ const MyPageMain: React.FC = () => {
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
-  let { x, y } = UserLocation();
-
-  const [range, setRange] = useState({ value: 33, range: 100});
+  const { x, y } = UserLocation();
+  const [range, setRange] = useState({ value: 33, range: 100 });
   const [intialValue, setintialValue] = useState<number>(33);
   const userId = useRecoilValue(updatedUser);
-  const familyId = userInfo?.aptId.toString() + "-" + userInfo?.dong + "-" + userInfo?.ho
-  
-  let navigate = useNavigate();
+  const familyId =
+    userInfo?.aptId.toString() + '-' + userInfo?.dong + '-' + userInfo?.ho;
+
+  const [permissions, setPermissions] = useState<string>('');
+
+  console.log(address);
+  navigator.permissions
+    .query({ name: 'geolocation' })
+    .then(function (permissionStatus) {
+      setPermissions(permissionStatus.state);
+      //console.log('geolocation permission state is ', permissionStatus.state);
+      permissionStatus.onchange = function () {
+        setPermissions(this.state);
+        //console.log('geolocation permission state has changed to ', this.state);
+      };
+    });
+
+  useEffect(() => {
+    if (permissions === 'denied') {
+      setAddressReadOnly(true);
+    }
+  }, [permissions]);
 
   useEffect(() => {
     if (nickname === '') {
@@ -136,12 +161,14 @@ const MyPageMain: React.FC = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.aptName) {
-      const docRef = doc(firestore, "families", familyId);
-      
-      getDoc(docRef).then(res => {
-        const index = marks.findIndex((mark) => mark.range === res.get('range'));
+      const docRef = doc(firestore, 'families', familyId);
+
+      getDoc(docRef).then((res) => {
+        const index = marks.findIndex(
+          (mark) => mark.range === res.get('range'),
+        );
         setintialValue(marks[index].value);
-      })
+      });
     }
   }, [userId]);
 
@@ -205,19 +232,30 @@ const MyPageMain: React.FC = () => {
   const handleAddressModifyIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    Swal.fire({
-      title: '주소 수정 시, 알림 사항 ',
-      text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
-      showDenyButton: true,
-      confirmButtonText: '수정하기',
-      denyButtonText: `취소하기`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setAddressReadOnly(false);
-      } else if (result.isDenied) {
-        setAddressReadOnly(true);
-      }
-    });
+    if (permissions !== 'denied') {
+      Swal.fire({
+        title: '주소 수정 시, 알림 사항 ',
+        text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
+        showDenyButton: true,
+        confirmButtonText: '수정하기',
+        denyButtonText: `취소하기`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setAddressReadOnly(false);
+        } else if (result.isDenied) {
+          setAddressReadOnly(true);
+        }
+      });
+    } else {
+      setAddressReadOnly(true);
+      Swal.fire({
+        title: 'GPS 이용 허용',
+        text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
   };
 
   const handleAddressConfirmIconClick = (
@@ -263,20 +301,22 @@ const MyPageMain: React.FC = () => {
   const handleGpsIconClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    UserService.getUserAddress({ x, y })
-      .then((response) => {
-        setAddress(response.documents[0].code);
-        setAddressName(response.documents[0].address_name);
-        setAddressError(false);
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: '위치 기반 주소 검색에 실패했습니다.',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
+    if (x !== 0 && y !== 0) {
+      UserService.getUserAddress({ x, y })
+        .then((response) => {
+          setAddress(response.documents[0].code);
+          setAddressName(response.documents[0].address_name);
+          setAddressError(false);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: '위치 기반 주소 검색에 실패했습니다.',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
         });
-      });
+    }
   };
 
   const handleFindFamilySwitchChange = (
@@ -363,23 +403,23 @@ const MyPageMain: React.FC = () => {
 
   const valueLabelFormat = (value: number) => {
     const index = marks.findIndex((mark) => mark.value === value);
-    const selectedRange = marks[index].range
-    
+    const selectedRange = marks[index].range;
+
     if (selectedRange !== range.range) {
       setRange({
         value: marks[index].value,
-        range: selectedRange
+        range: selectedRange,
       });
 
       if (familyId) {
-        const docRef = doc(firestore, "families", familyId);
-        getDoc(docRef).then(res => {
+        const docRef = doc(firestore, 'families', familyId);
+        getDoc(docRef).then((res) => {
           if (userInfo !== null && res.get('range') !== selectedRange) {
             updateDoc(docRef, {
-              range : selectedRange
+              range: selectedRange,
             });
           }
-        })
+        });
       }
     }
     return marks.findIndex((mark) => mark.value === value) + 1;
@@ -470,17 +510,19 @@ const MyPageMain: React.FC = () => {
             </FindFamilyButton>
           </StyledTextFieldWrapper>
 
-          <StyledTextFieldWrapper style={{ display: userInfo?.findFamily ? "" : "none" }}>
+          <StyledTextFieldWrapper
+            style={{ display: userInfo?.findFamily ? '' : 'none' }}
+          >
             <FindFamilyButton>
               아파트 범위(m){''}
               <SliderCustom
-              key={`slider-${intialValue}`}
-              defaultValue={intialValue}
-              getAriaValueText={valuetext}
-              valueLabelFormat={valueLabelFormat}
-              step={null}
-              marks={marks}
-            />
+                key={`slider-${intialValue}`}
+                defaultValue={intialValue}
+                getAriaValueText={valuetext}
+                valueLabelFormat={valueLabelFormat}
+                step={null}
+                marks={marks}
+              />
             </FindFamilyButton>
           </StyledTextFieldWrapper>
           <StyledTextFieldWrapper>

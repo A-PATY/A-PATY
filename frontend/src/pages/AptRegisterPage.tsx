@@ -46,7 +46,11 @@ const AptRegisterPage: React.FC = () => {
         ) : (
           <>
             <Header header="고지서 인증" />
-            <AptCertify aptId={aptId} doroJuso={doroJuso} />
+            <AptCertify
+              aptId={aptId}
+              doroJuso={doroJuso}
+              setDoroJuso={setDoroJuso}
+            />
           </>
         )}
       </Container>

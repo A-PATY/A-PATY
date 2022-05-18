@@ -25,9 +25,33 @@ const NewMemberMain: React.FC = () => {
   const [address, setAddress] = useState<string>('');
   const [addressName, setAddressName] = useState<string>('');
   const [addressError, setAddressError] = useState<boolean>(true);
+  const [addressDisabled, setAddressDisabled] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
   let { x, y } = UserLocation();
+
+  const [permissions, setPermissions] = useState<string>('');
+
+  navigator.permissions
+    .query({ name: 'geolocation' })
+    .then(function (permissionStatus) {
+      setPermissions(permissionStatus.state);
+      //console.log('geolocation permission state is ', permissionStatus.state);
+      permissionStatus.onchange = function () {
+        setPermissions(this.state);
+        //console.log('geolocation permission state has changed to ', this.state);
+      };
+    });
+
+  useEffect(() => {
+    if (permissions === 'denied') {
+      setAddressDisabled(true);
+      setAddressName('');
+      setAddress('');
+    } else {
+      setAddressDisabled(false);
+    }
+  }, [permissions]);
 
   useEffect(() => {
     if (itemData !== undefined) {
@@ -79,20 +103,30 @@ const NewMemberMain: React.FC = () => {
   const handleGpsIconClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    UserService.getUserAddress({ x, y })
-      .then((response) => {
-        setAddress(response.documents[0].code);
-        setAddressName(response.documents[0].address_name);
-        setAddressError(false);
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: '위치 기반 주소 검색에 실패했습니다.',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
-        });
+    if (addressDisabled === true) {
+      Swal.fire({
+        title: 'GPS 이용 허용',
+        text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
       });
+    } else if (x !== 0 && y !== 0) {
+      UserService.getUserAddress({ x, y })
+        .then((response) => {
+          setAddress(response.documents[0].code);
+          setAddressName(response.documents[0].address_name);
+          setAddressError(false);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: '위치 기반 주소 검색에 실패했습니다.',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        });
+    }
   };
 
   const handleClose = () => {
