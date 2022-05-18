@@ -15,11 +15,23 @@ import useBillList from '../../hooks/useBillList';
 import AdminService from '../../services/AdminService';
 import { billInfoState } from '../../features/Bill/atom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 const AdminBillConfirm: React.FC = () => {
-  useBillList();
-  const billList = useRecoilValue(billInfoState);
+  // useBillList();
+  const userInfo = useRecoilValue(userInfoState);
   const setBillInfo = useSetRecoilState(billInfoState);
+  const billList = useRecoilValue(billInfoState);
+
+  useEffect(() => {
+    AdminService.getBillList()
+      .then(({ bills }) => {
+        setBillInfo(bills);
+      })
+      .catch((error) => {
+        //에러처리
+      });
+  }, [billList, userInfo]);
 
   const handleListItemClick =
     (bilImage: string) =>
@@ -55,7 +67,7 @@ const AdminBillConfirm: React.FC = () => {
             kakaoId: bilImageName[0],
           }).finally(() => {
             AdminService.getBillList().then(({ bills }) => {
-              // setBillList(bills);
+              setBillList(bills);
             });
           });
         }
