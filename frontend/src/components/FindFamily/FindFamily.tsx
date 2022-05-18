@@ -102,14 +102,9 @@ const FindFamily: React.FC = () => {
     }
   }, [memberLocation, range, aptLocate]);  
   
-
-  const [rangeIn, setRangeIn] = useState<boolean>(false);
-  const [rangeOut, setRangeOut] = useState<boolean>(false);
-
   const mapLocation = (aptlat: number, aptlng: number, inputRange: number) => {
     // console.log('현재 멤버는?', memberLocation.lat, memberLocation.lng)
     if (selectedMember.userId) {  // memberLocation.lat !== 0 && memberLocation.lng !== 0
-      console.log('map')
       const container = document.getElementById('map');
       const center = new kakao.maps.LatLng(aptlat, aptlng);
       const member = new kakao.maps.LatLng(memberLocation.lat, memberLocation.lng);
@@ -142,7 +137,7 @@ const FindFamily: React.FC = () => {
       '</div>';
   
       if (distance <= range) {
-        if (memberLocation.lat && memberLocation.lng) {
+        if (selectedMember.findFamily && memberLocation.lat && memberLocation.lng) {
           // marker.setMap(map);
           const customOverlay = new kakao.maps.CustomOverlay({
             map: map,
@@ -158,9 +153,7 @@ const FindFamily: React.FC = () => {
       };
   
       circle.setMap(map);
-    } else {
-
-    }
+    } 
   };
 
   // firebase 불러오기
@@ -192,6 +185,7 @@ const FindFamily: React.FC = () => {
   const slide = () => {
     setIsUp(!isUp);
   };
+
   return (
     <>
       {/* <MapContainer id="map"/>
@@ -227,7 +221,7 @@ const FindFamily: React.FC = () => {
       <MapContainer id="map">
         
       </MapContainer>
-      <FamilyListContainer style={{ bottom: isUp ? "0" : "-200px"}}>
+      <FamilyListContainer style={{ bottom: isUp ? "0" : "-27%"}}>
         <Tab onClick={slide}/>
         <Head>
           <Title>가족들</Title>
@@ -261,6 +255,7 @@ const FamilyListContainer = styled.div`
   position: absolute;
   background-color: #fff;
   height: 30%;
+  /* height: 200px; */
   bottom: 0px;
   width: 100%;
   z-index: 1;
@@ -285,25 +280,25 @@ const Title = styled.h3`
   font-weight: 600;
 `;
 
-const SliderCustom = styled(Slider)`
-  width: 100px;
-  margin-top: 20px;
-  color: #dfc5ed;
-  & .MuiSlider-thumb {
-    width: 17px;
-    height: 17px;
-  };
-  & .MuiSlider-thumb:hover {
-    box-shadow: 0 0 0 8px #f4f1f580;
-  };
-  & .Mui-focusVisible {
-    /* box-shadow: 0 0 0 8px #f4f1f580; */
-    box-shadow: none;
-  };
-  & .MuiSlider-markLabel {
-    color: transparent;
-  };
-`;
+// const SliderCustom = styled(Slider)`
+//   width: 100px;
+//   margin-top: 20px;
+//   color: #dfc5ed;
+//   & .MuiSlider-thumb {
+//     width: 17px;
+//     height: 17px;
+//   };
+//   & .MuiSlider-thumb:hover {
+//     box-shadow: 0 0 0 8px #f4f1f580;
+//   };
+//   & .Mui-focusVisible {
+//     /* box-shadow: 0 0 0 8px #f4f1f580; */
+//     box-shadow: none;
+//   };
+//   & .MuiSlider-markLabel {
+//     color: transparent;
+//   };
+// `;
 
 const Tab = styled.div`
   background-color: lightgray;

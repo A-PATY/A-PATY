@@ -34,7 +34,7 @@ import { categoryListState } from './features/Board/atom';
 
 import { db, firestore } from './firebase';
 import { ref, set, onValue, onDisconnect } from 'firebase/database';
-import { getDoc, updateDoc, doc, onSnapshot, setDoc, query, orderBy } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc, query, orderBy, addDoc } from 'firebase/firestore';
 import { familyList, location } from './types/familyTypes';
 
 import { getDistance } from './utils/getDistance';
@@ -123,6 +123,9 @@ const App: React.FC = () => {
   const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
   const setAptLocationState = useSetRecoilState(aptLocationState);
   
+  const [beforeUser, setBeforeUser] = useState();
+
+
   useEffect(() => {
     if (userId) {
       FamilyService.getFamilyList()
@@ -144,7 +147,7 @@ const App: React.FC = () => {
   useEffect(() => {
     // range 실시간으로 받아오기
     if (familyId) {
-      console.log(familyId)
+      // console.log(familyId);
       const docRef = doc(firestore, "families", familyId);
       onSnapshot(docRef, (document) => { 
         setRange(document.get('range'))
@@ -156,13 +159,11 @@ const App: React.FC = () => {
   // 내 위치 저장하기
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success, () => {}, { timeout: Infinity });  // enableHighAccuracy: true,
-    // if (userId) {  // ----- 움직이면서 확인 필요
-    // }
+    geolocation.watchPosition(success, () => {}, { timeout: 10000 });  // enableHighAccuracy: true,
   }, [familyId, range]);
 
   useEffect(() => {
-    console.log("범위 전환 후 위치 전환")
+    // console.log("범위 전환 후 위치 전환")
     // console.log(userLocation)
     if (userLocation.lat !== 0 && userLocation.lng !== 0) {
       // console.log('app에서의 range 벗어나는지 확인 여부');
@@ -173,7 +174,7 @@ const App: React.FC = () => {
   const success = (position: any) => {
     if (familyId) {
       const { latitude, longitude } = position.coords;
-      console.log('내 위치', latitude, longitude)
+      // console.log('내 위치', latitude, longitude);
       const docRef = doc(firestore, "families", familyId);
       
       if (userInfo !== null) {
@@ -212,7 +213,7 @@ const App: React.FC = () => {
     // console.log("설정된 범위는??", range)
     
     if (distance <= range) {  
-      console.log('범위 안입니다!!!!')
+      console.log('범위 안입니다!!')
       if (userLocation.lat && userLocation.lng) {
         ///------------------------- 알림에 집어넣기 => 벗어나서 1번 넣으면 다시 넣지 않아야 함... (알림 무한반복 문제)
         // 그리고 위치 허용한 사람의 경우에만 밑의 과정을 실행할 것
@@ -221,10 +222,11 @@ const App: React.FC = () => {
           // console.log(userInfo?.userId)
           if (userInfo?.userId && member.userId !== userInfo?.userId) {
             const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-            getDoc(notifyRef).then((data) => {
-              const contents = data.get(userInfo?.userId.toString())
-              
-            });    
+            
+            // getDoc(notifyRef).then((data) => {
+            //   const contents = data.get(userInfo?.userId.toString());
+
+            // });    
             const time = new Date();
             updateDoc(notifyRef, { 
               [time.toString()] : {
@@ -243,12 +245,12 @@ const App: React.FC = () => {
         };
       };
     } else {
-      console.log("범위 밖입니다!!!");
+      console.log("범위 밖입니다!!");
       for (let member of familyList) {
         if (userInfo?.userId && member.userId !== userInfo?.userId) {
-          // console.log(member.userId)
           const notifyRef = doc(firestore, `notifications`, member.userId.toString())
           const time = new Date();
+
           updateDoc(notifyRef, {  // updateDoc(notifyRef, {
             [time.toString()] : {  // [userInfo?.userId]
               userId : userInfo?.userId,
