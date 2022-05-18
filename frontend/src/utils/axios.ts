@@ -71,7 +71,7 @@ axiosInstance.interceptors.response.use(
             ] = `Bearer ${accessToken}`;
 
             setCookie('apaty_refresh', refreshToken, {
-              maxAge: 60 * 5,
+              maxAge: 60 * 60 * 24 * 5,
               path: '/',
             });
 
