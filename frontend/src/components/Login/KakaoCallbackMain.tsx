@@ -44,6 +44,7 @@ const KakaoCallbackMain: React.FC = () => {
               // console.log('categoryList : ');
               // console.log(categoryList);
               setCategoryList(categoryList);
+              console.log('ddddd');
             });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
@@ -85,6 +86,12 @@ const KakaoCallbackMain: React.FC = () => {
           if (newMember) {
             navigate('/newMember');
           } else {
+            BoardService.getCategoryList().then(({ categoryList }) => {
+              // console.log('categoryList : ');
+              // console.log(categoryList);
+              setCategoryList(categoryList);
+              console.log('ddddd');
+            });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
 

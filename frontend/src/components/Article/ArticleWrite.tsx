@@ -254,7 +254,8 @@ const ArticleWrite: React.FC = () => {
               id="outlined-multiline-static"
               label="글 내용"
               multiline
-              rows={18}
+              rows={10}
+              size="small"
               onChange={changeContent}
             />
           </div>
@@ -286,7 +287,7 @@ const ArticleWrite: React.FC = () => {
           justifyContent="flex-end"
           sx={{
             m: 1,
-            minWidth: 410,
+            // minWidth: 410,
           }}
         >
           <ButtonGroup
