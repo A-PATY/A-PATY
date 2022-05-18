@@ -6,13 +6,13 @@ import NotificationList from '../components/Notification/NotificationList';
 
 const NotificationPage: React.FC = () => {
   useEffect(() => {
-    document.title = '공지사항';
+    document.title = '알림';
   }, []);
 
   return (
     <>
       <Container>
-        <Header header="공지사항" />
+        <Header header="" />
         <NotificationList />
       </Container>
       <Footer footerNumber={-1} />
