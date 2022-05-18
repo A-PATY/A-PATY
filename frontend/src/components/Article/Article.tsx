@@ -18,10 +18,19 @@ import Swal from 'sweetalert2';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { presentArticleState } from '../../features/Board/atom';
 import { userInfoState } from '../../features/Login/atom';
+import { presentCommunityTypeState } from '../../features/Board/atom';
 
 const Article: React.FC = () => {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoState);
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+  const communityName =
+    presentCommunityType === 1
+      ? '지역'
+      : presentCommunityType === 2
+      ? '아파트'
+      : '아파트 익명';
+
   const [article, setArticle] = useRecoilState(presentArticleState);
 
   const { article_id } = useParams<{ article_id: string }>();
@@ -128,8 +137,10 @@ const Article: React.FC = () => {
         <Wrapper>
           <ArticleHead>
             <Category>
-              <Link href="">지역</Link>
-              <ArrowBackIosRoundedIconCustom></ArrowBackIosRoundedIconCustom>
+              <Link href="">{communityName}</Link>
+              {presentCommunityType !== 3 && (
+                <ArrowBackIosRoundedIconCustom></ArrowBackIosRoundedIconCustom>
+              )}
               <Link href="">{article?.category}</Link>
             </Category>
             <Title>{article?.title}</Title>
