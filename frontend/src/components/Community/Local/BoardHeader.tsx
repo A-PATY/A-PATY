@@ -63,15 +63,16 @@ const BoardHeader: React.FC<Props> = ({
     navigate('/notification');
   };
 
-  /// 알림기능 추가 ---------------------
+  // 알림기능 추가 ---------------------
   const [notifications, setNotifications] = useState<any>([])
   useEffect(() => {
     const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString())
     
     onSnapshot(notifyRef, (document) => { 
+      console.log('firestore 알림 존재?',document.exists())
       if (document.exists()) {
-        const alarm = document.get('family');
-        console.log('firestore의', alarm);
+        const alarm = document.data();
+        console.log('firestore의 알림!!', alarm);
         // notifications.push(alarm);
         setNotifications([...notifications, alarm]);
         console.log(notifications)
