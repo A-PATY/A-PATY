@@ -196,14 +196,14 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  border-top: 8px solid #f2f2f3;
+  // border-top: 8px solid #f2f2f3;
 `;
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   padding: 0 20px;
-  border-bottom: 8px solid #f2f2f3;
+  // border-bottom: 8px solid #f2f2f3;
 `;
 
 const ArticleWrapper = styled.div`
