@@ -35,8 +35,6 @@ const ArticleWritePage: React.FC = () => {
   const { type, communityId } = state;
 
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
 
   const title =
     presentCommunityType === 1

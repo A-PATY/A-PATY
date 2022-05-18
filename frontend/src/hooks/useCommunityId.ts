@@ -4,8 +4,6 @@ import { userInfoState } from '../features/Login/atom';
 const useCommunityId = (type: number) => {
   // type - 1:지역, 2:아파트, 3:아파트 익명
   const userInfo = useRecoilValue(userInfoState);
-  // console.log('userInfo : ');
-  // console.log(userInfo);
   const communityList = userInfo?.communityList;
   const communityId = communityList?.filter((community) => {
     if (type === 1) {

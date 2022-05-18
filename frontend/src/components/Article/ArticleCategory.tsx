@@ -39,8 +39,8 @@ const ArticleCategory: React.FC<Props> = ({ category, setCategory }) => {
   };
 
   return (
-    <div>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 410 }}>
+    <div style={{ width: '100%' }}>
+      <FormControl variant="standard" sx={{ width: '100%' }}>
         <Select
           value={label}
           onChange={handleChange}
