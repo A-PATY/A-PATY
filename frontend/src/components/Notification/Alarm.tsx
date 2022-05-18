@@ -16,7 +16,7 @@ interface Props {
 //   nickname: string,
 // }
 
-const Alarm: React.FC<alarmProps> = ({ detail }) => {
+const Alarm: React.FC<Props> = ({ detail }) => {
   const navigate = useNavigate();
   
   const calculateTime = (time: string) => {
