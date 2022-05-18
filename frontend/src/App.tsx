@@ -150,7 +150,7 @@ const App: React.FC = () => {
       const docRef = doc(firestore, "families", familyId);
       onSnapshot(docRef, (document) => { 
         setRange(document.get('range'))
-        console.log('저장된 범위 확인', document.get('range'))
+        // console.log('저장된 범위 확인', document.get('range'))
       });
     }  
   }, [familyId]);
@@ -172,7 +172,7 @@ const App: React.FC = () => {
   const success = (position: any) => {
     if (familyId) {
       const { latitude, longitude } = position.coords;
-      // console.log('내 위치', latitude, longitude);
+      console.log('내 위치', latitude, longitude);
       const docRef = doc(firestore, "families", familyId);
       
       if (userInfo !== null) {
@@ -214,74 +214,24 @@ const App: React.FC = () => {
   const mapLocation = (aptlat: number, aptlng: number) => {
     
     const distance = Math.round(getDistance(userLocation.lat, userLocation.lng, aptlat, aptlng));
-    
     const beforeDistance = Math.round(getDistance(beforeUser.lat, beforeUser.lng, aptlat, aptlng));
     // console.log("설정된 범위는??", range)
-    const nowPos = distance - range
-    const beforePos = beforeDistance - range
-    if (nowPos > 0 && beforePos > 0)
+    // console.log("이전 값 저장",beforeUser)
+    // console.log("현재 값", userLocation)
+    const nowPos = distance - range;
+    const beforePos = beforeDistance - range;
 
-    if (distance <= range) { 
-      // console.log('범위 안입니다!!');
-      if (userLocation.lat && userLocation.lng) {
-        // console.log('가족리스트', familyList)
-        for (let member of familyList) {
-          // console.log(userInfo?.userId)
-          if (userInfo?.userId && member.userId !== userInfo?.userId) {
-            const notifyRef = doc(firestore, `notifications`, member.userId.toString());
-            const time = new Date();
-            
-            getDoc(notifyRef).then((data) => {
-              if (data.exists()) {
-                updateDoc(notifyRef, { 
-                  [time.toString()] : {
-                    userId : userInfo?.userId,
-                    time: time,
-                    nickname: userInfo?.nickname,
-                    content: "아파트 단지에 들어왔습니다."
-                  }
-                  // [userInfo?.userId] : {
-                  //   time: new Date(),
-                  //   nickname: userInfo?.nickname,
-                  //   content: "아파트 단지에 들어왔습니다."
-                  // }
-                });
-              } else {
-                setDoc(notifyRef, { 
-                  [time.toString()] : {
-                    userId : userInfo?.userId,
-                    time: time,
-                    nickname: userInfo?.nickname,
-                    content: "아파트 단지에 들어왔습니다."
-                  }
-                });
-              };
-            });    
-            // updateDoc(notifyRef, { 
-            //   [time.toString()] : {
-            //     userId : userInfo?.userId,
-            //     time: time,
-            //     nickname: userInfo?.nickname,
-            //     content: "아파트 단지에 들어왔습니다."
-            //   }
-            //   // [userInfo?.userId] : {
-            //   //   time: new Date(),
-            //   //   nickname: userInfo?.nickname,
-            //   //   content: "아파트 단지에 들어왔습니다."
-            //   // }
-            // });
-          }
-        };
-      };
-    } else {
-      // console.log("범위 밖입니다!!");
-      for (let member of familyList) {
-        if (userInfo?.userId && member.userId !== userInfo?.userId) {
-          const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-          const time = new Date();
-
-          getDoc(notifyRef).then((data) => {
-            if (data.exists()) {
+    // console.log(nowPos, beforePos)
+    
+    for (let member of familyList) {
+      // console.log(userInfo?.userId)
+      if (userInfo?.userId && member.userId !== userInfo?.userId) {
+        const notifyRef = doc(firestore, `notifications`, member.userId.toString());
+        const time = new Date();
+        
+        getDoc(notifyRef).then((data) => {
+          if (data.exists()) {
+            if (nowPos > 0 && beforePos < 0) {  // 안에서 밖(벗어남)
               updateDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -290,7 +240,19 @@ const App: React.FC = () => {
                   content: "아파트 단지에서 벗어났습니다."
                 }
               });
-            } else {
+            } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
+              updateDoc(notifyRef, { 
+                [time.toString()] : {
+                  userId : userInfo?.userId,
+                  time: time,
+                  nickname: userInfo?.nickname,
+                  content: "아파트 단지에 들어왔습니다."
+                }
+              });
+            };
+
+          } else {
+            if (nowPos > 0 && beforePos < 0) {  // 안에서 밖(벗어남)
               setDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -299,19 +261,26 @@ const App: React.FC = () => {
                   content: "아파트 단지에서 벗어났습니다."
                 }
               });
-            };
-          });    
-          updateDoc(notifyRef, {  // updateDoc(notifyRef, {
-            [time.toString()] : {  // [userInfo?.userId]
-              userId : userInfo?.userId,
-              time: time,
-              nickname: userInfo.nickname,
-              content: "아파트 단지에서 벗어났습니다."
+            } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
+              setDoc(notifyRef, { 
+                [time.toString()] : {
+                  userId : userInfo?.userId,
+                  time: time,
+                  nickname: userInfo?.nickname,
+                  content: "아파트 단지에 들어왔습니다."
+                }
+              });
             }
-          });
-        }
+          };
+        });    
       }
-    }
+    };
+
+    // if (nowPos > 0 && beforePos < 0) {  // 안에서밖(벗어남)
+
+    // } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
+
+    // }
   };
 
   // 아파트 좌표 등록하기 (처음에)
