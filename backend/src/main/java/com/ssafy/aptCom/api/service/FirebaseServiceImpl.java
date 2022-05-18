@@ -74,7 +74,7 @@ public class FirebaseServiceImpl implements FirebaseService {
 
         // map의 크기가 2 초과면 멤버만 삭제, 2이면 마지막 멤버이므로 family를 삭제
         int size = getFamilyDetail(familyId).size();
-        if (size > 2) {
+        if (size > 3) {
             Map<String, Object> updates = new HashMap<>();
             updates.put(userId, FieldValue.delete());
             documentReference.update(updates);
