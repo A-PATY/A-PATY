@@ -276,7 +276,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               m: 1,
               minWidth: 410,
               fontSize: 16,
-              fontFamily: 'MinSans-Regular',
+              // fontFamily: 'MinSans-Regular',
             },
           }}
           noValidate
@@ -289,6 +289,14 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               multiline
               rows={10}
               value={content}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
               onChange={changeContent}
             />
           </div>
@@ -391,7 +399,9 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           </>
         ) : undefined}
 
-        <SubmitButtonCustom onClick={onSubmit}>Submit</SubmitButtonCustom>
+        <SubmitContainer>
+          <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
+        </SubmitContainer>
       </Container>
     </>
   );
@@ -459,14 +469,22 @@ const ClearRoundedIconCustom = styled(ClearRoundedIcon)`
 
 const SubmitButtonCustom = styled(Button)`
   background-color: #bae6e5;
-  margin: 0px 20px
-  color: #ffb2a9;
+  box-shadow: none;
+  color: white;
+  width: 300px;
+  min-height: 45px;
+  border-radius: 126px;
   font-family: 'MinSans-Regular';
-  font-size: 18px;
-  padding: 0;
+  font-size: 16px;
   &:hover {
     background-color: #ffb2a9;
-    color: #bae6e5;
+    color: white;
   }
+`;
+
+const SubmitContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 `;
 export default ArticleEdit;

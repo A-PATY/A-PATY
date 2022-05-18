@@ -186,7 +186,11 @@ const ArticleWrite: React.FC = () => {
     //   formData.append(key, articleData[key]);
     // }
 
-    formData.append('communityId', String(communityId));
+    if (category === '공지') {
+      formData.append('communityId', '0');
+    } else {
+      formData.append('communityId', String(communityId));
+    }
     formData.append('title', title);
     formData.append('contents', content);
 
@@ -249,7 +253,7 @@ const ArticleWrite: React.FC = () => {
               m: 1,
               minWidth: 410,
               fontSize: 16,
-              fontFamily: 'MinSans-Regular',
+              // fontFamily: 'MinSans-Regular',
             },
           }}
           noValidate
@@ -262,6 +266,14 @@ const ArticleWrite: React.FC = () => {
               multiline
               rows={10}
               size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
               onChange={changeContent}
             />
           </div>
@@ -349,8 +361,9 @@ const ArticleWrite: React.FC = () => {
             </Box>
           </>
         ) : undefined}
-
-        <SubmitButtonCustom onClick={onSubmit}>Submit</SubmitButtonCustom>
+        <SubmitContainer>
+          <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
+        </SubmitContainer>
       </Container>
     </>
   );
@@ -418,14 +431,22 @@ const ClearRoundedIconCustom = styled(ClearRoundedIcon)`
 
 const SubmitButtonCustom = styled(Button)`
   background-color: #bae6e5;
-  margin: 0px 20px
-  color: #ffb2a9;
+  box-shadow: none;
+  color: white;
+  width: 300px;
+  min-height: 45px;
+  border-radius: 126px;
   font-family: 'MinSans-Regular';
-  font-size: 18px;
-  padding: 0;
+  font-size: 16px;
   &:hover {
     background-color: #ffb2a9;
-    color: #bae6e5;
+    color: white;
   }
+`;
+
+const SubmitContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 `;
 export default ArticleWrite;
