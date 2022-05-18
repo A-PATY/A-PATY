@@ -12,9 +12,8 @@ import React, { useEffect, useState } from 'react';
 import { firestore } from '../../../firebase';
 import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../../features/Login/atom';
+import { userInfoState, updatedUser } from '../../../features/Login/atom';
 import { UserInfo } from '../../../types/loginTypes';
-
 import Badge from '@mui/material/Badge';
 
 interface Props {
@@ -31,6 +30,7 @@ const BoardHeader: React.FC<Props> = ({
   setKeyword,
 }) => {
   const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
+  const userId = useRecoilValue(updatedUser);
   const navigate = useNavigate();
   const writeArticle = () => {
     navigate('/board/write', {
@@ -64,21 +64,22 @@ const BoardHeader: React.FC<Props> = ({
   };
 
   // 알림기능 추가 ---------------------
-  const [notifications, setNotifications] = useState<any>([])
+  const [notifications, setNotifications] = useState<any>([]);
   useEffect(() => {
-    const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString())
-    
-    onSnapshot(notifyRef, (document) => { 
-      console.log('firestore 알림 존재?',document.exists())
-      if (document.exists()) {
-        const alarm = document.data();
-        console.log('firestore의 알림!!', alarm);
-        // notifications.push(alarm);
-        setNotifications([...notifications, alarm]);
-        console.log(notifications)
-      }
-    });
-  }, [])
+    if (userId) {
+      const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString());
+      onSnapshot(notifyRef, (document) => { 
+        // console.log('firestore 알림 존재?',document.exists())
+        if (document.exists()) {
+          const alarm = document.data();
+          console.log('firestore의 알림!!', alarm);
+          // notifications.push(alarm);
+          setNotifications([...notifications, alarm]);
+          // console.log(notifications);
+        }
+      });
+    }
+  }, [userId]);
 
   return (
     <>
@@ -115,7 +116,7 @@ const BoardHeader: React.FC<Props> = ({
                 </BadgeCustom> :
                 <NotificationsActiveRoundedIcon onClick={goToNotification} />
               }
-
+              {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
             </TransparentBtn>
           </GridCustom>
         </Grid>
