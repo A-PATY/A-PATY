@@ -71,79 +71,79 @@ const MyPageMain: React.FC = () => {
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
-  //const { x, y } = UserLocation();
+  const { x, y } = UserLocation();
 
-  const [x, setX] = useState<number>(0);
-  const [y, setY] = useState<number>(0);
+  // const [x, setX] = useState<number>(0);
+  // const [y, setY] = useState<number>(0);
   const [range, setRange] = useState({ value: 33, range: 100 });
   const [intialValue, setintialValue] = useState<number>(33);
   const userId = useRecoilValue(updatedUser);
   const familyId =
     userInfo?.aptId.toString() + '-' + userInfo?.dong + '-' + userInfo?.ho;
 
-  const [permissions, setPermissions] = useState<string>('');
+  // const [permissions, setPermissions] = useState<string>('');
 
-  useEffect(() => {
-    let lat: number, long: number;
-    if (navigator.geolocation) {
-      // GPS를 지원하면
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          lat = position.coords.latitude;
-          long = position.coords.longitude;
-          setX(long);
-          setY(lat);
-        },
-        function (error) {
-          // Swal.fire({
-          //   title: error.message,
-          //   text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
-          //   icon: 'error',
-          //   showConfirmButton: false,
-          //   timer: 2000,
-          // });
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: Infinity,
-        },
-      );
-    } else {
-      Swal.fire({
-        title: '이 브라우저는 GPS를 지원하지 않습니다',
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-      return;
-    }
-  }, [permissions]);
+  // useEffect(() => {
+  //   let lat: number, long: number;
+  //   if (navigator.geolocation) {
+  //     // GPS를 지원하면
+  //     navigator.geolocation.getCurrentPosition(
+  //       function (position) {
+  //         lat = position.coords.latitude;
+  //         long = position.coords.longitude;
+  //         setX(long);
+  //         setY(lat);
+  //       },
+  //       function (error) {
+  //         // Swal.fire({
+  //         //   title: error.message,
+  //         //   text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
+  //         //   icon: 'error',
+  //         //   showConfirmButton: false,
+  //         //   timer: 2000,
+  //         // });
+  //       },
+  //       {
+  //         enableHighAccuracy: true,
+  //         maximumAge: 0,
+  //         timeout: Infinity,
+  //       },
+  //     );
+  //   } else {
+  //     Swal.fire({
+  //       title: '이 브라우저는 GPS를 지원하지 않습니다',
+  //       icon: 'error',
+  //       showConfirmButton: false,
+  //       timer: 2000,
+  //     });
+  //     return;
+  //   }
+  // }, [permissions]);
 
-  navigator.permissions
-    .query({ name: 'geolocation' })
-    .then(function (permissionStatus) {
-      setPermissions(permissionStatus.state);
-      //console.log('geolocation permission state is ', permissionStatus.state);
-      permissionStatus.onchange = function () {
-        setPermissions(this.state);
-        //console.log('geolocation permission state has changed to ', this.state);
-      };
-    });
+  // navigator.permissions
+  //   .query({ name: 'geolocation' })
+  //   .then(function (permissionStatus) {
+  //     setPermissions(permissionStatus.state);
+  //     //console.log('geolocation permission state is ', permissionStatus.state);
+  //     permissionStatus.onchange = function () {
+  //       setPermissions(this.state);
+  //       //console.log('geolocation permission state has changed to ', this.state);
+  //     };
+  //   });
 
-  useEffect(() => {
-    if (permissions === 'denied') {
-      setAddressReadOnly(true);
-    }
-  }, [permissions]);
+  // useEffect(() => {
+  //   if (permissions === 'denied') {
+  //     setAddressReadOnly(true);
+  //   }
+  // }, [permissions]);
 
-  useEffect(() => {
-    if (nickname === '') {
-      setNicknameError(true);
-    } else {
-      setNicknameError(false);
-    }
-  }, [nickname]);
+  // useEffect(() => {
+  //   if (nickname === '') {
+  //     setNicknameError(true);
+  //   } else {
+  //     setNicknameError(false);
+  //   }
+  // }, [nickname]);
 
   useEffect(() => {
     if (userInfo !== null) {
@@ -271,30 +271,19 @@ const MyPageMain: React.FC = () => {
   const handleAddressModifyIconClick = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    if (permissions !== 'denied') {
-      Swal.fire({
-        title: '주소 수정 시, 알림 사항 ',
-        text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
-        showDenyButton: true,
-        confirmButtonText: '수정하기',
-        denyButtonText: `취소하기`,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setAddressReadOnly(false);
-        } else if (result.isDenied) {
-          setAddressReadOnly(true);
-        }
-      });
-    } else {
-      setAddressReadOnly(true);
-      Swal.fire({
-        title: 'GPS 이용 허용',
-        text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
-        icon: 'info',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    }
+    Swal.fire({
+      title: '주소 수정 시, 알림 사항 ',
+      text: '주소를 변경하게 되면 현재 이용 중인 커뮤니티를 더 이상 이용할 수 없습니다.',
+      showDenyButton: true,
+      confirmButtonText: '수정하기',
+      denyButtonText: `취소하기`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setAddressReadOnly(false);
+      } else if (result.isDenied) {
+        setAddressReadOnly(true);
+      }
+    });
   };
 
   const handleAddressConfirmIconClick = (
