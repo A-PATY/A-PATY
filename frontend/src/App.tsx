@@ -109,7 +109,6 @@ const App: React.FC = () => {
           nickname: userInfo?.nickname,
         });
       }
-
       onDisconnect(ref(db, `/status/${userInfo?.userId}/state`)).set('offline');
     });
   }, [userId]);
@@ -190,8 +189,8 @@ const App: React.FC = () => {
         getDoc(docRef).then((res) => {
           const loc = res.get(userInfo?.userId.toString());
           const dist = getDistance(latitude, longitude, loc.lat, loc.lng);
-
-          if (dist < 5) {
+          // console.log(dist)
+          if (dist > 5) {
             updateDoc(docRef, {
               [userInfo.userId]: {  
                 lat: latitude,
