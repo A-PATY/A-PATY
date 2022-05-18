@@ -71,7 +71,10 @@ const MyPageMain: React.FC = () => {
   const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
-  const { x, y } = UserLocation();
+  //const { x, y } = UserLocation();
+
+  const [x, setX] = useState<number>(0);
+  const [y, setY] = useState<number>(0);
   const [range, setRange] = useState({ value: 33, range: 100 });
   const [intialValue, setintialValue] = useState<number>(33);
   const userId = useRecoilValue(updatedUser);
@@ -80,7 +83,43 @@ const MyPageMain: React.FC = () => {
 
   const [permissions, setPermissions] = useState<string>('');
 
-  console.log(address);
+  useEffect(() => {
+    let lat: number, long: number;
+    if (navigator.geolocation) {
+      // GPS를 지원하면
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          lat = position.coords.latitude;
+          long = position.coords.longitude;
+          setX(long);
+          setY(lat);
+        },
+        function (error) {
+          // Swal.fire({
+          //   title: error.message,
+          //   text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
+          //   icon: 'error',
+          //   showConfirmButton: false,
+          //   timer: 2000,
+          // });
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: Infinity,
+        },
+      );
+    } else {
+      Swal.fire({
+        title: '이 브라우저는 GPS를 지원하지 않습니다',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+  }, [permissions]);
+
   navigator.permissions
     .query({ name: 'geolocation' })
     .then(function (permissionStatus) {
