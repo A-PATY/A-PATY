@@ -7,7 +7,15 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import { useNavigate } from 'react-router-dom';
 import { InputBase } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { firestore } from '../../../firebase';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../../features/Login/atom';
+import { UserInfo } from '../../../types/loginTypes';
+
+import Badge from '@mui/material/Badge';
 
 interface Props {
   type: number;
@@ -22,6 +30,7 @@ const BoardHeader: React.FC<Props> = ({
   keyword,
   setKeyword,
 }) => {
+  const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
   const navigate = useNavigate();
   const writeArticle = () => {
     navigate('/board/write', {
@@ -54,6 +63,23 @@ const BoardHeader: React.FC<Props> = ({
     navigate('/notification');
   };
 
+  // 알림기능 추가 ---------------------
+  const [notifications, setNotifications] = useState<any>([])
+  useEffect(() => {
+    const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString())
+    
+    onSnapshot(notifyRef, (document) => { 
+      console.log('firestore 알림 존재?',document.exists())
+      if (document.exists()) {
+        const alarm = document.data();
+        console.log('firestore의 알림!!', alarm);
+        // notifications.push(alarm);
+        setNotifications([...notifications, alarm]);
+        console.log(notifications)
+      }
+    });
+  }, [])
+
   return (
     <>
       <Container>
@@ -81,7 +107,15 @@ const BoardHeader: React.FC<Props> = ({
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-              <NotificationsActiveRoundedIcon onClick={goToNotification} />
+
+              {/* 알림 기능!! badgeContent={notifications.length} */}
+              { notifications.length > 0 ?
+                <BadgeCustom color="error" badgeContent="">
+                  <NotificationsActiveRoundedIcon onClick={goToNotification} />
+                </BadgeCustom> :
+                <NotificationsActiveRoundedIcon onClick={goToNotification} />
+              }
+
             </TransparentBtn>
           </GridCustom>
         </Grid>
@@ -142,6 +176,15 @@ const Search = styled.div`
   &:hover {
     background-color: rgba(192, 192, 192, 0.3);
   }
+`;
+
+const BadgeCustom = styled(Badge)`
+  & span {
+    font-size: 10px;
+    min-width: 15px;
+    height: 15px;
+    padding: 0;
+  };
 `;
 
 export default BoardHeader;

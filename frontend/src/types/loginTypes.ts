@@ -24,6 +24,7 @@ export interface UserInfo {
   sidoName: string; // null
   gugunName: string; //null
   dongName: string; //null
+  aptId : number; // null
   aptName: string | null; //null
   dong: string | null; //null
   ho: string | null; //null
