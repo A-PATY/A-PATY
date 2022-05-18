@@ -9,11 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { InputBase } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { firestore } from '../../../firebase';
+import { firestore } from '../../firebase';
 import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
-import { userInfoState, updatedUser } from '../../../features/Login/atom';
-import { UserInfo } from '../../../types/loginTypes';
+import { userInfoState, updatedUser } from '../../features/Login/atom';
+import { UserInfo } from '../../types/loginTypes';
 import Badge from '@mui/material/Badge';
 
 interface Props {
@@ -63,8 +63,12 @@ const BoardHeader: React.FC<Props> = ({
   const [notifications, setNotifications] = useState<any>([]);
   useEffect(() => {
     if (userId) {
-      const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString());
-      onSnapshot(notifyRef, (document) => { 
+      const notifyRef = doc(
+        firestore,
+        `notifications`,
+        userInfo?.userId.toString(),
+      );
+      onSnapshot(notifyRef, (document) => {
         // console.log('firestore 알림 존재?',document.exists())
         if (document.exists()) {
           const alarm = document.data();
@@ -104,14 +108,14 @@ const BoardHeader: React.FC<Props> = ({
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-
               {/* 알림 기능!! badgeContent={notifications.length} */}
-              { notifications.length > 0 ?
+              {notifications.length > 0 ? (
                 <BadgeCustom color="error" badgeContent="">
                   <NotificationsActiveRoundedIcon onClick={goToNotification} />
-                </BadgeCustom> :
+                </BadgeCustom>
+              ) : (
                 <NotificationsActiveRoundedIcon onClick={goToNotification} />
-              }
+              )}
               {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
             </TransparentBtn>
           </GridCustom>
@@ -181,7 +185,7 @@ const BadgeCustom = styled(Badge)`
     min-width: 12px;
     height: 12px;
     padding: 0;
-  };
+  }
 `;
 
 export default BoardHeader;
