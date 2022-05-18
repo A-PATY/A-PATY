@@ -1,16 +1,17 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import ApartmentRoundedIcon from '@mui/icons-material/ApartmentRounded';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../features/Login/atom';
-
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 const Main: React.FC = () => {
   let navigate = useNavigate();
 
@@ -53,17 +54,6 @@ const Main: React.FC = () => {
               <PhoneFrameWrapper>
                 <PhoneFrame>
                   <PhoneInner src="\img\service.png" />
-                  {/* <PhoneHeader>
-                    <LeftGrid>
-                      <LeftArrow></LeftArrow>
-                      <PhoneHeaderText>잠실동</PhoneHeaderText>
-                    </LeftGrid>
-                    <RightGrid>
-                      <SearchIcon />
-                      <WriteIcon />
-                      <AlertIcon />
-                    </RightGrid>
-                  </PhoneHeader> */}
                 </PhoneFrame>
               </PhoneFrameWrapper>
             </PhoneFrameContainer>
@@ -90,25 +80,118 @@ const Main: React.FC = () => {
             </IntroductionQuestion>
             <IntroductionAnswer>
               <IntroductionAnswerH2>
-                아파트 주민들을 위한 커뮤니티 공간
+                아파트 주민들을 위한 커뮤니티 공간으로
+                <br />
+                <br />
+                배달비 부담을 덜고 싶을 때!
+                <br />
+                층간 소음 문제로 고민일 때!
+                <br />
+                이웃과 친해지고 싶을 때!
+                <br />
+                이사와서 동네 정보를 얻고 싶을 때!
+                <br />
+                사랑하는 가족의 위치가 궁금할 때!
               </IntroductionAnswerH2>
             </IntroductionAnswer>
           </IntroductionTextContainer>
         </SecondSection>
-        <ThirdSection>
-          <FirstAdvantageDescriptionWrapper>
-            <FirstAdvantageDescriptionOne>
-              <FirstAdvantageDescriptionOneH3>
-                <FirstAdvantageDescriptionOneStrong>
-                  첫번째 특장점
-                </FirstAdvantageDescriptionOneStrong>
-                {/* <FirstAdvantageDescriptionOneBr /> */}
+        <Section>
+          <AdvantageDescriptionWrapper>
+            <AdvantageDescriptionOne>
+              <AdvantageDescriptionOneH3>
+                <AdvantageDescriptionOneStrong>
+                  자유로운 소통공간
+                </AdvantageDescriptionOneStrong>
                 <br />
-                특장점 요약
-              </FirstAdvantageDescriptionOneH3>
-            </FirstAdvantageDescriptionOne>
-          </FirstAdvantageDescriptionWrapper>
-        </ThirdSection>
+                <br />
+                위치 인증과 고지서 인증을 통해
+                <br />
+                신뢰 기반 커뮤니티 이용이 가능합니다.
+              </AdvantageDescriptionOneH3>
+            </AdvantageDescriptionOne>
+            <AdvantageIconContainer>
+              <AdvantageIconWrapper>
+                <ReceiptLongIcon css={iconCustom} sx={{ color: '#f99084' }} />
+                <AdvantageSpan>고지서 인증</AdvantageSpan>
+              </AdvantageIconWrapper>
+              <AdvantageIconWrapper>
+                <LockRoundedIcon css={iconCustom} sx={{ color: '#f99084' }} />
+                <AdvantageSpan>게시판 분리</AdvantageSpan>
+              </AdvantageIconWrapper>
+            </AdvantageIconContainer>
+
+            <PhoneFrameContainer>
+              <PhoneFrameWrapper>
+                <PhoneFrame>
+                  <PhoneInner src="\img\service.png" />
+                </PhoneFrame>
+              </PhoneFrameWrapper>
+            </PhoneFrameContainer>
+          </AdvantageDescriptionWrapper>
+        </Section>
+        <Section css={backgroundpurple}>
+          <AdvantageDescriptionWrapper>
+            <AdvantageDescriptionOne>
+              <AdvantageDescriptionOneH3>
+                <AdvantageDescriptionOneStrong css={purple}>
+                  아파트 내 우리 가족 찾기
+                </AdvantageDescriptionOneStrong>
+                <br />
+                <br />
+                실시간 위치 추적을 통해
+                <br />
+                사랑하는 가족들의 위치를 알 수 있습니다.
+              </AdvantageDescriptionOneH3>
+            </AdvantageDescriptionOne>
+            <AdvantageIconContainer>
+              <AdvantageIconWrapper>
+                <LocationOnRoundedIcon
+                  css={iconCustom}
+                  sx={{ color: '#b65ee6' }}
+                />
+                <AdvantageSpan>실시간 위치 추적</AdvantageSpan>
+              </AdvantageIconWrapper>
+              <AdvantageIconWrapper>
+                <FavoriteRoundedIcon
+                  css={iconCustom}
+                  sx={{ color: '#b65ee6' }}
+                />
+                <AdvantageSpan>가족들의 안전</AdvantageSpan>
+              </AdvantageIconWrapper>
+            </AdvantageIconContainer>
+            <PhoneFrameContainer>
+              <FindFamilyContainer>
+                <PhoneFrameWrapper>
+                  <PhoneFrame css={purpleborder}>
+                    <PhoneInner src="\img\service.png" />
+                  </PhoneFrame>
+                </PhoneFrameWrapper>
+                <FindFamilyWrapper>
+                  <FindFamilyAlert>
+                    <FindFamilyAlertImg />
+                  </FindFamilyAlert>
+                  <FamilyList>
+                    <FamilyListImage />
+                  </FamilyList>
+                </FindFamilyWrapper>
+              </FindFamilyContainer>
+            </PhoneFrameContainer>
+          </AdvantageDescriptionWrapper>
+        </Section>
+        <LastSection>
+          <LastDescriptionTitle>이웃과 친해져봐요</LastDescriptionTitle>
+          <LastDescriptionWrapper>
+            <LastDescription>
+              아파티로 이웃들과 더 친해질 수 있어요!
+            </LastDescription>
+          </LastDescriptionWrapper>
+          <LastDescriptionImageContainer>
+            <LastDescriptionImageWrapper>
+              <LastDescriptionImage src="\img\apaty.gif"></LastDescriptionImage>
+            </LastDescriptionImageWrapper>
+          </LastDescriptionImageContainer>
+        </LastSection>
         <ServiceButtonWrapper>
           <ButtonCustom onClick={handleButtonCustomClick}>
             A : PATY 시작하기
@@ -193,7 +276,7 @@ const Description = styled.h1`
 
 const DescriptionBr = styled.br`
   font-size: 2rem;
-  line-height: 120%;
+  line-height: 140%;
   margin-top: 5.125rem;
 `;
 
@@ -202,6 +285,13 @@ const PhoneFrameContainer = styled.div`
   align-items: flex-end;
   justify-content: center;
   flex: 1;
+`;
+
+const FindFamilyContainer = styled.div`
+  opacity: 1;
+  transform: none;
+  position: relative;
+  width: 18rem;
 `;
 
 const PhoneFrameWrapper = styled.div`
@@ -227,61 +317,46 @@ const PhoneInner = styled.img`
   width: 19.625em;
 `;
 
-const PhoneHeader = styled.div`
+const FindFamilyWrapper = styled.div`
+  position: absolute;
+  bottom: 1.625em;
+  right: 0px;
+  z-index: 0;
+  font-size: 0.59375rem;
+`;
+
+const FindFamilyAlert = styled.div`
+  opacity: 1;
+  transform: none;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0.75em 1em;
-  margin-top: 1em;
-  font-family: 'MinSans-Bold';
-`;
-const LeftGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  grid-column-gap: 0.25em;
+  padding: 1.5em;
+  background: white;
+  border-radius: 1.5em;
+  box-shadow: rgb(0 0 0 / 6%) 0.125em 0.375em 1em 0.5em;
+  width: 16.875em;
+  margin-bottom: 1.25em;
 `;
 
-const LeftArrow = styled(KeyboardArrowLeftRoundedIcon)`
-  width: 16px;
-  height: 16px;
+const FindFamilyAlertImg = styled.img`
+  height: 50px;
 `;
 
-const PhoneHeaderText = styled.div`
-  font-size: 1.125em;
-  font-weight: bold;
-  align-self: center;
+const FamilyList = styled.div`
+  opacity: 1;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em;
+  background: white;
+  border-radius: 1.5em;
+  box-shadow: rgb(0 0 0 / 6%) 0.125em 0.375em 1em 0.5em;
+  width: 16.875em;
 `;
 
-const RightGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, max-content);
-  grid-column-gap: 0.875em;
+const FamilyListImage = styled.img`
+  height: 150px;
 `;
-
-const SearchIcon = styled(SearchRoundedIcon)`
-  width: 16px;
-  height: 16px;
-`;
-
-const WriteIcon = styled(ModeEditOutlineRoundedIcon)`
-  width: 16px;
-  height: 16px;
-`;
-
-const AlertIcon = styled(NotificationsRoundedIcon)`
-  width: 16px;
-  height: 16px;
-`;
-
-// const ServiceButtonWrapper = styled.div`
-//   display: flex;
-//   position: sticky;
-//   bottom: 0px;
-//   // width: 100%;
-//   padding: 1rem;
-//   box-sizing: border-box;
-//   z-index: 1;
-// `;
 
 const ServiceButtonWrapper = styled.div`
   position: sticky;
@@ -410,9 +485,9 @@ const IntroductionQuestion = styled.div`
 const IntroductionAnswer = styled.div``;
 
 const IntroductionAnswerH2 = styled.h2`
-  font-family: 'MinSans-Regular';
-  font-size: 1.5rem;
-  line-height: 120%;
+  font-family: 'MinSans-Bold';
+  font-size: 18px;
+  line-height: 140%;
 `;
 
 const ApartmentRoundedIconCustom = styled(ApartmentRoundedIcon)`
@@ -424,32 +499,124 @@ const IntroductionText = styled.div`
   margin-left: 0.25rem;
 `;
 
-const ThirdSection = styled.div`
+const Section = styled.div`
   display: flex;
   margin: 0px auto;
-  height: 100%;
   flex-direction: column;
   text-align: center;
   padding: 3.5rem 1.625rem;
+  background-color: #ffe9d3;
 `;
 
-const FirstAdvantageDescriptionWrapper = styled.div`
+const AdvantageDescriptionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const FirstAdvantageDescriptionOne = styled.div``;
+const AdvantageDescriptionOne = styled.div`
+  line-height: 140%;
+`;
 
-const FirstAdvantageDescriptionOneH3 = styled.h3`
+const AdvantageDescriptionOneH3 = styled.h3`
   font-family: 'MinSans-Regular';
-  font-size: 1.25rem;
+  font-size: 16px;
   line-height: 120%;
 `;
 
-const FirstAdvantageDescriptionOneStrong = styled.strong`
+const AdvantageDescriptionOneStrong = styled.strong`
+  font-family: 'Yeongdo-Rg';
+  font-size: 20px;
   color: #ffb2a9;
+`;
+
+const AdvantageIconContainer = styled.div`
+  display: grid;
+  grid-template-columns: max-content;
+  gap: 0.625rem 0rem;
+  margin-top: 1rem;
+  margin-bottom: 2.25rem;
+`;
+
+const AdvantageIconWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  column-gap: 0.3125rem;
+`;
+
+const LastSection = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 3.5rem 2.25rem;
+`;
+const LastDescriptionTitle = styled.h2`
+  font-size: 20px;
+  font-family: 'MinSans-Bold';
+  margin-bottom: 1.75rem;
+`;
+
+const LastDescriptionWrapper = styled.div`
+  text-align: center;
+`;
+
+const LastDescription = styled.p`
+  font-size: 16px;
+  font-family: 'MinSans-Regular';
+`;
+
+const AdvantageSpan = styled.span`
+  opacity: 0.6;
+  align-items: center;
+`;
+
+const LastDescriptionImageContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 288px;
+  height: 302px;
+`;
+
+const LastDescriptionImageWrapper = styled.div`
+  max-width: 800px;
+  display: block;
+`;
+
+const LastDescriptionImage = styled.img`
+  max-width: 100%;
+  display: block;
+  position: static;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  object-fit: cover;
+`;
+const backgroundpurple = css`
+  background-color: #e4d2ee;
+`;
+
+const purple = css`
+  color: #cd99e9;
+`;
+
+const purpleborder = css`
+  border: 0.5em solid #cd99e9;
+  margin: 0;
+`;
+
+const iconCustom = css`
+  font-size: 18px;
 `;
 
 export default Main;
