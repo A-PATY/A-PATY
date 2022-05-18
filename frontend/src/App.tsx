@@ -180,7 +180,7 @@ const App: React.FC = () => {
           const loc = res.get(userInfo?.userId.toString());
           const distance = getDistance(latitude, longitude, loc.lat, loc.lng);
           // console.log(dist);
-          if (distance > 5) {
+          if (distance > 10) {
             updateDoc(docRef, {
               [userInfo.userId]: {  
                 lat: latitude,
@@ -222,7 +222,7 @@ const App: React.FC = () => {
     const beforePos = beforeDistance - range;
 
     // console.log(nowPos, beforePos)
-    
+
     for (let member of familyList) {
       // console.log(userInfo?.userId)
       if (userInfo?.userId && member.userId !== userInfo?.userId) {
