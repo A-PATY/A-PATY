@@ -89,7 +89,7 @@ const BoardHeader: React.FC<Props> = ({
             <Text>장미동</Text>
             <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
           </GridText> */}
-          <Grid item xs={8.5}>
+          <Grid item xs={8}>
             <Search id="search">
               <InputBaseCustom
                 placeholder="검색하기"
@@ -100,7 +100,7 @@ const BoardHeader: React.FC<Props> = ({
               />
             </Search>
           </Grid>
-          <GridCustom item xs={3}>
+          <GridCustom item xs={3.5}>
             <TransparentBtn onClick={onSearch}>
               <SearchRoundedIcon />
             </TransparentBtn>
