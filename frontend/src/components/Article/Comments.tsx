@@ -31,8 +31,6 @@ interface CommentsProps {
 const Comment: React.FC<CommentProps> = ({ comment, deleteComment }) => {
   const userInfo = useRecoilValue(userInfoState);
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
   const articleAuthor = useRecoilValue(presentArticleState)?.authorId;
 
   const authorName =
@@ -99,12 +97,10 @@ const Comments: React.FC<CommentsProps> = ({
   const [content, setContent] = useState('');
 
   const handleSecretChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
     setIsSecret(event.target.checked);
   };
 
   const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setContent(event.target.value);
   };
 
@@ -124,8 +120,6 @@ const Comments: React.FC<CommentsProps> = ({
   };
 
   const deleteComment = (commentId: number) => {
-    console.log('삭제');
-    console.log(commentId);
     BoardService.deleteComment(artielcId, String(commentId))
       .then(() => {
         // 현재 글 상세페이지 업데이트

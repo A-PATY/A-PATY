@@ -9,11 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { InputBase } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { firestore } from '../../../firebase';
+import { firestore } from '../../firebase';
 import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
-import { userInfoState, updatedUser } from '../../../features/Login/atom';
-import { UserInfo } from '../../../types/loginTypes';
+import { userInfoState, updatedUser } from '../../features/Login/atom';
+import { UserInfo } from '../../types/loginTypes';
 import Badge from '@mui/material/Badge';
 
 interface Props {
@@ -42,7 +42,6 @@ const BoardHeader: React.FC<Props> = ({
     navigate('/apt_community/anonymous');
   };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setSearchValue(event.target.value);
   };
   const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -53,9 +52,6 @@ const BoardHeader: React.FC<Props> = ({
     }
   };
   const onSearch = () => {
-    console.log('검색합니다.');
-    console.log('searchValue');
-    console.log(searchValue);
     setKeyword(searchValue);
   };
 
@@ -67,12 +63,16 @@ const BoardHeader: React.FC<Props> = ({
   const [notifications, setNotifications] = useState<any>([]);
   useEffect(() => {
     if (userId) {
-      const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString());
-      onSnapshot(notifyRef, (document) => { 
+      const notifyRef = doc(
+        firestore,
+        `notifications`,
+        userInfo?.userId.toString(),
+      );
+      onSnapshot(notifyRef, (document) => {
         // console.log('firestore 알림 존재?',document.exists())
         if (document.exists()) {
           const alarm = document.data();
-          console.log('firestore의 알림!!', alarm);
+          // console.log('firestore의 알림!!', alarm);
           // notifications.push(alarm);
           setNotifications([...notifications, alarm]);
           // console.log(notifications);
@@ -89,7 +89,7 @@ const BoardHeader: React.FC<Props> = ({
             <Text>장미동</Text>
             <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
           </GridText> */}
-          <Grid item xs={8.5}>
+          <Grid item xs={8}>
             <Search id="search">
               <InputBaseCustom
                 placeholder="검색하기"
@@ -100,7 +100,7 @@ const BoardHeader: React.FC<Props> = ({
               />
             </Search>
           </Grid>
-          <GridCustom item xs={3}>
+          <GridCustom item xs={3.5}>
             <TransparentBtn onClick={onSearch}>
               <SearchRoundedIcon />
             </TransparentBtn>
@@ -108,14 +108,14 @@ const BoardHeader: React.FC<Props> = ({
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-
               {/* 알림 기능!! badgeContent={notifications.length} */}
-              { notifications.length > 0 ?
+              {notifications.length > 0 ? (
                 <BadgeCustom color="error" badgeContent="">
                   <NotificationsActiveRoundedIcon onClick={goToNotification} />
-                </BadgeCustom> :
+                </BadgeCustom>
+              ) : (
                 <NotificationsActiveRoundedIcon onClick={goToNotification} />
-              }
+              )}
               {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
             </TransparentBtn>
           </GridCustom>
@@ -182,10 +182,10 @@ const Search = styled.div`
 const BadgeCustom = styled(Badge)`
   & span {
     font-size: 10px;
-    min-width: 15px;
-    height: 15px;
+    min-width: 12px;
+    height: 12px;
     padding: 0;
-  };
+  }
 `;
 
 export default BoardHeader;

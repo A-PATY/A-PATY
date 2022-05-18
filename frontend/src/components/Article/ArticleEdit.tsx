@@ -28,12 +28,7 @@ interface Props {
 
 const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
-  console.log(article);
-  console.log(article.category);
-
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
 
   const [category, setCategory] = useState<string>(article.category);
   const [title, setTitle] = useState<string>(article.title);
@@ -57,7 +52,6 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     setTitle(event.target.value);
   };
   const changeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(event.target.value);
     setContent(event.target.value);
   };
 
@@ -228,13 +222,8 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
       formData.append('isDone', String(isDone));
     }
 
-    console.log(formData.get('category'));
-    console.log(formData.getAll('img'));
-    console.log(formData.get('isDone'));
-
     await BoardService.editArticle(String(article.articleId), formData)
       .then((res) => {
-        console.log(res);
         // 게시판 목록으로 이동
         navigate(-1);
       })
@@ -245,9 +234,11 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     <>
       <Container>
         {article.category !== null && (
-          <ArticleCategory category={category} setCategory={setCategory} />
+          <DivContainer>
+            <ArticleCategory category={category} setCategory={setCategory} />
+          </DivContainer>
         )}
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& > :not(style)': {
@@ -267,16 +258,30 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
             value={title}
             onChange={changeTitle}
           />
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <Input
+            type="text"
+            placeholder="제목을 입력해주세요."
+            // inputProps={ariaLabel}
+            value={title}
+            onChange={changeTitle}
+            sx={{
+              width: '100%',
+              fontSize: 16,
+              fontFamily: 'MinSans-Regular',
+            }}
+          />
+        </DivContainer>
 
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& .MuiTextField-root': {
               m: 1,
               minWidth: 410,
               fontSize: 16,
-              fontFamily: 'MinSans-Regular',
+              // fontFamily: 'MinSans-Regular',
             },
           }}
           noValidate
@@ -289,10 +294,41 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               multiline
               rows={10}
               value={content}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
               onChange={changeContent}
             />
           </div>
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <div style={{ width: '100%' }}>
+            <TextField
+              id="outlined-multiline-static"
+              placeholder="내용을 입력해주세요."
+              multiline
+              rows={10}
+              value={content}
+              sx={{
+                'width': '100%',
+                'fontSize': 16,
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
+              onChange={changeContent}
+            />
+          </div>
+        </DivContainer>
+
         <Box
           sx={{
             '& > :not(style)': {
@@ -333,8 +369,9 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           display="flex"
           justifyContent="flex-end"
           sx={{
-            m: 1,
-            minWidth: 410,
+            margin: '0px 20px 10px',
+            // m: 1,
+            // minWidth: 410,
           }}
         >
           <ButtonGroup
@@ -391,7 +428,9 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           </>
         ) : undefined}
 
-        <SubmitButtonCustom onClick={onSubmit}>Submit</SubmitButtonCustom>
+        <DivContainer>
+          <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
+        </DivContainer>
       </Container>
     </>
   );
@@ -459,14 +498,22 @@ const ClearRoundedIconCustom = styled(ClearRoundedIcon)`
 
 const SubmitButtonCustom = styled(Button)`
   background-color: #bae6e5;
-  margin: 0px 20px
-  color: #ffb2a9;
+  box-shadow: none;
+  color: white;
+  width: 300px;
+  min-height: 45px;
+  border-radius: 126px;
   font-family: 'MinSans-Regular';
-  font-size: 18px;
-  padding: 0;
+  font-size: 16px;
   &:hover {
     background-color: #ffb2a9;
-    color: #bae6e5;
+    color: white;
   }
+`;
+
+const DivContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px 20px;
 `;
 export default ArticleEdit;

@@ -92,6 +92,8 @@ const BottomNavigationCustom = styled(BottomNavigation)`
 `;
 
 const BottomNavigationActionCustom = styled(BottomNavigationAction)`
+  min-width: 10px;
+
   & .MuiBottomNavigationAction-label {
     font-family: 'MinSans-Regular';
   }

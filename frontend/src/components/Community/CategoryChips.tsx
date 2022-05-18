@@ -7,9 +7,9 @@ import {
   categoryListState,
   adminCategoryChipState,
   userCategoryChipState,
-} from '../../../features/Board/atom';
-import { userInfoState } from '../../../features/Login/atom';
-import { category } from '../../../types/boardTypes';
+} from '../../features/Board/atom';
+import { userInfoState } from '../../features/Login/atom';
+import { category } from '../../types/boardTypes';
 
 interface Props {
   categoryId: number;
@@ -46,8 +46,6 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   // }
 
   const handleCategoryClick = (categoryId: number) => {
-    console.log('categoryId');
-    console.log(categoryId);
     setCategoryId(categoryId);
   };
 
