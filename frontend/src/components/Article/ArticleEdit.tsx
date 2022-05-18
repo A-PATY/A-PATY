@@ -234,9 +234,11 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     <>
       <Container>
         {article.category !== null && (
-          <ArticleCategory category={category} setCategory={setCategory} />
+          <DivContainer>
+            <ArticleCategory category={category} setCategory={setCategory} />
+          </DivContainer>
         )}
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& > :not(style)': {
@@ -256,9 +258,23 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
             value={title}
             onChange={changeTitle}
           />
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <Input
+            type="text"
+            placeholder="제목을 입력해주세요."
+            // inputProps={ariaLabel}
+            value={title}
+            onChange={changeTitle}
+            sx={{
+              width: '100%',
+              fontSize: 16,
+              fontFamily: 'MinSans-Regular',
+            }}
+          />
+        </DivContainer>
 
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& .MuiTextField-root': {
@@ -289,7 +305,30 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               onChange={changeContent}
             />
           </div>
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <div style={{ width: '100%' }}>
+            <TextField
+              id="outlined-multiline-static"
+              placeholder="내용을 입력해주세요."
+              multiline
+              rows={10}
+              value={content}
+              sx={{
+                'width': '100%',
+                'fontSize': 16,
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
+              onChange={changeContent}
+            />
+          </div>
+        </DivContainer>
+
         <Box
           sx={{
             '& > :not(style)': {
@@ -331,7 +370,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           justifyContent="flex-end"
           sx={{
             m: 1,
-            minWidth: 410,
+            // minWidth: 410,
           }}
         >
           <ButtonGroup
@@ -388,9 +427,9 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           </>
         ) : undefined}
 
-        <SubmitContainer>
+        <DivContainer>
           <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
-        </SubmitContainer>
+        </DivContainer>
       </Container>
     </>
   );
@@ -471,9 +510,9 @@ const SubmitButtonCustom = styled(Button)`
   }
 `;
 
-const SubmitContainer = styled.div`
+const DivContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 10px;
+  margin: 10px 20px;
 `;
 export default ArticleEdit;

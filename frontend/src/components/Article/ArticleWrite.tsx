@@ -211,14 +211,17 @@ const ArticleWrite: React.FC = () => {
     <>
       <Container>
         {presentCommunityType !== 3 && (
-          <ArticleCategory category={category} setCategory={setCategory} />
+          <DivContainer>
+            <ArticleCategory category={category} setCategory={setCategory} />
+          </DivContainer>
         )}
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& > :not(style)': {
               m: 1,
-              minWidth: 410,
+              // minWidth: 410,
+              // width: '100vw',
               fontSize: 16,
               fontFamily: 'MinSans-Regular',
             },
@@ -233,9 +236,23 @@ const ArticleWrite: React.FC = () => {
             // value={value}
             onChange={changeTitle}
           />
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <Input
+            type="text"
+            placeholder="제목을 입력해주세요."
+            // inputProps={ariaLabel}
+            // value={value}
+            onChange={changeTitle}
+            sx={{
+              width: '100%',
+              fontSize: 16,
+              fontFamily: 'MinSans-Regular',
+            }}
+          />
+        </DivContainer>
 
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& .MuiTextField-root': {
@@ -266,7 +283,30 @@ const ArticleWrite: React.FC = () => {
               onChange={changeContent}
             />
           </div>
-        </Box>
+        </Box> */}
+
+        <DivContainer>
+          <div style={{ width: '100%' }}>
+            <TextField
+              id="outlined-multiline-static"
+              label="글 내용"
+              multiline
+              rows={10}
+              size="small"
+              sx={{
+                'width': '100%',
+                'fontSize': 16,
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
+              onChange={changeContent}
+            />
+          </div>
+        </DivContainer>
 
         <Box
           sx={{
@@ -350,9 +390,9 @@ const ArticleWrite: React.FC = () => {
             </Box>
           </>
         ) : undefined}
-        <SubmitContainer>
+        <DivContainer>
           <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
-        </SubmitContainer>
+        </DivContainer>
       </Container>
     </>
   );
@@ -433,7 +473,7 @@ const SubmitButtonCustom = styled(Button)`
   }
 `;
 
-const SubmitContainer = styled.div`
+const DivContainer = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px;
