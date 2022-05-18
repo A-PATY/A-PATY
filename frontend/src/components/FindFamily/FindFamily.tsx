@@ -188,9 +188,13 @@ const FindFamily: React.FC = () => {
     };
   };
 
+  const [isUp, setIsUp] = useState(true);
+  const slide = () => {
+    setIsUp(!isUp);
+  };
   return (
     <>
-      <MapContainer id="map"/>
+      {/* <MapContainer id="map"/>
       <motion.div 
         drag="y"
         dragConstraints={{ top: 0, bottom: 180 }}
@@ -201,13 +205,13 @@ const FindFamily: React.FC = () => {
           <Tab />
           <Head>
             <Title>가족들</Title>
-            {/* <SliderCustom
+            <SliderCustom
               defaultValue={range}
               valueLabelFormat={valueLabelFormat}
               step={null}
               valueLabelDisplay="auto"
               marks={marks}
-            /> */}
+            />
           </Head>
           {familyList.map((member) => {
             return (
@@ -219,7 +223,30 @@ const FindFamily: React.FC = () => {
             );
           })}
         </FamilyListContainer>
-      </motion.div>
+      </motion.div> */}
+      <MapContainer id="map">
+        
+      </MapContainer>
+      <FamilyListContainer style={{ bottom: isUp ? "0" : "-200px"}}>
+        <Tab onClick={slide}/>
+        <Head>
+          <Title>가족들</Title>
+          {/* <SliderCustom
+            defaultValue={30}
+            valueLabelFormat={valueLabelFormat}
+            step={null}
+            valueLabelDisplay="auto"
+            marks={marks}
+          /> */}
+        </Head>
+        {
+          familyList.map((member) => {
+            return (
+              <FamilyMember key={member.userId} member={member} changeMember={changeMember}/>
+            )
+          })
+        }
+      </FamilyListContainer>
     </>
   );
 };
@@ -227,14 +254,16 @@ const FindFamily: React.FC = () => {
 const MapContainer = styled.div`
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: relative;
 `;
 
 const FamilyListContainer = styled.div`
-  position: relative;
+  position: absolute;
   background-color: #fff;
-  height: 200px;
+  height: 30%;
+  bottom: 0px;
   width: 100%;
+  z-index: 1;
   border-radius: 20px 20px 0 0;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -242,22 +271,11 @@ const FamilyListContainer = styled.div`
   }
 `;
 
-const Tab = styled.div`
-  background-color: lightgray;
-  border-radius: 10px;
-  width: 40px;
-  height: 4px;
-  text-align: center;
-  margin: 10px auto 0;
-  cursor: grab;
-`;
-
 const Head = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* padding: 0 28px; */
   padding: 20px 28px;
 `;
 
@@ -265,6 +283,36 @@ const Title = styled.h3`
   font-size: 20px;
   height: 20px;
   font-weight: 600;
+`;
+
+const SliderCustom = styled(Slider)`
+  width: 100px;
+  margin-top: 20px;
+  color: #dfc5ed;
+  & .MuiSlider-thumb {
+    width: 17px;
+    height: 17px;
+  };
+  & .MuiSlider-thumb:hover {
+    box-shadow: 0 0 0 8px #f4f1f580;
+  };
+  & .Mui-focusVisible {
+    /* box-shadow: 0 0 0 8px #f4f1f580; */
+    box-shadow: none;
+  };
+  & .MuiSlider-markLabel {
+    color: transparent;
+  };
+`;
+
+const Tab = styled.div`
+  background-color: lightgray;
+  border-radius: 10px;
+  width: 50px;
+  height: 4px;
+  text-align: center;
+  margin: 10px auto 0;
+  cursor: pointer;
 `;
  
 export default FindFamily;
