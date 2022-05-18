@@ -33,7 +33,6 @@ const BoardHeader: React.FC<Props> = ({
     navigate('/apt_community/anonymous');
   };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setSearchValue(event.target.value);
   };
   const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -44,9 +43,6 @@ const BoardHeader: React.FC<Props> = ({
     }
   };
   const onSearch = () => {
-    console.log('검색합니다.');
-    console.log('searchValue');
-    console.log(searchValue);
     setKeyword(searchValue);
   };
 

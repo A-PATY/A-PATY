@@ -35,8 +35,6 @@ const ArticleWrite: React.FC = () => {
   const { type, communityId } = state;
 
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
 
   // const communityId = 367;
   const [category, setCategory] = useState<string>('');
@@ -47,13 +45,11 @@ const ArticleWrite: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
   const [previewImageFiles, setPreviewImageFiles] = useState<Array<any>>([]);
-  // console.log(phoneNumber);
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
   const changeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(event.target.value);
     setContent(event.target.value);
   };
 
@@ -203,15 +199,8 @@ const ArticleWrite: React.FC = () => {
       formData.append('isDone', String(isDone));
     }
 
-    console.log(formData.get('communityId'));
-    console.log(typeof formData.get('communityId'));
-    console.log(formData.get('category'));
-    console.log(formData.getAll('img'));
-    console.log(formData.get('isDone'));
-
     await BoardService.createNewArticle(formData)
       .then((res) => {
-        console.log(res);
         // 게시판 목록으로 이동
         navigate(-1);
       })

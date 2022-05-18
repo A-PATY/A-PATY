@@ -28,59 +28,26 @@ const Board: React.FC<Props> = ({
   isFetching,
   isFetchingNextPage,
 }) => {
-  // const [lastArticleId, setLastArticleId] = React.useState<number>(0);
-  // const defaultPaginationSize = 5; // 한 번 요청으로 가져올 게시글의 개수
-  // const communityId = 367;
-  // const categoryId = 1;
-  // const keyword = '';
-
-  // const fetchArticles = async ({ pageParam = 0 }) => {
-  //   const { articles } = await BoardService.getArticles(
-  //     communityId,
-  //     pageParam,
-  //     defaultPaginationSize,
-  //     categoryId,
-  //     keyword,
-  //   );
-  //   return {
-  //     result: articles,
-  //   };
-  // };
-
-  // const {
-  //   data,
-  //   error,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   isFetching,
-  //   isFetchingNextPage,
-  //   status,
-  // } = useInfiniteQuery(`localArticles-category${categoryId}`, fetchArticles, {
-  //   getNextPageParam: (lastPage) =>
-  //     lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
-  // });
-
-  console.log('data');
-  console.log(data);
-
+  // console.log('data');
+  // console.log(data);
   const ObservationComponent = (): React.ReactElement => {
     const [ref, inView] = useInView();
 
     React.useEffect(() => {
       if (!data) {
-        console.log('inView: ' + inView);
-        console.log('data가 없음');
-        console.log(data);
+        // console.log('inView: ' + inView);
+        // console.log('data가 없음');
+        // console.log(data);
         return;
       }
       if (data.pages[data.pages.length - 1].result.length === 0) {
-        console.log('마지막 page의 result 길이가 0입니다.');
-        console.log(data.pages[data.pages.length - 1].result);
+        // console.log('마지막 page의 result 길이가 0입니다.');
+        // console.log(data.pages[data.pages.length - 1].result);
         return;
       }
       if (inView) {
-        console.log('////////////////fetchNextPage 실행//////////////');
-        console.log('inView: ' + inView);
+        // console.log('////////////////fetchNextPage 실행//////////////');
+        // console.log('inView: ' + inView);
         fetchNextPage(); // 다음 페이지 fetch
       }
     }, [inView]);

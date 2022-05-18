@@ -46,8 +46,6 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   // }
 
   const handleCategoryClick = (categoryId: number) => {
-    console.log('categoryId');
-    console.log(categoryId);
     setCategoryId(categoryId);
   };
 

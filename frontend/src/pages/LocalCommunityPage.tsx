@@ -30,8 +30,6 @@ const LocalCommunityPage: React.FC = () => {
 
   const setCommunityType = useSetRecoilState(presentCommunityTypeState);
   const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo : ');
-  console.log(userInfo);
   const communityName = userInfo?.dongName + ' 커뮤니티';
 
   // 공통 함수

@@ -28,12 +28,7 @@ interface Props {
 
 const ArticleEdit: React.FC<Props> = ({ article }) => {
   const navigate = useNavigate();
-  console.log(article);
-  console.log(article.category);
-
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
 
   const [category, setCategory] = useState<string>(article.category);
   const [title, setTitle] = useState<string>(article.title);
@@ -57,7 +52,6 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
     setTitle(event.target.value);
   };
   const changeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(event.target.value);
     setContent(event.target.value);
   };
 
@@ -228,13 +222,8 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
       formData.append('isDone', String(isDone));
     }
 
-    console.log(formData.get('category'));
-    console.log(formData.getAll('img'));
-    console.log(formData.get('isDone'));
-
     await BoardService.editArticle(String(article.articleId), formData)
       .then((res) => {
-        console.log(res);
         // 게시판 목록으로 이동
         navigate(-1);
       })
