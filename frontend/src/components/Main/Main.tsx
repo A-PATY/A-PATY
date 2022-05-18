@@ -12,7 +12,53 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import { Fade } from 'react-awesome-reveal';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 const Main: React.FC = () => {
+  //   <Tooltip title="이여진">
+  //   <a
+  //     href="https://github.com/limejin"
+  //     target="_blank"
+  //     rel="noreferrer"
+  //   >
+  //     <Avatar css={avatar} alt="Cindy Baker" src="\img\bird.png" />
+  //   </a>
+  // </Tooltip>
+  const developerList = [
+    {
+      name: '방의진',
+      href: '',
+      img: '\\img\\crab.png',
+    },
+    {
+      name: '손영배',
+      href: 'https://github.com/dudqo225',
+      img: '\\img\\penguin.png',
+    },
+
+    {
+      name: '조은솔',
+      href: 'https://github.com/escho0212',
+      img: '\\img\\rabbit.png',
+    },
+    {
+      name: '김선민',
+      href: '',
+      img: '\\img\\fox.png',
+    },
+    {
+      name: '이여진',
+      href: 'https://github.com/limejin',
+      img: '\\img\\bird.png',
+    },
+    {
+      name: '채예은',
+      href: '',
+      img: '\\img\\otter.png',
+    },
+  ];
   let navigate = useNavigate();
 
   const userInfo = useRecoilValue(userInfoState);
@@ -41,13 +87,15 @@ const Main: React.FC = () => {
           <PhoneContainer>
             <DescriptionContainer>
               <DescriptionWrapper>
-                <Description>
-                  소식을 나누고
-                  <DescriptionBr />
-                  정보를 공유하고
-                  <DescriptionBr />
-                  서로를 알게되는
-                </Description>
+                <Fade>
+                  <Description>
+                    소식을 나누고
+                    <DescriptionBr />
+                    정보를 공유하고
+                    <DescriptionBr />
+                    서로를 알게되는
+                  </Description>
+                </Fade>
               </DescriptionWrapper>
             </DescriptionContainer>
             <PhoneFrameContainer>
@@ -120,14 +168,15 @@ const Main: React.FC = () => {
                 <AdvantageSpan>게시판 분리</AdvantageSpan>
               </AdvantageIconWrapper>
             </AdvantageIconContainer>
-
-            <PhoneFrameContainer>
-              <PhoneFrameWrapper>
-                <PhoneFrame>
-                  <PhoneInner src="\img\service.png" />
-                </PhoneFrame>
-              </PhoneFrameWrapper>
-            </PhoneFrameContainer>
+            <Fade delay={500}>
+              <PhoneFrameContainer>
+                <PhoneFrameWrapper>
+                  <PhoneFrame>
+                    <PhoneInner src="\img\service.png" />
+                  </PhoneFrame>
+                </PhoneFrameWrapper>
+              </PhoneFrameContainer>
+            </Fade>
           </AdvantageDescriptionWrapper>
         </Section>
         <Section css={backgroundpurple}>
@@ -162,18 +211,24 @@ const Main: React.FC = () => {
             </AdvantageIconContainer>
             <PhoneFrameContainer>
               <FindFamilyContainer>
-                <PhoneFrameWrapper>
-                  <PhoneFrame css={purpleborder}>
-                    <PhoneInner src="\img\service.png" />
-                  </PhoneFrame>
-                </PhoneFrameWrapper>
+                <Fade>
+                  <PhoneFrameWrapper>
+                    <PhoneFrame css={purpleborder}>
+                      <PhoneInner src="\img\service.png" />
+                    </PhoneFrame>
+                  </PhoneFrameWrapper>
+                </Fade>
                 <FindFamilyWrapper>
-                  <FindFamilyAlert>
-                    <FindFamilyAlertImg />
-                  </FindFamilyAlert>
-                  <FamilyList>
-                    <FamilyListImage />
-                  </FamilyList>
+                  <Fade delay={500}>
+                    <FindFamilyAlert>
+                      <FindFamilyAlertImg />
+                    </FindFamilyAlert>
+                  </Fade>
+                  <Fade delay={1000}>
+                    <FamilyList>
+                      <FamilyListImage />
+                    </FamilyList>
+                  </Fade>
                 </FindFamilyWrapper>
               </FindFamilyContainer>
             </PhoneFrameContainer>
@@ -197,6 +252,28 @@ const Main: React.FC = () => {
             A : PATY 시작하기
           </ButtonCustom>
         </ServiceButtonWrapper>
+        <DeveloperSection>
+          A : PATY Developer
+          <StackCustom direction="row" spacing={2}>
+            {developerList.map((developer) => {
+              return (
+                <Tooltip
+                  key={developer.name}
+                  title={developer.name}
+                  sx={{ fontFamily: 'MinSans-Regular' }}
+                >
+                  <a href={developer.href} target="_blank" rel="noreferrer">
+                    <Avatar
+                      css={avatar}
+                      alt={developer.name}
+                      src={developer.img}
+                    />
+                  </a>
+                </Tooltip>
+              );
+            })}
+          </StackCustom>
+        </DeveloperSection>
       </FirstBox>
     </>
   );
@@ -601,6 +678,26 @@ const LastDescriptionImage = styled.img`
   top: 0;
   width: 100%;
   object-fit: cover;
+`;
+
+const DeveloperSection = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 1.5rem 1.25rem;
+`;
+
+const StackCustom = styled(Stack)`
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+const avatar = css`
+  width: 50px;
+  height: 50px;
 `;
 const backgroundpurple = css`
   background-color: #e4d2ee;
