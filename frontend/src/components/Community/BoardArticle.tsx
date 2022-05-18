@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { article } from '../../../types/boardTypes';
+import { article } from '../../types/boardTypes';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import BoardService from '../../../services/BoardService';
+import BoardService from '../../services/BoardService';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {

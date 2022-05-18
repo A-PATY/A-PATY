@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { article } from '../../../types/boardTypes';
+import { article } from '../../types/boardTypes';
 // import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 // import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 // import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
