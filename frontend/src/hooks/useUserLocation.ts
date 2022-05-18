@@ -26,11 +26,6 @@ const UserLocation = () => {
   // }, [permissions]);
 
   useEffect(() => {
-    if (permissions === 'denied') {
-      setX(0);
-      setY(0);
-    }
-
     const getLocation = () => {
       let lat: number, long: number;
 
@@ -69,7 +64,12 @@ const UserLocation = () => {
         return;
       }
     };
-
+    if (permissions === 'denied') {
+      setX(0);
+      setY(0);
+    } else {
+      getLocation();
+    }
     getLocation();
   }, [permissions]);
   return { x, y };
