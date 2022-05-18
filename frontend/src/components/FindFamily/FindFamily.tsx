@@ -97,6 +97,7 @@ const FindFamily: React.FC = () => {
   useEffect(() => {
     if (aptLocate && memberLocation) {
       if (memberLocation.lat !== 0 && memberLocation.lng !== 0) {
+        console.log('map 빈도 확인')
         mapLocation(aptLocate.lat, aptLocate.lng, range);
       }
     }
@@ -165,6 +166,7 @@ const FindFamily: React.FC = () => {
       onSnapshot(docRef, (document) => { 
         console.log('snapshot 빈도')
         const user = document.get(member.toString());
+        
         if (user && (memberLocation.lat !== user.lat || memberLocation.lng !== user.lng)) {
           console.log('memberLocation 저장 빈도')
           setMemberLocation({ 
