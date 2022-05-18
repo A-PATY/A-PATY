@@ -72,7 +72,7 @@ const MyPageMain: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [findFamilyChecked, setFindFamilyChecked] = useState<boolean>(false);
   const { x, y } = UserLocation();
-
+  let navigate = useNavigate();
   // const [x, setX] = useState<number>(0);
   // const [y, setY] = useState<number>(0);
   const [range, setRange] = useState({ value: 33, range: 100 });
@@ -429,6 +429,11 @@ const MyPageMain: React.FC = () => {
       });
   };
 
+  const handleBillButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    navigate('/admin');
+  };
   const valueLabelFormat = (value: number) => {
     const index = marks.findIndex((mark) => mark.value === value);
     const selectedRange = marks[index].range;
@@ -553,6 +558,13 @@ const MyPageMain: React.FC = () => {
               />
             </FindFamilyButton>
           </StyledTextFieldWrapper>
+          {userInfo?.role === 'ROLE_ADMIN' && (
+            <StyledTextFieldWrapper>
+              <DeleteButton onClick={handleBillButtonClick}>
+                고지서 승인
+              </DeleteButton>
+            </StyledTextFieldWrapper>
+          )}
           <StyledTextFieldWrapper>
             <LogOutButton onClick={handleLogOutButtonClick}>
               로그아웃

@@ -28,8 +28,15 @@ const AdminBillConfirm: React.FC = () => {
       .then(({ bills }) => {
         setBillInfo(bills);
       })
-      .catch((error) => {
-        //에러처리
+      .catch(({ status, message }) => {
+        if (status === 500) {
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
       });
   }, [userInfo]);
 
