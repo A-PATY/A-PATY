@@ -4,8 +4,8 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { userInfoState } from '../features/Login/atom';
 import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
-import BoardList from '../components/Community/Local/BoardList';
-import BoardHeader from '../components/Community/Local/BoardHeader';
+import BoardList from '../components/Community/BoardList';
+import BoardHeader from '../components/Community/BoardHeader';
 import BoardService from '../services/BoardService';
 import { useInfiniteQuery } from 'react-query';
 import useCommunityId from '../hooks/useCommunityId';
@@ -33,8 +33,6 @@ const AptCommunityPage: React.FC = () => {
   );
 
   const userInfo = useRecoilValue(userInfoState);
-  console.log('userInfo : ');
-  console.log(userInfo);
 
   // 현재 communityId
   const aptCommunityId = useCommunityId(2);
@@ -94,7 +92,6 @@ const AptCommunityPage: React.FC = () => {
     if (communityType === 2) {
       setCommunityType(3);
       setCommunityId(aptAnonyCommunityId);
-      console.log('익명 전환');
     } else if (communityType === 3) {
       setCommunityType(2);
       setCommunityId(aptCommunityId);

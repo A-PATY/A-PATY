@@ -35,8 +35,6 @@ const ArticleEditPage: React.FC = () => {
   }, []);
 
   const { article } = state;
-  console.log(location);
-  console.log(article);
 
   return (
     <>

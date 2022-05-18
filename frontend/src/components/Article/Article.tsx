@@ -40,7 +40,6 @@ const Article: React.FC = () => {
   const fetchArticle = React.useCallback(async () => {
     await BoardService.getArticle(article_id)
       .then((res) => {
-        console.log(res);
         setArticle(res);
         setIsLike(res.likeyn);
         setlikeCnt(res.likes);

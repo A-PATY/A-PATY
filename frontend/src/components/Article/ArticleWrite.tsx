@@ -35,8 +35,6 @@ const ArticleWrite: React.FC = () => {
   const { type, communityId } = state;
 
   const presentCommunityType = useRecoilValue(presentCommunityTypeState);
-  console.log('presentCommunityType');
-  console.log(presentCommunityType);
 
   // const communityId = 367;
   const [category, setCategory] = useState<string>('');
@@ -47,13 +45,11 @@ const ArticleWrite: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [imageFiles, setImageFiles] = useState<Array<any>>([]);
   const [previewImageFiles, setPreviewImageFiles] = useState<Array<any>>([]);
-  // console.log(phoneNumber);
 
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
   const changeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(event.target.value);
     setContent(event.target.value);
   };
 
@@ -186,7 +182,11 @@ const ArticleWrite: React.FC = () => {
     //   formData.append(key, articleData[key]);
     // }
 
-    formData.append('communityId', String(communityId));
+    if (category === '공지') {
+      formData.append('communityId', '0');
+    } else {
+      formData.append('communityId', String(communityId));
+    }
     formData.append('title', title);
     formData.append('contents', content);
 
@@ -199,15 +199,8 @@ const ArticleWrite: React.FC = () => {
       formData.append('isDone', String(isDone));
     }
 
-    console.log(formData.get('communityId'));
-    console.log(typeof formData.get('communityId'));
-    console.log(formData.get('category'));
-    console.log(formData.getAll('img'));
-    console.log(formData.get('isDone'));
-
     await BoardService.createNewArticle(formData)
       .then((res) => {
-        console.log(res);
         // 게시판 목록으로 이동
         navigate(-1);
       })
@@ -218,14 +211,17 @@ const ArticleWrite: React.FC = () => {
     <>
       <Container>
         {presentCommunityType !== 3 && (
-          <ArticleCategory category={category} setCategory={setCategory} />
+          <DivContainer>
+            <ArticleCategory category={category} setCategory={setCategory} />
+          </DivContainer>
         )}
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& > :not(style)': {
               m: 1,
-              minWidth: 410,
+              // minWidth: 410,
+              // width: '100vw',
               fontSize: 16,
               fontFamily: 'MinSans-Regular',
             },
@@ -240,16 +236,30 @@ const ArticleWrite: React.FC = () => {
             // value={value}
             onChange={changeTitle}
           />
-        </Box>
+        </Box> */}
+        <DivContainer>
+          <Input
+            type="text"
+            placeholder="제목을 입력해주세요."
+            // inputProps={ariaLabel}
+            // value={value}
+            onChange={changeTitle}
+            sx={{
+              width: '100%',
+              fontSize: 16,
+              fontFamily: 'MinSans-Regular',
+            }}
+          />
+        </DivContainer>
 
-        <Box
+        {/* <Box
           component="form"
           sx={{
             '& .MuiTextField-root': {
               m: 1,
               minWidth: 410,
               fontSize: 16,
-              fontFamily: 'MinSans-Regular',
+              // fontFamily: 'MinSans-Regular',
             },
           }}
           noValidate
@@ -262,10 +272,41 @@ const ArticleWrite: React.FC = () => {
               multiline
               rows={10}
               size="small"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
               onChange={changeContent}
             />
           </div>
-        </Box>
+        </Box> */}
+
+        <DivContainer>
+          <div style={{ width: '100%' }}>
+            <TextField
+              id="outlined-multiline-static"
+              label="글 내용"
+              multiline
+              rows={10}
+              size="small"
+              sx={{
+                'width': '100%',
+                'fontSize': 16,
+                '& .MuiOutlinedInput-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+                '& .MuiInputLabel-root': {
+                  fontFamily: 'MinSans-Regular',
+                },
+              }}
+              onChange={changeContent}
+            />
+          </div>
+        </DivContainer>
 
         <Box
           sx={{
@@ -349,8 +390,9 @@ const ArticleWrite: React.FC = () => {
             </Box>
           </>
         ) : undefined}
-
-        <SubmitButtonCustom onClick={onSubmit}>Submit</SubmitButtonCustom>
+        <DivContainer>
+          <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
+        </DivContainer>
       </Container>
     </>
   );
@@ -418,14 +460,22 @@ const ClearRoundedIconCustom = styled(ClearRoundedIcon)`
 
 const SubmitButtonCustom = styled(Button)`
   background-color: #bae6e5;
-  margin: 0px 20px
-  color: #ffb2a9;
+  box-shadow: none;
+  color: white;
+  width: 300px;
+  min-height: 45px;
+  border-radius: 126px;
   font-family: 'MinSans-Regular';
-  font-size: 18px;
-  padding: 0;
+  font-size: 16px;
   &:hover {
     background-color: #ffb2a9;
-    color: #bae6e5;
+    color: white;
   }
+`;
+
+const DivContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 `;
 export default ArticleWrite;

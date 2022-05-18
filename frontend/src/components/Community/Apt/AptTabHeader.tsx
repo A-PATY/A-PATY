@@ -30,16 +30,15 @@ const AptTabHeader: React.FC<Props> = ({ value, handleChange }) => {
           spacing={0}
           sx={{ height: '70px', alignContent: 'center' }}
         >
-          <GridIcon item xs={1}>
+          {/* <GridIcon item xs={1}>
             <ArrowBackIosRoundedIconCustom onClick={() => navigate(-1)} />
-          </GridIcon>
-          <GridText item xs={11}>
+          </GridIcon> */}
+          <GridText item xs={12}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '90%' }}>
-              <Tabs
+              <TabsCustom
                 value={value}
                 onChange={handleChange}
-                textColor="secondary"
-                indicatorColor="secondary"
+                textColor="inherit"
                 aria-label="basic tabs example"
               >
                 <Tab
@@ -52,7 +51,7 @@ const AptTabHeader: React.FC<Props> = ({ value, handleChange }) => {
                   {...a11yProps(1)}
                   sx={{ width: '50%' }}
                 />
-              </Tabs>
+              </TabsCustom>
             </Box>
           </GridText>
         </Grid>
@@ -91,5 +90,17 @@ const GridText = styled(Grid)`
   align-items: center;
 `;
 
-const Text = styled.p``;
+const TabsCustom = styled(Tabs)`
+  & .MuiButtonBase-root {
+    font-family: 'MinSans-Regular';
+    font-size: 15px;
+    // color: #bae6e5;
+    // color: #95e3e1;
+  }
+
+  & .MuiTabs-indicator {
+    background-color: #bae6e5;
+  }
+`;
+
 export default AptTabHeader;
