@@ -34,7 +34,7 @@ import { categoryListState } from './features/Board/atom';
 
 import { db, firestore } from './firebase';
 import { ref, set, onValue, onDisconnect } from 'firebase/database';
-import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc, query, orderBy } from 'firebase/firestore';
 import { familyList, location } from './types/familyTypes';
 
 import { getDistance } from './utils/getDistance';
@@ -43,7 +43,6 @@ import Swal from 'sweetalert2';
 
 
 const App: React.FC = () => {
-  // 확인!!! -------------
   const userId = useRecoilValue(updatedUser);
   const setCategoryList = useSetRecoilState(categoryListState);
   const userInfo = useRecoilValue(userInfoState);
@@ -129,7 +128,6 @@ const App: React.FC = () => {
       FamilyService.getFamilyList()
       .then((data) => {
         console.log('가족 목록 가져오기')
-        // console.log(data);
         const family = data.familyList;
         // setFamilyId(data.familyId);
         setFamilyList(data.familyList);
@@ -139,24 +137,18 @@ const App: React.FC = () => {
           findAptLocation(res.get('doroJuso'));
         });
       })
-      .catch(err => {
-        console.log('가져오지 못함!!!!!!')
-      })
+      .catch(err => console.log(err));
     }
   }, [userId]);  // ------------- [] 배열 확인하기
 
   useEffect(() => {
-    // range 받아오기
-    // const docRef = doc(firestore, "families", data.familyId);
-    // getDoc(docRef).then(res => {
-    //   setRange(res.get('range'));
-    // });
-    
+    // range 실시간으로 받아오기
     if (familyId) {
+      console.log(familyId)
       const docRef = doc(firestore, "families", familyId);
       onSnapshot(docRef, (document) => { 
         setRange(document.get('range'))
-        console.log('범위확인', document.get('range'))
+        console.log('저장된 범위 확인', document.get('range'))
       });
     }  
   }, [familyId]);
@@ -164,33 +156,32 @@ const App: React.FC = () => {
   // 내 위치 저장하기
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success, () => {}, { timeout: 10000 });  // enableHighAccuracy: true,
+    geolocation.watchPosition(success, () => {}, { timeout: Infinity });  // enableHighAccuracy: true,
     // if (userId) {  // ----- 움직이면서 확인 필요
-    
     // }
-  }, [familyId]);
-
+  }, [familyId, range]);
 
   useEffect(() => {
+    console.log("범위 전환 후 위치 전환")
+    // console.log(userLocation)
     if (userLocation.lat !== 0 && userLocation.lng !== 0) {
-      console.log('app에서의 range 확인여부')
+      // console.log('app에서의 range 벗어나는지 확인 여부');
       mapLocation(aptLocation.lat, aptLocation.lng);
     }
   }, [userLocation, range]);  
 
   const success = (position: any) => {
-    const { latitude, longitude } = position.coords;
-    console.log('내 위치', latitude, longitude)
-    // console.log(familyId)
-    // console.log('위치확인시점의 가족아이디',familyId)
     if (familyId) {
+      const { latitude, longitude } = position.coords;
+      console.log('내 위치', latitude, longitude)
       const docRef = doc(firestore, "families", familyId);
+      
       if (userInfo !== null) {
         getDoc(docRef).then((res) => {
           const loc = res.get(userInfo?.userId.toString());
-          const dist = getDistance(latitude, longitude, loc.lat, loc.lng);
+          const distance = getDistance(latitude, longitude, loc.lat, loc.lng);
           // console.log(dist)
-          if (dist > 5) {
+          if (distance > 5) {
             updateDoc(docRef, {
               [userInfo.userId]: {  
                 lat: latitude,
@@ -201,10 +192,9 @@ const App: React.FC = () => {
             setUserLocation({
               lat: latitude,
               lng: longitude
-            })
+            });
           }
-        })
-        
+        });
       }
     }
   };
@@ -217,36 +207,62 @@ const App: React.FC = () => {
   const [rangeOut, setRangeOut] = useState<boolean>(false);
 
   const mapLocation = (aptlat: number, aptlng: number) => {
+    
     const distance = Math.round(getDistance(userLocation.lat, userLocation.lng, aptlat, aptlng));
-
-    if (distance <= range) {
-      // console.log('범위 안입니다!!!!')
+    // console.log("설정된 범위는??", range)
+    
+    if (distance <= range) {  
+      console.log('범위 안입니다!!!!')
       if (userLocation.lat && userLocation.lng) {
         ///------------------------- 알림에 집어넣기 => 벗어나서 1번 넣으면 다시 넣지 않아야 함... (알림 무한반복 문제)
         // 그리고 위치 허용한 사람의 경우에만 밑의 과정을 실행할 것
-        // 범위를 설정할 것(고정값 store에 저장) 
-        console.log('가족리스트', familyList)
+        // console.log('가족리스트', familyList)
         for (let member of familyList) {
-          console.log(userInfo?.userId)
+          // console.log(userInfo?.userId)
           if (userInfo?.userId && member.userId !== userInfo?.userId) {
             const notifyRef = doc(firestore, `notifications`, member.userId.toString())
-            console.log('App에서 알림 넣음!!!')
-            
+            getDoc(notifyRef).then((data) => {
+              const contents = data.get(userInfo?.userId.toString())
+              
+            });    
+            const time = new Date();
             updateDoc(notifyRef, { 
-              [userInfo?.userId] : {
-                time: new Date(),
+              [time.toString()] : {
+                userId : userInfo?.userId,
+                time: time,
                 nickname: userInfo?.nickname,
                 content: "아파트 단지에 들어왔습니다."
               }
+              // [userInfo?.userId] : {
+              //   time: new Date(),
+              //   nickname: userInfo?.nickname,
+              //   content: "아파트 단지에 들어왔습니다."
+              // }
             })
           }
         };
       };
     } else {
-
+      console.log("범위 밖입니다!!!");
+      for (let member of familyList) {
+        if (userInfo?.userId && member.userId !== userInfo?.userId) {
+          // console.log(member.userId)
+          const notifyRef = doc(firestore, `notifications`, member.userId.toString())
+          const time = new Date();
+          updateDoc(notifyRef, {  // updateDoc(notifyRef, {
+            [time.toString()] : {  // [userInfo?.userId]
+              userId : userInfo?.userId,
+              time: time,
+              nickname: userInfo.nickname,
+              content: "아파트 단지에서 벗어났습니다."
+            }
+          })
+        }
+      }
     }
   };
 
+  // 아파트 좌표 등록하기 (처음에)
   const findAptLocation = (address: string) => {
     const geocoder = new kakao.maps.services.Geocoder();
     
