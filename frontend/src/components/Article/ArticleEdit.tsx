@@ -369,7 +369,8 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           display="flex"
           justifyContent="flex-end"
           sx={{
-            m: 1,
+            margin: '0px 20px 10px',
+            // m: 1,
             // minWidth: 410,
           }}
         >
