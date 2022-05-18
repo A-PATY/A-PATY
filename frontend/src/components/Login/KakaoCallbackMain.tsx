@@ -25,7 +25,6 @@ const KakaoCallbackMain: React.FC = () => {
   const href2 = href.split(':');
   useEffect(() => {
     if (code !== null && href2[0] === 'http') {
-      console.log(axiosInstance);
       UserService.getUserToken(code, true)
         .then(({ accessToken, refreshToken, newMember }) => {
           axiosInstance.defaults.headers.common[

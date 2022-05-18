@@ -6,6 +6,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import AptRegisterService from '../../services/AptRegisterService';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import UserService from '../../services/UserService';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 interface Props {
   aptId: number;
@@ -24,6 +27,8 @@ const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
   const [imageFileError, setImageFileError] = useState<boolean>(false);
   const [previewImg, setPreviewImg] = useState('');
   const AptRegister = new FormData();
+  const userInfo = useRecoilValue(userInfoState);
+  const setUserInfo = useSetRecoilState(userInfoState);
   let navigate = useNavigate();
   useEffect(() => {
     if (aptName === '') {
@@ -102,8 +107,10 @@ const AptCertify: React.FC<Props> = ({ aptId, doroJuso }) => {
             showConfirmButton: false,
             timer: 2000,
           });
-
-          navigate('/local_community');
+          UserService.getUserInfo().then(({ userInfo }) => {
+            setUserInfo(userInfo);
+          });
+          window.location.reload();
         })
         .catch(({ message }) => {
           Swal.fire({

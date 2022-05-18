@@ -31,7 +31,7 @@ const AdminBillConfirm: React.FC = () => {
       .catch((error) => {
         //에러처리
       });
-  }, [billList, userInfo]);
+  }, [userInfo]);
 
   const handleListItemClick =
     (bilImage: string) =>
@@ -67,7 +67,7 @@ const AdminBillConfirm: React.FC = () => {
             kakaoId: bilImageName[0],
           }).finally(() => {
             AdminService.getBillList().then(({ bills }) => {
-              setBillList(bills);
+              setBillInfo(bills);
             });
           });
         }
@@ -84,16 +84,36 @@ const AdminBillConfirm: React.FC = () => {
           {billList !== undefined &&
             billList !== null &&
             billList.length !== 0 &&
-            billList.map((bill) => {
+            billList?.map((bill) => {
               return (
                 <ListItem
+                  key={bill.billImg}
                   disablePadding
-                  key={bill.billId}
                   onClick={(event) => handleListItemClick(bill.billImg)(event)}
                 >
                   <ListItemButton>
                     <ListItemTextCustom>
-                      {bill.billImg.split('.')[4].split('/')[2]}
+                      {`${
+                        bill.billImg.split('.')[4].split('/')[2].split('_')[2]
+                      }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[3]
+                         }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[4]
+                         }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[5]
+                         }`}
                     </ListItemTextCustom>
                   </ListItemButton>
                 </ListItem>
