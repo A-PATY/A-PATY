@@ -10,7 +10,13 @@ interface Props {
   detail : article,
 };
 
-const Alarm: React.FC<Props> = ({ detail }) => {
+// interface alarmProps {
+//   content: string,
+//   time: Timestamp,
+//   nickname: string,
+// }
+
+const Alarm: React.FC<alarmProps> = ({ detail }) => {
   const navigate = useNavigate();
   
   const calculateTime = (time: string) => {

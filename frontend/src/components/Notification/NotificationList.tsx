@@ -23,7 +23,7 @@ interface alarm {
 const NotificationList: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState)!;
   const [notifications, setNotifications] = useState<article[]>([]);
-  const [alarms, setAlarms] = useState<alarm[]>([]);
+  const [alarms, setAlarms] = useState({});  // <alarm[]>([]);
   const [tab, setTab] = useState<string>("알림");
   let categoryId = 0;
   
@@ -59,7 +59,7 @@ const NotificationList: React.FC = () => {
   //   getDoc(notifyRef).then((res) => {
   //     if (res.exists()){
   //       console.log(res.data());
-  //       // setAlarms(res.data());
+  //       setAlarms(res.data());
   //     }
   //   });
   // }, [])
@@ -95,12 +95,13 @@ const NotificationList: React.FC = () => {
           tab === "알림" ? 
           <>
             {
-              alarms.length === 0 ?
+              // alarms.length === 0 ?
+              Object.keys(alarms).length ?
               <Text>등록된 알림이 없습니다.</Text> :
               <>
                 {  // 같은 notification 컴포넌트 사용하고 title={tab}으로 넘겨서 하는 방식으로 진행 가능
                   notifications.map((notification) => {
-                    return <Alarm key={notification.articleId} detail={notification}/>
+                    return <Alarm key={notification.articleId} detail={alarms}/>
                   })
                 }
               </>
