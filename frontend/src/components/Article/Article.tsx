@@ -158,10 +158,10 @@ const Article: React.FC = () => {
                 <VisibilityOutlinedIcon />
                 {article?.views}
               </InfoSpan>
-              <InfoSpan>
+              {/* <InfoSpan>
                 <ChatBubbleOutlineIcon />
                 {article?.commentCount}
-              </InfoSpan>
+              </InfoSpan> */}
               {userInfo?.userId === article?.authorId && (
                 <InfoFunction>
                   <EditOutlinedIcon onClick={editArticle} />
@@ -191,11 +191,11 @@ const Article: React.FC = () => {
                 ) : (
                   <ThumbUpOutlinedIcon onClick={toggleLike} />
                 )}
-                {likeCnt}
+                {'좋아요 ' + likeCnt}
               </Buttons>
               <Buttons>
                 <ChatBubbleOutlineIcon />
-                {article?.commentCount}
+                {'댓글 ' + article?.commentCount}
               </Buttons>
             </ArticleInfo>
           </ArticleContent>
@@ -348,6 +348,7 @@ const Buttons = styled.a`
   margin-right: 17px;
   padding-left: 24px;
   font-size: 14px;
+  // font-weight: 700;
   line-height: 20px;
   vertical-align: top;
   text-decoration: none;
