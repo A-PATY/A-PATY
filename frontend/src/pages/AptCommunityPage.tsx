@@ -41,6 +41,8 @@ const AptCommunityPage: React.FC = () => {
 
   // const userInfo = useRecoilValue(userInfoState);
   const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
+  const [notifications, setNotifications] = useState<any>({});
+  const userId = useRecoilValue(updatedUser);
 
   // 현재 communityId
   const aptCommunityId = useCommunityId(2);
@@ -115,11 +117,6 @@ const AptCommunityPage: React.FC = () => {
     navigate('/notification');
   };
 
-  // 알림기능 추가 ---------------------
-  const [notifications, setNotifications] = useState<any>({});
-
-  const userId = useRecoilValue(updatedUser);
-
   useEffect(() => {
     if (userId) {
       const notifyRef = doc(
@@ -128,13 +125,9 @@ const AptCommunityPage: React.FC = () => {
         userInfo?.userId.toString(),
       );
       onSnapshot(notifyRef, (document) => {
-        // console.log('firestore 알림 존재?',document.exists())
         if (document.exists()) {
           const alarm = document.data();
-          // console.log("알림은? ", alarm)
-          // console.log('firestore의 알림!!', alarm);
           setNotifications(alarm);
-          // console.log(notifications);
         }
       });
     }

@@ -61,11 +61,11 @@ const Alarm: React.FC<alarmProps> = ({ detail }) => {
 
   const deleteAlarm = () => {
     const notifyRef = doc(firestore, 'notifications', userInfo?.userId.toString());
-    const date = new Date(time)
+    const date = new Date(time);
     updateDoc(notifyRef, {
       [date.toString()]: deleteField()
     });
-    window.location.href = '/notification'
+    window.location.href = '/notification';
   };
   
   return (
