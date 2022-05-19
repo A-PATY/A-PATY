@@ -102,10 +102,10 @@ const BoardHeader: React.FC<Props> = ({
           </Grid>
           <GridCustom item xs={3.5}>
             <TransparentBtn onClick={onSearch}>
-              <SearchRoundedIcon />
+              <SearchRoundedIcon sx={{ color: "#8c8888"}} />
             </TransparentBtn>
             <TransparentBtn onClick={writeArticle}>
-              <CreateRoundedIcon />
+              <CreateRoundedIcon sx={{ color: "#8c8888"}} />
             </TransparentBtn>
           </GridCustom>
         </Grid>
@@ -137,7 +137,7 @@ const GridText = styled(Grid)`
 
 const GridCustom = styled(Grid)`
   display: flex;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
   align-items: center;
 
   &:last-child {
@@ -154,7 +154,7 @@ const TransparentBtn = styled.button`
   @media (max-width: 330px) {
     & .MuiSvgIcon-root {
       font-size: 20px;
-      color: black
+      color: #8c8888;
     }
   }
 `;

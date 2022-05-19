@@ -143,13 +143,13 @@ const LocalCommunityPage: React.FC = () => {
         />
         <ServiceButtonWrapper>
           <TransparentBtn>
-            {/* { notifications !== {} || notifications.length > 0 ? */}
             {Object.keys(notifications).length > 0 ? (
-              <NotificationsActiveRoundedIcon onClick={goToNotification} />
+              <BadgeCustom badgeContent="">
+                <NotificationsActiveRoundedIcon sx={{ color: "#b65ee6" }} onClick={goToNotification} />
+              </BadgeCustom>
             ) : (
               <NotificationsActiveRoundedIcon onClick={goToNotification} />
             )}
-            {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
           </TransparentBtn>
         </ServiceButtonWrapper>
       </Container>
@@ -166,27 +166,16 @@ const Container = styled.div`
 `;
 
 const ServiceButtonWrapper = styled.div`
-  /* position: sticky;
-  bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  opacity: 1;
-  transform: scale(100%);
-  transition: 2s;
-  align-items: center;
-  display: flex;
-  margin: 20px; */
-
-  width: 40px;
+  width: 50px;
   margin: 2px;
-  height: 40px;
-  background-color: rgb(255, 178, 169);
+  height: 50px;
+  background-color: #fff;
+  border: 1px solid #e4d2ee;
   border-radius: 40px;
   display: flex;
   justify-content: center;
   position: fixed;
   bottom: 80px;
-  /* margin-right: 15px; */
   right: calc((100% - 350px)/2);
 `;
 
@@ -202,4 +191,13 @@ const TransparentBtn = styled.button`
   }
 `;
 
+const BadgeCustom = styled(Badge)`
+  & span {
+    font-size: 10px;
+    min-width: 12px;
+    height: 12px;
+    padding: 0;
+    background-color: #ff8d81;
+  }
+`;
 export default LocalCommunityPage;

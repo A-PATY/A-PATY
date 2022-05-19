@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { userInfoState } from '../features/Login/atom';
 import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/BoardList';
@@ -12,9 +11,17 @@ import useCommunityId from '../hooks/useCommunityId';
 import AptTabHeader from '../components/Community/Apt/AptTabHeader';
 import { getCookie } from '../hooks/Cookie';
 import Swal from 'sweetalert2';
+import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { firestore } from '../firebase';
+import { UserInfo } from '../types/loginTypes';
+import { updatedUser, userInfoState } from '../features/Login/atom';
+import { Badge } from '@mui/material';
 
 const AptCommunityPage: React.FC = () => {
   const refreshToken = getCookie('apaty_refresh');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (refreshToken === undefined) {
@@ -32,7 +39,8 @@ const AptCommunityPage: React.FC = () => {
     presentCommunityTypeState,
   );
 
-  const userInfo = useRecoilValue(userInfoState);
+  // const userInfo = useRecoilValue(userInfoState);
+  const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
 
   // 현재 communityId
   const aptCommunityId = useCommunityId(2);
@@ -103,6 +111,35 @@ const AptCommunityPage: React.FC = () => {
     setCommunityType(2);
   }, []);
 
+  const goToNotification = () => {
+    navigate('/notification');
+  };
+
+  // 알림기능 추가 ---------------------
+  const [notifications, setNotifications] = useState<any>({});
+
+  const userId = useRecoilValue(updatedUser);
+
+  useEffect(() => {
+    if (userId) {
+      const notifyRef = doc(
+        firestore,
+        `notifications`,
+        userInfo?.userId.toString(),
+      );
+      onSnapshot(notifyRef, (document) => {
+        // console.log('firestore 알림 존재?',document.exists())
+        if (document.exists()) {
+          const alarm = document.data();
+          // console.log("알림은? ", alarm)
+          // console.log('firestore의 알림!!', alarm);
+          setNotifications(alarm);
+          // console.log(notifications);
+        }
+      });
+    }
+  }, [userId]);
+
   return (
     <>
       <Container id="Container">
@@ -123,6 +160,17 @@ const AptCommunityPage: React.FC = () => {
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
         />
+         <ServiceButtonWrapper>
+          <TransparentBtn>
+            {Object.keys(notifications).length > 0 ? (
+              <BadgeCustom badgeContent="">
+                <NotificationsActiveRoundedIcon sx={{ color: "#b65ee6" }} onClick={goToNotification} />
+              </BadgeCustom>
+            ) : (
+              <NotificationsActiveRoundedIcon onClick={goToNotification} />
+            )}
+          </TransparentBtn>
+        </ServiceButtonWrapper>
       </Container>
       <Footer footerNumber={2} />
     </>
@@ -140,6 +188,42 @@ const Container = styled.div`
   // &::-webkit-scrollbar-track {
   //   background-color: transparent;
   // }
+`;
+
+const ServiceButtonWrapper = styled.div`
+  width: 50px;
+  margin: 2px;
+  height: 50px;
+  background-color: #fff;
+  border: 1px solid #e4d2ee;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 80px;
+  right: calc((100% - 350px)/2);
+`;
+
+const TransparentBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  @media (max-width: 330px) {
+    & .MuiSvgIcon-root {
+      font-size: 20px;
+    }
+  }
+`;
+
+const BadgeCustom = styled(Badge)`
+  & span {
+    font-size: 10px;
+    min-width: 12px;
+    height: 12px;
+    padding: 0;
+    background-color: #ff8d81;
+  }
 `;
 
 export default AptCommunityPage;
