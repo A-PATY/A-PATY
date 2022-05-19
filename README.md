@@ -2,18 +2,17 @@
 
 
 
-
 # A:PATY 
 
 ### SSAFY 6기 자율 프로젝트 - 지역/아파트 커뮤니티 
 
 
 
+
+
 ### 💁 서비스 소개
 
-- ``A:PATY``
-
-[https://apaty.co.kr](https://apaty.co.kr)
+- ``A:PATY`` [https://apaty.co.kr](https://apaty.co.kr)
 
 - 파티처럼 즐거운 지역 아파트 커뮤니티
 
@@ -23,6 +22,7 @@
 
   
 
+
 ### 💡 주요 기능 (특장점)
 
 - 지역 커뮤니티  -  지역 주민 간 주제별 커뮤니티 형성
@@ -31,7 +31,9 @@
 - GPS 기반 우리 가족 위치 찾기  -  아파트 근거리 내, 우리 아이 위치 확인 가능
 - 모바일 1st 디자인 
 
-####  
+
+
+
 
 
 #### :desktop_computer:  시연 영상
@@ -61,6 +63,8 @@
 
 
 
+
+
 ### 🎈 상세 구현기능
 
 | 기능                      | 상세내용                                                     |
@@ -74,6 +78,8 @@
 | 게시글 주제 카테고리 종류 | 일상, 정보, 나눔장터, 헬프, 육아, 교육, 공구, 후기           |
 | 가족 위치 찾기            | GPS 기반 아파트 근거리 내 가족 위치 확인 , 개인별 허용 여부 설정 |
 | 관리자 페이지             | 고지서 인증 승인/반려, 공지사항 관리                         |
+
+
 
 
 
@@ -102,6 +108,8 @@
 
 
 
+
+
 ### 📂 프로젝트 구성도
 
 #### 아키텍처![아키텍처](https://user-images.githubusercontent.com/12628688/169325492-a69b07d3-824b-46eb-8e9f-85164d22ae5f.JPG)
@@ -109,6 +117,7 @@
 #### ERD
 
 #### ![erd](https://user-images.githubusercontent.com/12628688/169325785-5d6bc3e3-b72f-4c41-8079-8627813e52c9.JPG)
+
 
 
 
@@ -131,9 +140,7 @@
 
 #### 협업 툴
 
-- 문서 정리 : Notion 
-
-  [바로가기](https://www.notion.so/27bd1dcf1319422481c0f2b3b1562ecb)
+- 문서 정리 : Notion  [바로가기](https://www.notion.so/27bd1dcf1319422481c0f2b3b1562ecb)
 
 - 이슈 관리 : Jira
 
@@ -147,19 +154,19 @@
 
 #### 컨벤션 
 
-- 문서 링크 
-
-  [바로가기](https://www.notion.so/Convention-61d6404cc0d0424296e57cec6def1b87)
+- 문서 링크   [바로가기](https://www.notion.so/Convention-61d6404cc0d0424296e57cec6def1b87)
 
   
+
+
 
 ### 📅 개발 기간 및 일정
 
 ####   22.4.11 ~ 22.05.20 (6주)
 
-- 세부일정 
+- 세부일정   [바로가기](https://www.notion.so/cbc32e6dd51d4db1aa65e1b4b4e5e110)
 
-[바로가기](https://www.notion.so/cbc32e6dd51d4db1aa65e1b4b4e5e110)
+
 
 
 
