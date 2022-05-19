@@ -338,6 +338,40 @@ const ArticleWrite: React.FC = () => {
             // minWidth: 410,
           }}
         >
+          {(category === '나눔장터' ||
+            category === '공구' ||
+            category === '헬프') && (
+            <ButtonGroup
+              variant="contained"
+              aria-label="outlined primary button group"
+              sx={{
+                marginRight: 'auto',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '210px',
+                }}
+              >
+                <ButtonCustom sx={{ height: '25px' }}>전화번호</ButtonCustom>
+                <PhoneNumber
+                  phoneNumber={phoneNumber}
+                  setPhoneNumber={setPhoneNumber}
+                />
+              </div>
+              <ButtonCustom>
+                <div>마감여부</div>
+                <Switch
+                  checked={isDone}
+                  onChange={handleIsDoneChange}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              </ButtonCustom>
+            </ButtonGroup>
+          )}
+
           <ButtonGroup
             variant="contained"
             aria-label="outlined primary button group"
@@ -358,7 +392,7 @@ const ArticleWrite: React.FC = () => {
             onChange={changeImage}
           />
         </Box>
-        {category === '나눔장터' ||
+        {/* {category === '나눔장터' ||
         category === '공구' ||
         category === '헬프' ? (
           <>
@@ -391,7 +425,7 @@ const ArticleWrite: React.FC = () => {
               </ButtonGroup>
             </Box>
           </>
-        ) : undefined}
+        ) : undefined} */}
         <DivContainer>
           <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
         </DivContainer>
@@ -422,9 +456,12 @@ const UploadLabel = styled.label`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const ButtonCustom = styled(Button)`
+  font-family: 'MinSans-Regular';
+  flex-direction: column;
   background-color: #bae6e5;
   font-size: 14px;
   padding: 0px 10px;
