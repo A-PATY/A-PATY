@@ -57,7 +57,7 @@ const ArrowBackIosRoundedIconCustom = styled(ArrowBackIosRoundedIcon)`
 const GridText = styled(Grid)`
   text-align: left;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 `;
 

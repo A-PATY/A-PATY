@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Board from './Board';
 import CategoryChips from './CategoryChips';
+import { useRecoilValue } from 'recoil';
+import { presentCommunityTypeState } from '../../features/Board/atom';
 
 interface Props {
   type: number;
@@ -25,9 +27,10 @@ const BoardList: React.FC<Props> = ({
   isFetching,
   isFetchingNextPage,
 }) => {
+  const communityType = useRecoilValue(presentCommunityTypeState);
   return (
     <>
-      {type !== 3 && (
+      {communityType !== 3 && (
         <CategoryChipsWrapper>
           <CategoryChips
             categoryId={categoryId}
