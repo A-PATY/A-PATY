@@ -99,7 +99,7 @@ const BoardHeader: React.FC<Props> = ({
               <SearchRoundedIcon sx={{ color: "#8c8888"}} />
             </TransparentBtn>
             <TransparentBtn onClick={writeArticle}>
-              <CreateRoundedIcon sx={{ color: "#8c8888"}} />
+              <CreateRoundedIconCustom sx={{ color: "#8c8888" }} />
             </TransparentBtn>
           </GridCustom>
         </Grid>
@@ -167,6 +167,12 @@ const Search = styled.div`
   &:hover {
     background-color: rgba(192, 192, 192, 0.3);
   }
+`;
+
+const CreateRoundedIconCustom = styled(CreateRoundedIcon)`
+  padding: 4px;
+  border: 1px solid lightgray;
+  border-radius: 20px;
 `;
 
 export default BoardHeader;
