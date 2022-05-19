@@ -129,18 +129,17 @@ const App: React.FC = () => {
   useEffect(() => {
     if (userId) {
       FamilyService.getFamilyList()
-        .then((data) => {
-          console.log('가족 목록 가져오기');
-          const family = data.familyList;
-          // setFamilyId(data.familyId);
-          setFamilyList(data.familyList);
-
-          const docRef = doc(firestore, 'families', data.familyId);
-          getDoc(docRef).then((res) => {
-            findAptLocation(res.get('doroJuso'));
-          });
-        })
-        .catch((err) => console.log(err));
+      .then((data) => {
+        // console.log('가족 목록 가져오기')
+        const family = data.familyList;
+        setFamilyList(data.familyList);
+        
+        const docRef = doc(firestore, "families", data.familyId);
+        getDoc(docRef).then(res => {
+          findAptLocation(res.get('doroJuso'));
+        });
+      })
+      .catch(err => console.log(err));
     }
   }, [userId]); // ------------- [] 배열 확인하기
 
@@ -173,7 +172,7 @@ const App: React.FC = () => {
   const success = (position: any) => {
     if (familyId) {
       const { latitude, longitude } = position.coords;
-      console.log('내 위치', latitude, longitude);
+      // console.log('내 위치', latitude, longitude);
       const docRef = doc(firestore, "families", familyId);
       
       if (userInfo !== null) {
@@ -213,16 +212,10 @@ const App: React.FC = () => {
   const [rangeOut, setRangeOut] = useState<boolean>(false);
 
   const mapLocation = (aptlat: number, aptlng: number) => {
-    
     const distance = Math.round(getDistance(userLocation.lat, userLocation.lng, aptlat, aptlng));
     const beforeDistance = Math.round(getDistance(beforeUser.lat, beforeUser.lng, aptlat, aptlng));
-    // console.log("설정된 범위는??", range)
-    // console.log("이전 값 저장",beforeUser)
-    // console.log("현재 값", userLocation)
     const nowPos = distance - range;
     const beforePos = beforeDistance - range;
-
-    // console.log(nowPos, beforePos)
 
     for (let member of familyList) {
       // console.log(userInfo?.userId)
