@@ -41,7 +41,7 @@ const ArticleWritePage: React.FC = () => {
       ? '지역 커뮤니티 글 작성'
       : presentCommunityType === 2
       ? '아파트 커뮤니티 글 작성'
-      : '아파트 익명 커뮤니티 글 작성';
+      : '아파트 익명 글 작성';
 
   return (
     <>
