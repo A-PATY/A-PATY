@@ -91,15 +91,17 @@ const BoardHeader: React.FC<Props> = ({
                 value={searchValue}
                 onChange={handleSearchChange}
                 onKeyPress={handleKeyUp}
+                sx={{ fontFamily: 'MinSans-Regular' }}
               />
             </Search>
           </Grid>
           <GridCustom item xs={3.5}>
             <TransparentBtn onClick={onSearch}>
-              <SearchRoundedIcon sx={{ color: "#8c8888"}} />
+              <SearchRoundedIcon sx={{ color: '#8c8888' }} />
             </TransparentBtn>
-            <TransparentBtn onClick={writeArticle}>
-              <CreateRoundedIconCustom sx={{ color: "#8c8888" }} />
+            <TransparentBtn onClick={writeArticle} className="write">
+              글쓰기
+              {/* <CreateRoundedIconCustom /> */}
             </TransparentBtn>
           </GridCustom>
         </Grid>
@@ -151,6 +153,20 @@ const TransparentBtn = styled.button`
       color: #8c8888;
     }
   }
+
+  //삭제
+  &.write {
+    border-radius: 10px;
+    background-color: #e4d2ee;
+    height: 35px;
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: 'MinSans-Regular';
+    &:hover {
+      background-color: #bd79e2;
+      color: #fff;
+    }
+  }
 `;
 
 const InputBaseCustom = styled(InputBase)`
@@ -170,9 +186,10 @@ const Search = styled.div`
 `;
 
 const CreateRoundedIconCustom = styled(CreateRoundedIcon)`
-  /* padding: 4px;
-  border: 1px solid lightgray;
-  border-radius: 20px; */
+  color: #b65ee6;
+  &:hover {
+    color: #e4d2ee;
+  }
 `;
 
 export default BoardHeader;

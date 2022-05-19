@@ -153,11 +153,14 @@ const AptCommunityPage: React.FC = () => {
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
         />
-         <ServiceButtonWrapper>
+        <ServiceButtonWrapper>
           <TransparentBtn>
             {Object.keys(notifications).length > 0 ? (
               <BadgeCustom badgeContent="">
-                <NotificationsActiveRoundedIcon sx={{ color: "#b65ee6" }} onClick={goToNotification} />
+                <NotificationsActiveRoundedIcon
+                  sx={{ color: '#b65ee6' }}
+                  onClick={goToNotification}
+                />
               </BadgeCustom>
             ) : (
               <NotificationsActiveRoundedIcon onClick={goToNotification} />
@@ -194,17 +197,19 @@ const ServiceButtonWrapper = styled.div`
   justify-content: center;
   position: fixed;
   bottom: 80px;
-  right: calc((100% - 350px)/2);
+  right: calc((100% - 350px) / 2);
 `;
 
 const TransparentBtn = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
+  color: #b65ee6;
 
   @media (max-width: 330px) {
     & .MuiSvgIcon-root {
       font-size: 20px;
+      color: #b65ee6;
     }
   }
 `;

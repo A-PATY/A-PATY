@@ -65,7 +65,7 @@ const Container = styled.div`
   font-size: 18px;
   height: 70px;
   text-align: center;
-  box-shadow: rgb(0 0 0 / 15%) 0px 2px 10px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 15px 15px -15px;
   position: sticky;
   top: 0px;
   z-index: 2;
