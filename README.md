@@ -1,9 +1,11 @@
 
 
 
+
+
 # A:PATY 
 
-#### SSAFY 6기 자율 프로젝트 - 지역/아파트 커뮤니티 
+### SSAFY 6기 자율 프로젝트 - 지역/아파트 커뮤니티 
 
 
 
@@ -11,7 +13,7 @@
 
 - ``A:PATY``
 
-[https://apaty.co.kr]: https://apaty.co.kr
+[https://apaty.co.kr](https://apaty.co.kr)
 
 - 파티처럼 즐거운 지역 아파트 커뮤니티
 
@@ -30,6 +32,7 @@
 - 모바일 1st 디자인 
 
 ####  
+
 
 #### :desktop_computer:  시연 영상
 
@@ -111,7 +114,7 @@
 
 
 
-### :family_man_woman_girl_girl: 개발 팀 소개
+### 👪 개발 팀 소개
 
 #### 팀원 소개
 
@@ -130,7 +133,7 @@
 
 - 문서 정리 : Notion 
 
-  [바로가기]: https://www.notion.so/27bd1dcf1319422481c0f2b3b1562ecb
+  [바로가기](https://www.notion.so/27bd1dcf1319422481c0f2b3b1562ecb)
 
 - 이슈 관리 : Jira
 
@@ -146,7 +149,7 @@
 
 - 문서 링크 
 
-  [바로가기]: https://www.notion.so/Convention-61d6404cc0d0424296e57cec6def1b87
+  [바로가기](https://www.notion.so/Convention-61d6404cc0d0424296e57cec6def1b87)
 
   
 
@@ -156,7 +159,7 @@
 
 - 세부일정 
 
-[바로가기]: https://www.notion.so/cbc32e6dd51d4db1aa65e1b4b4e5e110
+[바로가기](https://www.notion.so/cbc32e6dd51d4db1aa65e1b4b4e5e110)
 
 
 
