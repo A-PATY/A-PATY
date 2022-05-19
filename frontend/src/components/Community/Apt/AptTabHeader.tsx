@@ -93,7 +93,7 @@ const GridText = styled(Grid)`
 const TabsCustom = styled(Tabs)`
   & .MuiButtonBase-root {
     font-family: 'MinSans-Regular';
-    font-size: 15px;
+    font-size: 18px;
     // color: #bae6e5;
     // color: #95e3e1;
   }

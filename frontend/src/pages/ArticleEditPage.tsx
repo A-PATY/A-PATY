@@ -7,6 +7,8 @@ import { article } from '../types/boardTypes';
 import { useLocation } from 'react-router-dom';
 import { getCookie } from '../hooks/Cookie';
 import Swal from 'sweetalert2';
+import { useRecoilValue } from 'recoil';
+import { presentCommunityTypeState } from '../features/Board/atom';
 
 // interface Props {
 //   article: article;
@@ -36,10 +38,19 @@ const ArticleEditPage: React.FC = () => {
 
   const { article } = state;
 
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+
+  const title =
+    presentCommunityType === 1
+      ? '지역 커뮤니티 글 수정'
+      : presentCommunityType === 2
+      ? '아파트 커뮤니티 글 수정'
+      : '아파트 익명 커뮤니티 글 수정';
+
   return (
     <>
       <Container>
-        <ArticleHeader header="지역/아파트 커뮤니티 수정" />
+        <ArticleHeader header={title} />
         <ArticleEdit article={article} />
       </Container>
       <Footer footerNumber={-1} />

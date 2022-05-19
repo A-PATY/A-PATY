@@ -63,17 +63,18 @@ const FormattedInputs: React.FC<Props> = ({ setPhoneNumber, phoneNumber }) => {
         },
       }}
     >
-      <FormControl variant="standard">
-        <InputLabel htmlFor="formatted-text-mask-input">
+      <FormControl sx={{ height: '30px', width: '90%' }} variant="standard">
+        {/* <InputLabel htmlFor="formatted-text-mask-input">
           {phoneNumber === '' ? '휴대폰 번호' : ''}
-        </InputLabel>
+        </InputLabel> */}
         <Input
-          placeholder="(010) 1234-5678"
+          placeholder=" (010) 1234-5678"
           value={phoneNumber}
           onChange={handleChange}
           name="textmask"
           id="formatted-text-mask-input"
           inputComponent={TextMaskCustom as any}
+          sx={{ fontFamily: 'MinSans-Regular', fontSize: '14px' }}
         />
       </FormControl>
     </Box>
