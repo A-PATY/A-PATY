@@ -149,7 +149,7 @@ const GridText = styled(Grid)`
 
 const GridCustom = styled(Grid)`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 
   &:last-child {
@@ -166,6 +166,7 @@ const TransparentBtn = styled.button`
   @media (max-width: 330px) {
     & .MuiSvgIcon-root {
       font-size: 20px;
+      color: black
     }
   }
 `;
