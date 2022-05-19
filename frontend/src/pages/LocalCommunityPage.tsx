@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userInfoState } from '../features/Login/atom';
+import { updatedUser, userInfoState } from '../features/Login/atom';
 import { presentCommunityTypeState } from '../features/Board/atom';
 import Footer from '../components/common/Footer';
 import BoardList from '../components/Community/BoardList';
@@ -12,6 +12,12 @@ import useCommunityId from '../hooks/useCommunityId';
 import Header from '../components/common/Header';
 import { getCookie } from '../hooks/Cookie';
 import Swal from 'sweetalert2';
+import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
+import { UserInfo } from '../types/loginTypes';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { firestore } from '../firebase';
+import Badge from '@mui/material/Badge/Badge';
 
 const LocalCommunityPage: React.FC = () => {
   const refreshToken = getCookie('apaty_refresh');
@@ -29,7 +35,7 @@ const LocalCommunityPage: React.FC = () => {
   }, []);
 
   const setCommunityType = useSetRecoilState(presentCommunityTypeState);
-  const userInfo = useRecoilValue(userInfoState);
+  const userInfo = useRecoilValue<UserInfo | null>(userInfoState)!;
   const communityName = userInfo?.dongName + ' 커뮤니티';
 
   // 공통 함수
@@ -80,11 +86,40 @@ const LocalCommunityPage: React.FC = () => {
       //   lastPage.result[lastPage.result.length - 1].articleId, // 마지막 글 id (lastArticleId)를 다음 param으로 보냄
     },
   );
-
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = '지역 커뮤니티';
     setCommunityType(1);
   }, []);
+
+  const goToNotification = () => {
+    navigate('/notification');
+  };
+
+  // 알림기능 추가 ---------------------
+  const [notifications, setNotifications] = useState<any>({});
+
+  const userId = useRecoilValue(updatedUser);
+
+  useEffect(() => {
+    if (userId) {
+      const notifyRef = doc(
+        firestore,
+        `notifications`,
+        userInfo?.userId.toString(),
+      );
+      onSnapshot(notifyRef, (document) => {
+        // console.log('firestore 알림 존재?',document.exists())
+        if (document.exists()) {
+          const alarm = document.data();
+          // console.log("알림은? ", alarm)
+          // console.log('firestore의 알림!!', alarm);
+          setNotifications(alarm);
+          // console.log(notifications);
+        }
+      });
+    }
+  }, [userId]);
 
   return (
     <>
@@ -106,7 +141,19 @@ const LocalCommunityPage: React.FC = () => {
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
         />
+        <ServiceButtonWrapper>
+          <TransparentBtn>
+            {/* { notifications !== {} || notifications.length > 0 ? */}
+            {Object.keys(notifications).length > 0 ? (
+              <NotificationsActiveRoundedIcon onClick={goToNotification} />
+            ) : (
+              <NotificationsActiveRoundedIcon onClick={goToNotification} />
+            )}
+            {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
+          </TransparentBtn>
+        </ServiceButtonWrapper>
       </Container>
+
       <Footer footerNumber={1} />
     </>
   );
@@ -117,4 +164,30 @@ const Container = styled.div`
   flex-direction: column;
   height: calc(100% - 70px);
 `;
+
+const ServiceButtonWrapper = styled.div`
+  position: sticky;
+  bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: scale(100%);
+  transition: 2s;
+  align-items: center;
+  display: flex;
+  margin: 20px;
+`;
+
+const TransparentBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  @media (max-width: 330px) {
+    & .MuiSvgIcon-root {
+      font-size: 20px;
+    }
+  }
+`;
+
 export default LocalCommunityPage;

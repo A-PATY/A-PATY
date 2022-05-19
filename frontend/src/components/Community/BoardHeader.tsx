@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
-import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import { useNavigate } from 'react-router-dom';
 import { InputBase } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -108,17 +107,6 @@ const BoardHeader: React.FC<Props> = ({
             <TransparentBtn onClick={writeArticle}>
               <CreateRoundedIcon />
             </TransparentBtn>
-            <TransparentBtn>
-              {/* { notifications !== {} || notifications.length > 0 ? */}
-              {Object.keys(notifications).length > 0 ? (
-                <BadgeCustom color="error" badgeContent="">
-                  <NotificationsActiveRoundedIcon onClick={goToNotification} />
-                </BadgeCustom>
-              ) : (
-                <NotificationsActiveRoundedIcon onClick={goToNotification} />
-              )}
-              {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
-            </TransparentBtn>
           </GridCustom>
         </Grid>
       </Container>
@@ -131,13 +119,13 @@ const Container = styled.div`
   font-size: 18px;
   height: 70px;
   text-align: center;
-  box-shadow: rgb(0 0 0 / 15%) 0px 2px 10px;
   position: sticky;
   top: 0px;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border: none;
 `;
 
 const GridText = styled(Grid)`
@@ -183,15 +171,6 @@ const Search = styled.div`
   background-color: rgba(192, 192, 192, 0.2);
   &:hover {
     background-color: rgba(192, 192, 192, 0.3);
-  }
-`;
-
-const BadgeCustom = styled(Badge)`
-  & span {
-    font-size: 10px;
-    min-width: 12px;
-    height: 12px;
-    padding: 0;
   }
 `;
 
