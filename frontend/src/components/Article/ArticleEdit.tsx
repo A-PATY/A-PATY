@@ -377,35 +377,35 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           {category === '나눔장터' ||
           category === '공구' ||
           category === '헬프' ? (
-            <>
-              <Box
-                display="flex"
-                justifyContent="flex-end"
-                sx={{
-                  m: 1,
-                  minWidth: 410,
+            <ButtonGroup
+              variant="contained"
+              aria-label="outlined primary button group"
+              sx={{
+                marginRight: 'auto',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '210px',
                 }}
               >
-                <ButtonGroup
-                  variant="contained"
-                  aria-label="outlined primary button group"
-                >
-                  <ButtonCustom>전화번호</ButtonCustom>
-                  <PhoneNumber
-                    phoneNumber={phoneNumber}
-                    setPhoneNumber={setPhoneNumber}
-                  />
-                  <ButtonCustom>
-                    마감여부
-                    <Switch
-                      checked={isDone !== null ? isDone : false}
-                      onChange={handleIsDoneChange}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                  </ButtonCustom>
-                </ButtonGroup>
-              </Box>
-            </>
+                <ButtonCustom sx={{ height: '25px' }}>전화번호</ButtonCustom>
+                <PhoneNumber
+                  phoneNumber={phoneNumber}
+                  setPhoneNumber={setPhoneNumber}
+                />
+              </div>
+              <ButtonCustom>
+                <div>마감여부</div>
+                <Switch
+                  checked={isDone !== null ? isDone : false}
+                  onChange={handleIsDoneChange}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              </ButtonCustom>
+            </ButtonGroup>
           ) : undefined}
           <ButtonGroup
             variant="contained"
@@ -495,9 +495,11 @@ const UploadLabel = styled.label`
 `;
 
 const ButtonCustom = styled(Button)`
+  font-family: 'MinSans-Regular';
+  flex-direction: column;
   background-color: #bae6e5;
   font-size: 14px;
-  padding: 0px;
+  padding: 0px 10px;
   &:hover {
     background-color: #ffb2a9;
   }
