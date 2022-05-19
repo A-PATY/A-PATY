@@ -170,9 +170,9 @@ const Search = styled.div`
 `;
 
 const CreateRoundedIconCustom = styled(CreateRoundedIcon)`
-  padding: 4px;
+  /* padding: 4px;
   border: 1px solid lightgray;
-  border-radius: 20px;
+  border-radius: 20px; */
 `;
 
 export default BoardHeader;
