@@ -14,14 +14,21 @@ import { getDoc, updateDoc, doc, onSnapshot, setDoc, Timestamp } from 'firebase/
 import { familyList, location } from '../../types/familyTypes';
 import { userInfoState, updatedUser } from '../../features/Login/atom';
 
+interface timestamp {
+  seconds: number,
+  nanoseconds: number,
+};
+
 interface alarm {
   content: string,
-  time: Timestamp,
+  time: timestamp,
   nickname: string,
+  userId: number,
 }
 
 const NotificationList: React.FC = () => {
   const userInfo = useRecoilValue(userInfoState)!;
+  const userId = useRecoilValue(updatedUser)!;
   const [notifications, setNotifications] = useState<article[]>([]);
   const [alarms, setAlarms] = useState<alarm[]>([]);;  
   const [tab, setTab] = useState<string>("알림");
@@ -45,7 +52,7 @@ const NotificationList: React.FC = () => {
       );
       
       articles.sort((a, b) => {
-        return +new Date(b.createdAt) - +new Date(a.createdAt)
+        return +new Date(b.createdAt) - +new Date(a.createdAt);
       });
       setNotifications(articles);
     };
@@ -54,15 +61,22 @@ const NotificationList: React.FC = () => {
   }, [categoryId]);
 
   // firestore 알림 불러오기
-  // useEffect(() => {
-  //   const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString());
-  //   getDoc(notifyRef).then((res) => {
-  //     if (res.exists()){
-  //       console.log(res.data());
-  //       setAlarms(res.data());
-  //     }
-  //   });
-  // }, [])
+  useEffect(() => {
+    if (userId) {
+      const notifyRef = doc(firestore, `notifications`, userId?.toString());
+      
+      getDoc(notifyRef).then((res) => {
+        if (res.exists()){
+          const alarmList = Object.values(res.data());
+          
+          alarmList.sort((a, b) => {
+            return b.time.seconds - a.time.seconds;
+          });
+          setAlarms(alarmList);
+        }
+      });
+    }
+  }, [userId])
 
   const changeTab = (tab: string) => {
     setTab(tab);
@@ -95,13 +109,12 @@ const NotificationList: React.FC = () => {
           tab === "알림" ? 
           <>
             {
-              // alarms.length === 0 ?
-              Object.keys(alarms).length ?
+              alarms.length === 0 ?
               <Text>등록된 알림이 없습니다.</Text> :
               <>
                 {  // 같은 notification 컴포넌트 사용하고 title={tab}으로 넘겨서 하는 방식으로 진행 가능
-                  notifications.map((notification) => {
-                    return <Alarm key={notification.articleId} detail={notification}/>
+                  alarms.map((alarm, index) => {
+                    return <Alarm key={index} detail={alarm}/>
                   })
                 }
               </>

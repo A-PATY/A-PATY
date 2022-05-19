@@ -64,7 +64,8 @@ const BoardHeader: React.FC<Props> = ({
   };
 
   // 알림기능 추가 ---------------------
-  const [notifications, setNotifications] = useState<any>([]);
+  const [notifications, setNotifications] = useState<any>({});
+  
   useEffect(() => {
     if (userId) {
       const notifyRef = doc(firestore, `notifications`, userInfo?.userId.toString());
@@ -72,9 +73,9 @@ const BoardHeader: React.FC<Props> = ({
         // console.log('firestore 알림 존재?',document.exists())
         if (document.exists()) {
           const alarm = document.data();
+          // console.log("알림은? ", alarm)
           // console.log('firestore의 알림!!', alarm);
-          // notifications.push(alarm);
-          setNotifications([...notifications, alarm]);
+          setNotifications(alarm);
           // console.log(notifications);
         }
       });
@@ -108,9 +109,9 @@ const BoardHeader: React.FC<Props> = ({
               <CreateRoundedIcon />
             </TransparentBtn>
             <TransparentBtn>
-
-              {/* 알림 기능!! badgeContent={notifications.length} */}
-              { notifications.length > 0 ?
+              
+              {/* { notifications !== {} || notifications.length > 0 ? */}
+              { Object.keys(notifications).length > 0 ?
                 <BadgeCustom color="error" badgeContent="">
                   <NotificationsActiveRoundedIcon onClick={goToNotification} />
                 </BadgeCustom> :
