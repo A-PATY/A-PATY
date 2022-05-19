@@ -28,7 +28,7 @@ const NotificationPage: React.FC = () => {
   return (
     <>
       <Container>
-        <Header header="" />
+        <Header header="알림" />
         <NotificationList />
       </Container>
       <Footer footerNumber={-1} />

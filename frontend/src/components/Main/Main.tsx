@@ -29,7 +29,7 @@ const Main: React.FC = () => {
   const developerList = [
     {
       name: '방의진',
-      href: '',
+      href: 'https://github.com/llunaB',
       img: '\\img\\crab.png',
     },
     {
@@ -45,7 +45,7 @@ const Main: React.FC = () => {
     },
     {
       name: '김선민',
-      href: '',
+      href: 'https://github.com/smkim09',
       img: '\\img\\fox.png',
     },
     {
@@ -55,7 +55,7 @@ const Main: React.FC = () => {
     },
     {
       name: '채예은',
-      href: '',
+      href: 'https://github.com/devyen',
       img: '\\img\\otter.png',
     },
   ];
@@ -139,7 +139,11 @@ const Main: React.FC = () => {
                 <br />
                 이사와서 동네 정보를 얻고 싶을 때!
                 <br />
+                이웃과 내 일상을 공유하고 싶을 때!
+                <br />
                 사랑하는 가족의 위치가 궁금할 때!
+                <br />
+                마음을 나누고 싶을 때!
               </IntroductionAnswerH2>
             </IntroductionAnswer>
           </IntroductionTextContainer>
@@ -172,7 +176,7 @@ const Main: React.FC = () => {
               <PhoneFrameContainer>
                 <PhoneFrameWrapper>
                   <PhoneFrame>
-                    <PhoneInner src="\img\service.png" />
+                    <PhoneInner src="/img/aptRegister.gif" />
                   </PhoneFrame>
                 </PhoneFrameWrapper>
               </PhoneFrameContainer>
@@ -212,7 +216,7 @@ const Main: React.FC = () => {
             <PhoneFrameContainer>
               <FindFamilyContainer>
                 <Fade>
-                  <PhoneFrameWrapper>
+                  <PhoneFrameWrapper id="phone">
                     <PhoneFrame css={purpleborder}>
                       <PhoneInner src="\img\service.png" />
                     </PhoneFrame>
@@ -221,12 +225,12 @@ const Main: React.FC = () => {
                 <FindFamilyWrapper>
                   <Fade delay={500}>
                     <FindFamilyAlert>
-                      <FindFamilyAlertImg />
+                      <FindFamilyAlertImg src="/img/alarm.gif"/>
                     </FindFamilyAlert>
                   </Fade>
                   <Fade delay={1000}>
                     <FamilyList>
-                      <FamilyListImage />
+                      <FamilyListImage src="/img/findFamily.gif" />
                     </FamilyList>
                   </Fade>
                 </FindFamilyWrapper>
@@ -396,7 +400,7 @@ const PhoneInner = styled.img`
 
 const FindFamilyWrapper = styled.div`
   position: absolute;
-  bottom: 1.625em;
+  top: -3.625em;
   right: 0px;
   z-index: 0;
   font-size: 0.59375rem;
@@ -416,7 +420,7 @@ const FindFamilyAlert = styled.div`
 `;
 
 const FindFamilyAlertImg = styled.img`
-  height: 50px;
+  width: 100%;
 `;
 
 const FamilyList = styled.div`
