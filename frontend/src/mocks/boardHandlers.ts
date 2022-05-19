@@ -248,12 +248,7 @@ export const boardHandlers = [
   rest.get(
     `${process.env.REACT_APP_LOCALHOST_URL}/api/v1/board`,
     async (request: any, response, context) => {
-      // console.log('/////////request: ' + request);
-      // console.log('/////////response: ' + response);
-      // console.log('/////////context: ' + context);
-
       const communityId = request.url.searchParams.get('communityId');
-      // console.log('/////////communityId: ' + communityId);
 
       // const { communityId, lastArticleId, size, params } = request.body;
 
@@ -295,8 +290,6 @@ export const boardHandlers = [
     async (request: any, response, context) => {
       // const articleId = request.url.searchParams.get('articleId');
       const { articleId } = request.params;
-      console.log('/////////articleId: ');
-      console.log(articleId);
       const article = articles.find((v) => v.articleId === parseInt(articleId));
 
       // if (communityId === null) {

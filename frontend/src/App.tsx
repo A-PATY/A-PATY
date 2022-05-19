@@ -41,7 +41,6 @@ import { getDistance } from './utils/getDistance';
 import { aptLocationState } from './features/Family/atom';
 import Swal from 'sweetalert2';
 
-
 const App: React.FC = () => {
   const userId = useRecoilValue(updatedUser);
   const setCategoryList = useSetRecoilState(categoryListState);
@@ -61,7 +60,7 @@ const App: React.FC = () => {
         ] = `Bearer ${accessToken}`;
 
         setCookie('apaty_refresh', refreshToken, {
-          maxAge: 60 * 5,
+          maxAge: 60 * 60 * 24 * 5,
           path: '/',
         });
         BoardService.getCategoryList().then(({ categoryList }) => {
@@ -112,15 +111,17 @@ const App: React.FC = () => {
     });
   }, [userId]);
 
-
-
-  // ---------- 위치 추가 app단에서 진행하기 
-  const [familyList, setFamilyList] = useState<familyList[]>([]); 
+  // ---------- 위치 추가 app단에서 진행하기
+  const [familyList, setFamilyList] = useState<familyList[]>([]);
   // const [familyId, setFamilyId] = useState<string>("");
-  const familyId = userInfo?.aptId.toString() + "-" + userInfo?.dong + "-" + userInfo?.ho
-  const [userLocation, setUserLocation] = useState<location>({ lat: 0, lng: 0 });
+  const familyId =
+    userInfo?.aptId.toString() + '-' + userInfo?.dong + '-' + userInfo?.ho;
+  const [userLocation, setUserLocation] = useState<location>({
+    lat: 0,
+    lng: 0,
+  });
   const [range, setRange] = useState<number>(100);
-  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 });  // 아파트 위치 => 지도 center 위치
+  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 }); // 아파트 위치 => 지도 center 위치
   const setAptLocationState = useSetRecoilState(aptLocationState);
   
   const [beforeUser, setBeforeUser] = useState({ lat: 0, lng: 0 });
@@ -131,7 +132,6 @@ const App: React.FC = () => {
       .then((data) => {
         // console.log('가족 목록 가져오기')
         const family = data.familyList;
-        // setFamilyId(data.familyId);
         setFamilyList(data.familyList);
         
         const docRef = doc(firestore, "families", data.familyId);
@@ -141,7 +141,7 @@ const App: React.FC = () => {
       })
       .catch(err => console.log(err));
     }
-  }, [userId]);  // ------------- [] 배열 확인하기
+  }, [userId]); // ------------- [] 배열 확인하기
 
   useEffect(() => {
     // range 실시간으로 받아오기
@@ -152,7 +152,7 @@ const App: React.FC = () => {
         setRange(document.get('range'))
         // console.log('저장된 범위 확인', document.get('range'))
       });
-    }  
+    }
   }, [familyId]);
 
   // 내 위치 저장하기
@@ -167,7 +167,7 @@ const App: React.FC = () => {
       // console.log('app에서의 range 벗어나는지 확인 여부');
       mapLocation(aptLocation.lat, aptLocation.lng);
     }
-  }, [userLocation, range]);  
+  }, [userLocation, range]);
 
   const success = (position: any) => {
     if (familyId) {
@@ -182,15 +182,15 @@ const App: React.FC = () => {
           // console.log(dist);
           if (distance > 10) {
             updateDoc(docRef, {
-              [userInfo.userId]: {  
+              [userInfo.userId]: {
                 lat: latitude,
-                lng: longitude
-              }
+                lng: longitude,
+              },
             });
-    
+
             setUserLocation({
               lat: latitude,
-              lng: longitude
+              lng: longitude,
             });
 
             // 이전 기록 남기기
@@ -280,7 +280,7 @@ const App: React.FC = () => {
   // 아파트 좌표 등록하기 (처음에)
   const findAptLocation = (address: string) => {
     const geocoder = new kakao.maps.services.Geocoder();
-    
+
     geocoder.addressSearch(address, (result: any, status: string) => {
       if (status === kakao.maps.services.Status.OK) {
         setAptLocation({
@@ -290,7 +290,7 @@ const App: React.FC = () => {
         setAptLocationState({
           lat: result[0].y,
           lng: result[0].x,
-        })
+        });
         mapLocation(result[0].y, result[0].x); // 추후 확인!
       }
     });

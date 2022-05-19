@@ -25,7 +25,6 @@ const KakaoCallbackMain: React.FC = () => {
   const href2 = href.split(':');
   useEffect(() => {
     if (code !== null && href2[0] === 'http') {
-      console.log(axiosInstance);
       UserService.getUserToken(code, true)
         .then(({ accessToken, refreshToken, newMember }) => {
           axiosInstance.defaults.headers.common[
@@ -33,7 +32,7 @@ const KakaoCallbackMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            maxAge: 60 * 5,
+            maxAge: 60 * 60 * 24 * 5,
             path: '/',
           });
 
@@ -44,7 +43,6 @@ const KakaoCallbackMain: React.FC = () => {
               // console.log('categoryList : ');
               // console.log(categoryList);
               setCategoryList(categoryList);
-              console.log('ddddd');
             });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);
@@ -79,7 +77,7 @@ const KakaoCallbackMain: React.FC = () => {
           ] = `Bearer ${accessToken}`;
 
           setCookie('apaty_refresh', refreshToken, {
-            maxAge: 60 * 5,
+            maxAge: 60 * 60 * 24 * 5,
             path: '/',
           });
 
@@ -90,7 +88,6 @@ const KakaoCallbackMain: React.FC = () => {
               // console.log('categoryList : ');
               // console.log(categoryList);
               setCategoryList(categoryList);
-              console.log('ddddd');
             });
             UserService.getUserInfo().then(({ userInfo }) => {
               setUserInfo(userInfo);

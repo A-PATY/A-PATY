@@ -6,6 +6,8 @@ import ArticleHeader from '../components/Article/ArticleHeader';
 import { useLocation } from 'react-router-dom';
 import { getCookie } from '../hooks/Cookie';
 import Swal from 'sweetalert2';
+import { useRecoilValue } from 'recoil';
+import { presentCommunityTypeState } from '../features/Board/atom';
 
 const ArticleWritePage: React.FC = () => {
   useEffect(() => {
@@ -31,10 +33,13 @@ const ArticleWritePage: React.FC = () => {
     communityId: number | undefined;
   };
   const { type, communityId } = state;
+
+  const presentCommunityType = useRecoilValue(presentCommunityTypeState);
+
   const title =
-    type === 1
+    presentCommunityType === 1
       ? '지역 커뮤니티 글 작성'
-      : type === 2
+      : presentCommunityType === 2
       ? '아파트 커뮤니티 글 작성'
       : '아파트 익명 커뮤니티 글 작성';
 

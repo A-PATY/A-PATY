@@ -25,9 +25,75 @@ const NewMemberMain: React.FC = () => {
   const [address, setAddress] = useState<string>('');
   const [addressName, setAddressName] = useState<string>('');
   const [addressError, setAddressError] = useState<boolean>(true);
+  // const [addressDisabled, setAddressDisabled] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
   let { x, y } = UserLocation();
+
+  // const [x, setX] = useState<number>(0);
+  // const [y, setY] = useState<number>(0);
+
+  // const [permissions, setPermissions] = useState<string>('');
+
+  // useEffect(() => {
+  //   let lat: number, long: number;
+  //   if (navigator.geolocation) {
+  //     // GPS를 지원하면
+  //     navigator.geolocation.getCurrentPosition(
+  //       function (position) {
+  //         lat = position.coords.latitude;
+  //         long = position.coords.longitude;
+  //         setX(long);
+  //         setY(lat);
+
+  //         console.log('작동');
+  //       },
+  //       function (error) {
+  //         // Swal.fire({
+  //         //   title: error.message,
+  //         //   text: 'A:PATY 서비스 이용을 위해서는 거주 위치 인증이 필요합니다. GPS 이용을 허용해주세요.',
+  //         //   icon: 'error',
+  //         //   showConfirmButton: false,
+  //         //   timer: 2000,
+  //         // });
+  //       },
+  //       {
+  //         enableHighAccuracy: true,
+  //         maximumAge: 0,
+  //         timeout: Infinity,
+  //       },
+  //     );
+  //   } else {
+  //     Swal.fire({
+  //       title: '이 브라우저는 GPS를 지원하지 않습니다',
+  //       icon: 'error',
+  //       showConfirmButton: false,
+  //       timer: 2000,
+  //     });
+  //     return;
+  //   }
+  // }, [permissions]);
+
+  // navigator.permissions
+  //   .query({ name: 'geolocation' })
+  //   .then(function (permissionStatus) {
+  //     setPermissions(permissionStatus.state);
+  //     //console.log('geolocation permission state is ', permissionStatus.state);
+  //     permissionStatus.onchange = function () {
+  //       setPermissions(this.state);
+  //       //console.log('geolocation permission state has changed to ', this.state);
+  //     };
+  //   });
+
+  // useEffect(() => {
+  //   if (permissions === 'denied') {
+  //     setAddressDisabled(true);
+  //     setAddressName('');
+  //     setAddress('');
+  //   } else {
+  //     setAddressDisabled(false);
+  //   }
+  // }, [permissions]);
 
   useEffect(() => {
     if (itemData !== undefined) {
@@ -79,20 +145,22 @@ const NewMemberMain: React.FC = () => {
   const handleGpsIconClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
-    UserService.getUserAddress({ x, y })
-      .then((response) => {
-        setAddress(response.documents[0].code);
-        setAddressName(response.documents[0].address_name);
-        setAddressError(false);
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: '위치 기반 주소 검색에 실패했습니다.',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
+    if (x !== 0 && y !== 0) {
+      UserService.getUserAddress({ x, y })
+        .then((response) => {
+          setAddress(response.documents[0].code);
+          setAddressName(response.documents[0].address_name);
+          setAddressError(false);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: '위치 기반 주소 검색에 실패했습니다.',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
         });
-      });
+    }
   };
 
   const handleClose = () => {

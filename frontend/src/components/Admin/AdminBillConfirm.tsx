@@ -15,11 +15,30 @@ import useBillList from '../../hooks/useBillList';
 import AdminService from '../../services/AdminService';
 import { billInfoState } from '../../features/Bill/atom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
 const AdminBillConfirm: React.FC = () => {
-  useBillList();
-  const billList = useRecoilValue(billInfoState);
+  // useBillList();
+  const userInfo = useRecoilValue(userInfoState);
   const setBillInfo = useSetRecoilState(billInfoState);
+  const billList = useRecoilValue(billInfoState);
+
+  useEffect(() => {
+    AdminService.getBillList()
+      .then(({ bills }) => {
+        setBillInfo(bills);
+      })
+      .catch(({ status, message }) => {
+        if (status === 500) {
+          Swal.fire({
+            title: message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      });
+  }, [userInfo]);
 
   const handleListItemClick =
     (bilImage: string) =>
@@ -55,7 +74,7 @@ const AdminBillConfirm: React.FC = () => {
             kakaoId: bilImageName[0],
           }).finally(() => {
             AdminService.getBillList().then(({ bills }) => {
-              // setBillList(bills);
+              setBillInfo(bills);
             });
           });
         }
@@ -72,16 +91,36 @@ const AdminBillConfirm: React.FC = () => {
           {billList !== undefined &&
             billList !== null &&
             billList.length !== 0 &&
-            billList.map((bill) => {
+            billList?.map((bill) => {
               return (
                 <ListItem
+                  key={bill.billImg}
                   disablePadding
-                  key={bill.billId}
                   onClick={(event) => handleListItemClick(bill.billImg)(event)}
                 >
                   <ListItemButton>
                     <ListItemTextCustom>
-                      {bill.billImg.split('.')[4].split('/')[2]}
+                      {`${
+                        bill.billImg.split('.')[4].split('/')[2].split('_')[2]
+                      }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[3]
+                         }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[4]
+                         }
+                         ${
+                           bill.billImg
+                             .split('.')[4]
+                             .split('/')[2]
+                             .split('_')[5]
+                         }`}
                     </ListItemTextCustom>
                   </ListItemButton>
                 </ListItem>
