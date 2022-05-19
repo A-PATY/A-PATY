@@ -61,7 +61,7 @@ const BoardHeader: React.FC<Props> = ({
 
   // 알림기능 추가 ---------------------
   const [notifications, setNotifications] = useState<any>({});
-  
+
   useEffect(() => {
     if (userId) {
       const notifyRef = doc(
@@ -110,13 +110,13 @@ const BoardHeader: React.FC<Props> = ({
             </TransparentBtn>
             <TransparentBtn>
               {/* { notifications !== {} || notifications.length > 0 ? */}
-              { Object.keys(notifications).length > 0 ?
+              {Object.keys(notifications).length > 0 ? (
                 <BadgeCustom color="error" badgeContent="">
                   <NotificationsActiveRoundedIcon onClick={goToNotification} />
                 </BadgeCustom>
-               : 
+              ) : (
                 <NotificationsActiveRoundedIcon onClick={goToNotification} />
-              }
+              )}
               {/* <NotificationsActiveRoundedIcon onClick={goToNotification} /> */}
             </TransparentBtn>
           </GridCustom>
@@ -162,6 +162,12 @@ const TransparentBtn = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
+
+  @media (max-width: 330px) {
+    & .MuiSvgIcon-root {
+      font-size: 20px;
+    }
+  }
 `;
 
 const InputBaseCustom = styled(InputBase)`
