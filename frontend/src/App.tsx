@@ -34,7 +34,7 @@ import { categoryListState } from './features/Board/atom';
 
 import { db, firestore } from './firebase';
 import { ref, set, onValue, onDisconnect } from 'firebase/database';
-import { getDoc, updateDoc, doc, onSnapshot, setDoc, query, orderBy, addDoc } from 'firebase/firestore';
+import { getDoc, updateDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { familyList, location } from './types/familyTypes';
 
 import { getDistance } from './utils/getDistance';
@@ -48,6 +48,17 @@ const App: React.FC = () => {
   const setUserInfo = useSetRecoilState(userInfoState);
   const accessToken = axiosInstance.defaults.headers.common['Authorization'];
   const refreshToken = getCookie('apaty_refresh');
+
+  const [familyList, setFamilyList] = useState<familyList[]>([]);
+  const familyId = userInfo?.aptId.toString() + '-' + userInfo?.dong + '-' + userInfo?.ho;
+  const [userLocation, setUserLocation] = useState<location>({
+    lat: 0,
+    lng: 0,
+  });
+  const [range, setRange] = useState<number>(100);
+  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 }); // 아파트 위치 => 지도 center 위치
+  const setAptLocationState = useSetRecoilState(aptLocationState);
+  const [beforeUser, setBeforeUser] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
     if (userInfo === null && getCookie('apaty_refresh') !== undefined) {
@@ -97,6 +108,7 @@ const App: React.FC = () => {
     // }
   }, []);
 
+
   useEffect(() => {
     const connectRef = ref(db, '.info/connected');
 
@@ -111,60 +123,38 @@ const App: React.FC = () => {
     });
   }, [userId]);
 
-  // ---------- 위치 추가 app단에서 진행하기
-  const [familyList, setFamilyList] = useState<familyList[]>([]);
-  // const [familyId, setFamilyId] = useState<string>("");
-  const familyId =
-    userInfo?.aptId.toString() + '-' + userInfo?.dong + '-' + userInfo?.ho;
-  const [userLocation, setUserLocation] = useState<location>({
-    lat: 0,
-    lng: 0,
-  });
-  const [range, setRange] = useState<number>(100);
-  const [aptLocation, setAptLocation] = useState<location>({ lat: 0, lng: 0 }); // 아파트 위치 => 지도 center 위치
-  const setAptLocationState = useSetRecoilState(aptLocationState);
-  
-  const [beforeUser, setBeforeUser] = useState({ lat: 0, lng: 0 });
-
   useEffect(() => {
-    if (userId) {
+    if (userId && userInfo?.aptName) {
       FamilyService.getFamilyList()
-      .then((data) => {
-        // console.log('가족 목록 가져오기')
+      .then(data => {
         const family = data.familyList;
-        setFamilyList(data.familyList);
+        setFamilyList(family);
         
-        const docRef = doc(firestore, "families", data.familyId);
+        const docRef = doc(firestore, "families", family);
         getDoc(docRef).then(res => {
           findAptLocation(res.get('doroJuso'));
         });
       })
       .catch(err => console.log(err));
     }
-  }, [userId]); // ------------- [] 배열 확인하기
+  }, [userId]); 
 
   useEffect(() => {
-    // range 실시간으로 받아오기
     if (familyId) {
-      // console.log(familyId);
       const docRef = doc(firestore, "families", familyId);
       onSnapshot(docRef, (document) => { 
-        setRange(document.get('range'))
-        // console.log('저장된 범위 확인', document.get('range'))
+        setRange(document.get('range'));
       });
     }
   }, [familyId]);
 
-  // 내 위치 저장하기
   useEffect(() => {
     const { geolocation } = navigator;
-    geolocation.watchPosition(success, () => {}, { timeout: Infinity });  // enableHighAccuracy: true,
+    geolocation.watchPosition(success, () => {}, { timeout: Infinity });
   }, [familyId, range]);
 
   useEffect(() => {
-    // console.log(userLocation)
     if (userLocation.lat !== 0 && userLocation.lng !== 0) {
-      // console.log('app에서의 range 벗어나는지 확인 여부');
       mapLocation(aptLocation.lat, aptLocation.lng);
     }
   }, [userLocation, range]);
@@ -172,44 +162,40 @@ const App: React.FC = () => {
   const success = (position: any) => {
     if (familyId) {
       const { latitude, longitude } = position.coords;
-      // console.log('내 위치', latitude, longitude);
       const docRef = doc(firestore, "families", familyId);
       
       if (userInfo !== null) {
-        getDoc(docRef).then((res) => {
-          const loc = res.get(userInfo?.userId.toString());
-          const distance = getDistance(latitude, longitude, loc.lat, loc.lng);
-          // console.log(dist);
-          if (distance > 10) {
-            updateDoc(docRef, {
-              [userInfo.userId]: {
+        getDoc(docRef).then(res => {
+          if (res.exists()) {
+            const loc = res.get(userInfo?.userId.toString());
+            const distance = getDistance(latitude, longitude, loc.lat, loc.lng);
+            
+            if (distance > 10) {
+              updateDoc(docRef, {
+                [userInfo.userId]: {
+                  lat: latitude,
+                  lng: longitude,
+                },
+              });
+  
+              setUserLocation({
                 lat: latitude,
                 lng: longitude,
-              },
-            });
-
-            setUserLocation({
-              lat: latitude,
-              lng: longitude,
-            });
-
-            // 이전 기록 남기기
-            setBeforeUser({
-              lat: loc.lat,
-              lng: loc.lng
-            });
+              });
+  
+              setBeforeUser({
+                lat: loc.lat,
+                lng: loc.lng
+              });
+            }
           }
         });
       }
     }
   };
-  // const { geolocation } = navigator;
-  // geolocation.watchPosition(success, () => {}, { enableHighAccuracy: true, timeout: 10000 });
-
-  // map으로 범위만 확인하기
+  
+  // map으로 범위 확인
   const { kakao } = window as any;
-  const [rangeIn, setRangeIn] = useState<boolean>(false);
-  const [rangeOut, setRangeOut] = useState<boolean>(false);
 
   const mapLocation = (aptlat: number, aptlng: number) => {
     const distance = Math.round(getDistance(userLocation.lat, userLocation.lng, aptlat, aptlng));
@@ -218,14 +204,13 @@ const App: React.FC = () => {
     const beforePos = beforeDistance - range;
 
     for (let member of familyList) {
-      // console.log(userInfo?.userId)
       if (userInfo?.userId && member.userId !== userInfo?.userId) {
         const notifyRef = doc(firestore, `notifications`, member.userId.toString());
         const time = new Date();
         
         getDoc(notifyRef).then((data) => {
           if (data.exists()) {
-            if (nowPos > 0 && beforePos < 0) {  // 안에서 밖(벗어남)
+            if (nowPos > 0 && beforePos < 0) {
               updateDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -234,7 +219,7 @@ const App: React.FC = () => {
                   content: "아파트 단지에서 벗어났습니다."
                 }
               });
-            } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
+            } else if (nowPos < 0 && beforePos > 0) { 
               updateDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -244,9 +229,8 @@ const App: React.FC = () => {
                 }
               });
             };
-
           } else {
-            if (nowPos > 0 && beforePos < 0) {  // 안에서 밖(벗어남)
+            if (nowPos > 0 && beforePos < 0) {  
               setDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -255,7 +239,7 @@ const App: React.FC = () => {
                   content: "아파트 단지에서 벗어났습니다."
                 }
               });
-            } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
+            } else if (nowPos < 0 && beforePos > 0) { 
               setDoc(notifyRef, { 
                 [time.toString()] : {
                   userId : userInfo?.userId,
@@ -269,12 +253,6 @@ const App: React.FC = () => {
         });    
       }
     };
-
-    // if (nowPos > 0 && beforePos < 0) {  // 안에서밖(벗어남)
-
-    // } else if (nowPos < 0 && beforePos > 0) {  // 밖에서 안(들어옴)
-
-    // }
   };
 
   // 아파트 좌표 등록하기 (처음에)
@@ -291,7 +269,7 @@ const App: React.FC = () => {
           lat: result[0].y,
           lng: result[0].x,
         });
-        mapLocation(result[0].y, result[0].x); // 추후 확인!
+        mapLocation(result[0].y, result[0].x); 
       }
     });
   };
