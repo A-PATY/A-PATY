@@ -85,6 +85,9 @@ public class ArticleDto {
                 article.setAnonyAuthor(user.getDong() + "동 " + user.getHo() +"호 " + user.getNickname());
             }
         }
+        if(article.getCategory() != null) {
+            if(article.getCategory().getId() == 1) article.setAnonyAuthor("관리자");
+        }
         res.setAuthor(article.getAnonyAuthor());
 
         res.setCommentCount(article.getComments().size());
