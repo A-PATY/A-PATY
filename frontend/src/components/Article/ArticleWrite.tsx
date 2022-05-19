@@ -366,8 +366,9 @@ const ArticleWrite: React.FC = () => {
               display="flex"
               justifyContent="flex-end"
               sx={{
-                m: 1,
-                minWidth: 410,
+                margin: '0px 20px 10px',
+                // m: 1,
+                // minWidth: 410,
               }}
             >
               <ButtonGroup
@@ -380,7 +381,7 @@ const ArticleWrite: React.FC = () => {
                   setPhoneNumber={setPhoneNumber}
                 />
                 <ButtonCustom>
-                  마감여부
+                  <div>마감여부</div>
                   <Switch
                     checked={isDone}
                     onChange={handleIsDoneChange}
@@ -426,7 +427,7 @@ const UploadLabel = styled.label`
 const ButtonCustom = styled(Button)`
   background-color: #bae6e5;
   font-size: 14px;
-  padding: 0px;
+  padding: 0px 10px;
   &:hover {
     background-color: #ffb2a9;
   }

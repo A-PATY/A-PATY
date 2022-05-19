@@ -21,11 +21,8 @@ const CategoryChips: React.FC<Props> = ({ categoryId, setCategoryId }) => {
   const chipData = [{ categoryId: 0, categoryName: '전체', adminOnly: false }];
   const categoryList = useRecoilValue(categoryListState);
 
-  if (userInfo?.role === 'ROLE_ADMIN') {
-    if (categoryList !== null) chipData.push(...categoryList);
-  } else if (userInfo?.role === 'ROLE_USER') {
-    if (categoryList !== null)
-      chipData.push(...categoryList?.filter((category) => !category.adminOnly));
+  if (categoryList !== null) {
+    chipData.push(...categoryList?.filter((category) => !category.adminOnly));
   }
 
   // selector -> 오류 떠서 보류
@@ -110,6 +107,7 @@ const ListItem = styled.li`
 
 const ChipCustom = styled(Chip)`
   cursor: pointer;
+  font-family: 'MinSans-Regular';
 `;
 
 export default CategoryChips;

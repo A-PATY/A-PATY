@@ -47,8 +47,6 @@ const BoardHeader: React.FC<Props> = ({
   const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       onSearch();
-      // goSearch();
-      // setSearchwine("")
     }
   };
   const onSearch = () => {
@@ -85,10 +83,6 @@ const BoardHeader: React.FC<Props> = ({
     <>
       <Container>
         <Grid container spacing={0}>
-          {/* <GridText item xs={3}>
-            <Text>장미동</Text>
-            <button onClick={goToAnony}>익명 커뮤니티로 이동</button>
-          </GridText> */}
           <Grid item xs={8}>
             <Search id="search">
               <InputBaseCustom
