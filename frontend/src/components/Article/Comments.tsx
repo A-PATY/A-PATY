@@ -151,7 +151,7 @@ const Comments: React.FC<CommentsProps> = ({
               />
             }
             label="비밀"
-            sx={{ fontSize: '13px' }}
+            sx={{ fontSize: '10px' }}
           />
           <Input
             type="text"
@@ -266,7 +266,7 @@ const FormControlLabelCustom = styled(FormControlLabel)`
   margin: 0;
   span {
     padding: 5px 0;
-    font-size: 13px;
+    font-size: 11px;
     color: #f88e83;
   }
   & .MuiTypography-root {
