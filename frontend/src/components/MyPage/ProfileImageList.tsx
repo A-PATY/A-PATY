@@ -36,14 +36,12 @@ const ProfileImageList: React.FC<SimpleDialogProps> = ({
     <>
       <DialogCustom onClose={onClose} open={open}>
         <DialogTitleWrapper>
-          <DialogTitle>프로필 선택</DialogTitle>
+          <DialogTitle sx={{ fontFamily: 'MinSans-Regular' }}>
+            프로필 선택
+          </DialogTitle>
         </DialogTitleWrapper>
         <BoxCustom>
-          <ImageListCustom
-            sx={{ width: 500, height: 450 }}
-            cols={3}
-            rowHeight={164}
-          >
+          <ImageListCustom sx={{ height: 350 }} cols={3} rowHeight="auto">
             {itemData !== undefined &&
               itemData.map((item) => (
                 <Wrapper
