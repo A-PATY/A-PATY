@@ -374,6 +374,39 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
             // minWidth: 410,
           }}
         >
+          {category === '나눔장터' ||
+          category === '공구' ||
+          category === '헬프' ? (
+            <>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                sx={{
+                  m: 1,
+                  minWidth: 410,
+                }}
+              >
+                <ButtonGroup
+                  variant="contained"
+                  aria-label="outlined primary button group"
+                >
+                  <ButtonCustom>전화번호</ButtonCustom>
+                  <PhoneNumber
+                    phoneNumber={phoneNumber}
+                    setPhoneNumber={setPhoneNumber}
+                  />
+                  <ButtonCustom>
+                    마감여부
+                    <Switch
+                      checked={isDone !== null ? isDone : false}
+                      onChange={handleIsDoneChange}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                    />
+                  </ButtonCustom>
+                </ButtonGroup>
+              </Box>
+            </>
+          ) : undefined}
           <ButtonGroup
             variant="contained"
             aria-label="outlined primary button group"
@@ -394,7 +427,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
             onChange={changeImage}
           />
         </Box>
-        {category === '나눔장터' ||
+        {/* {category === '나눔장터' ||
         category === '공구' ||
         category === '헬프' ? (
           <>
@@ -426,7 +459,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               </ButtonGroup>
             </Box>
           </>
-        ) : undefined}
+        ) : undefined} */}
 
         <DivContainer>
           <SubmitButtonCustom onClick={onSubmit}>저장</SubmitButtonCustom>
@@ -458,6 +491,7 @@ const UploadLabel = styled.label`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const ButtonCustom = styled(Button)`
