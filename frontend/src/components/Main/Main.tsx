@@ -101,7 +101,7 @@ const Main: React.FC = () => {
             <PhoneFrameContainer>
               <PhoneFrameWrapper>
                 <PhoneFrame>
-                  <PhoneInner src="\img\service.png" />
+                  <PhoneInner src="/img/infiniteScroll.gif" style={{ filter: "brightness(1.1)" }} />
                 </PhoneFrame>
               </PhoneFrameWrapper>
             </PhoneFrameContainer>
@@ -225,12 +225,12 @@ const Main: React.FC = () => {
                 <FindFamilyWrapper>
                   <Fade delay={500}>
                     <FindFamilyAlert>
-                      <FindFamilyAlertImg src="/img/alarm.gif"/>
+                      <FindFamilyAlertImg src="/img/alarm.gif" style={{ filter: "brightness(1.07)" }}/>
                     </FindFamilyAlert>
                   </Fade>
                   <Fade delay={1000}>
                     <FamilyList>
-                      <FamilyListImage src="/img/findFamily.gif" />
+                      <FamilyListImage src="/img/findFamily.gif" style={{ filter: "brightness(1.07)" }} />
                     </FamilyList>
                   </Fade>
                 </FindFamilyWrapper>
@@ -395,7 +395,9 @@ const PhoneFrame = styled.div`
 
 const PhoneInner = styled.img`
   height: 31.875em;
-  width: 19.625em;
+  /* width: 19.625em; */
+  width: 100%;
+  /* filter: brightness(1.1); */
 `;
 
 const FindFamilyWrapper = styled.div`
@@ -436,7 +438,8 @@ const FamilyList = styled.div`
 `;
 
 const FamilyListImage = styled.img`
-  height: 150px;
+  /* height: 150px; */
+  width: 100%
 `;
 
 const ServiceButtonWrapper = styled.div`
