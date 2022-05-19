@@ -1,6 +1,5 @@
 
 
-
 # A:PATY 
 
 ### SSAFY 6기 자율 프로젝트 - 지역/아파트 커뮤니티 
@@ -14,7 +13,7 @@
 - 파티처럼 즐거운 지역 아파트 커뮤니티
 - 하이퍼로컬 (hyperlocal)  주거 지역 기반 생활밀착형 서비스
 
-- YouTube 보러가기 ▶
+- YouTube [보러가기](https://www.youtube.com/watch?v=e4ePun0enB4&feature=youtu.be)  ▶
   
   
   
@@ -32,7 +31,7 @@
 
 |                회원가입 / 로그인 / 마이페이지                |              아파트 커뮤니티 가입 (고지서 인증)              |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![회원관리로그인](https://user-images.githubusercontent.com/12628688/169336165-b3a4d472-add0-4786-955b-5e5edbe45ecc.gif) | ![지역커뮤니티](https://user-images.githubusercontent.com/12628688/169334781-9d938ead-52c5-4891-9a44-a99e577430db.gif) |
+| ![회원관리로그인](https://user-images.githubusercontent.com/12628688/169336165-b3a4d472-add0-4786-955b-5e5edbe45ecc.gif) | ![아파트커뮤니티가입1](https://user-images.githubusercontent.com/12628688/169361589-3c062715-9e99-4150-ab3c-c040964c9cd3.gif) |
 
 
 
@@ -76,7 +75,7 @@
 
 ### 🛠 기술 스택
   
-#### Front-end > 여진이 확인!
+#### Front-end
 
 - HTML5, CSS3, TypeScript
 - React, Redux, React Router, Axios
@@ -119,20 +118,17 @@
 | 이여진 | 팀장<br />Front-end |                                                              |
 | 김선민 | Front-end           |                                                              |
 | 채예은 | Front-end           |                                                              |
-| 방의진 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>		- 게시글 작성, 수정 및 삭제 (Aws S3 연동)<br/>- Firebase Datastore 연동<br/>        - 가족 정보 Create, Insert, Delete<br/>- Junit5, Mock 기반 단위 테스트코드 작성<br/>- Jenkins, Docker 기반 CI/CD 배포 |
-| 손영배 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>		- 소셜 로그인, 로그아웃<br/>		- 회원관리 (수정/탈퇴)<br/>		- 커뮤니티 가입, 고지서 인증<br/>		- 관리자 기능<br/>- Jenkins, Docker 기반 CI/CD 배포 |
-| 조은솔 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>		- 게시판, 게시글 조회 (무한스크롤, 키워드 검색)<br/>		- 댓글 작성/삭제<br/>		- 좋아요, 조회수 처리<br/>		- 가족 리스트 조회<br/>- Firebase Datastore 연동<br/>		- 가족 정보 Create, Insert, Delete<br/>- 지역, 아파트, 커뮤니티 기초 데이터 가공 및 생성<br/>- Jenkins, Docker 기반 CI/CD 배포 |
+| 방의진 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 게시글 작성, 수정 및 삭제 (Aws S3 연동)<br/>- Firebase Datastore 연동<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 가족 정보 Create, Insert, Delete<br/>- Junit5, Mock 기반 단위 테스트코드 작성<br/>- Jenkins, Docker 기반 CI/CD 배포 |
+| 손영배 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 소셜 로그인, 로그아웃<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 회원관리 (수정/탈퇴)<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 커뮤니티 가입, 고지서 인증<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 관리자 기능<br/>- Jenkins, Docker 기반 CI/CD 배포 |
+| 조은솔 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 게시판, 게시글 조회 (무한스크롤, 키워드 검색)<br/>	&nbsp;&nbsp;&nbsp;&nbsp;- 댓글 작성/삭제<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 좋아요, 조회수 처리<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 가족 리스트 조회<br/>- Firebase Datastore 연동<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 가족 정보 Create, Insert, Delete<br/>- 지역, 아파트, 커뮤니티 기초 데이터 가공 및 생성<br/>- Jenkins, Docker 기반 CI/CD 배포 |
 
   
   
 #### 협업 툴
 
 - 문서 정리 : Notion  [바로가기](https://www.notion.so/27bd1dcf1319422481c0f2b3b1562ecb)
-
 - 이슈 관리 : Jira
-
 - 형상 관리 : Gitlab
-
 - 소통 : Mattermost, Gatter town
 
   ![게더타운](https://user-images.githubusercontent.com/12628688/169325187-430004a5-6c15-4a58-bf64-8315e0fde128.gif)
