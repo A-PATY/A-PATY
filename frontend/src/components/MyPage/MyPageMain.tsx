@@ -28,9 +28,6 @@ import {
   getDoc,
   updateDoc,
   doc,
-  onSnapshot,
-  setDoc,
-  addDoc,
 } from 'firebase/firestore';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
