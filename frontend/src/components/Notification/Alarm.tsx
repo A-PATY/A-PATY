@@ -1,25 +1,39 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { article } from '../../types/boardTypes';
 import VolumeDownIcon from '@mui/icons-material/VolumeDown';
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { useEffect } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { doc, updateDoc, deleteField } from "firebase/firestore";
+import { firestore } from '../../firebase';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../features/Login/atom';
 
-interface Props {
-  detail : article,
+interface timestamp {
+  seconds: number,
+  nanoseconds: number,
 };
 
-// interface alarmProps {
-//   content: string,
-//   time: Timestamp,
-//   nickname: string,
-// }
+interface alarmProps {
+  detail : {
+    content: string,
+    time: timestamp,
+    nickname: string,
+    userId: number
+  }
+}
 
-const Alarm: React.FC<Props> = ({ detail }) => {
+const Alarm: React.FC<alarmProps> = ({ detail }) => {
   const navigate = useNavigate();
-  
-  const calculateTime = (time: string) => {
+  const userInfo = useRecoilValue(userInfoState)!;
+  const [time, setTime] = useState<number>(0);
+
+  useEffect(() => {
+    setTime(detail.time.seconds*1000);
+  }, [])
+
+  const calculateTime = (time: number) => {
     const today = new Date();
     const timeValue = new Date(time);
     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
@@ -38,30 +52,32 @@ const Alarm: React.FC<Props> = ({ detail }) => {
     if (betweenTimeDay < 365) {
       return `${betweenTimeDay}일전`;
     }
-
     return time;
   };
 
   const goToDetail = () => {
-    navigate(`/board/find_family`);
+    navigate(`/find_family`);
+  };
+
+  const deleteAlarm = () => {
+    const notifyRef = doc(firestore, 'notifications', userInfo?.userId.toString());
+    const date = new Date(time)
+    updateDoc(notifyRef, {
+      [date.toString()]: deleteField()
+    });
+    window.location.href = '/notification'
   };
   
   return (
     <>
-      <Container onClick={goToDetail}>
-        <NotificationIconCustom/>
-        <Contents>
-          <Title>{detail.title}</Title>
-          <Content>{detail.contents}</Content>
+      <Container>
+        <NotificationIconCustom onClick={goToDetail}/>
+        <CloseIconCustom onClick={deleteAlarm}/>
+        <Contents onClick={goToDetail}>
+          <Title>{detail.nickname}님</Title>
+          <Content>{detail.content}</Content>
           <Info>
-            <Time>{calculateTime(detail.createdAt)}</Time>
-            {/* 생략 여부 */}
-            <Icons>
-              <VisibilityRoundedIcon/>
-              {detail.views}
-              <ChatBubbleOutlineRoundedIcon/>
-              {detail.commentCount}
-            </Icons>
+            <Time>{calculateTime(time)}</Time>
           </Info>
         </Contents>
       </Container>
@@ -70,23 +86,35 @@ const Alarm: React.FC<Props> = ({ detail }) => {
 };
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   /* align-items: center; */
   margin: 35px 0;
   cursor: pointer;
-
 `;
 
 const NotificationIconCustom = styled(LocationOnIcon)`
   /* margin: auto 0; */
   font-size: 28px;
-  color: #ffb2a9;
+  color: #e4d2ee;
   background-color: #fff;
   border: solid 0.5px #d3d3d3;
   border-radius: 30px;
   padding: 8px;
+`;
+
+const CloseIconCustom = styled(CloseIcon)`
+  position: absolute;
+  right: 0;
+  top: -3px;
+  font-size: 18px;
+  color: gray;
+  &:hover {
+    color: #222;
+  };
+  z-index: 1;
 `;
 
 const Contents = styled.div`
