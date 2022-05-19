@@ -8,10 +8,8 @@ import { category } from '../../types/boardTypes';
 import Notification from './Notification';
 import Alarm from './Alarm';
 
-import { db, firestore } from '../../firebase';
-import { ref, set, onValue, onDisconnect } from 'firebase/database';
-import { getDoc, updateDoc, doc, onSnapshot, setDoc, Timestamp } from 'firebase/firestore';
-import { familyList, location } from '../../types/familyTypes';
+import { firestore } from '../../firebase';
+import { getDoc, doc } from 'firebase/firestore';
 import { userInfoState, updatedUser } from '../../features/Login/atom';
 
 interface timestamp {
@@ -40,7 +38,6 @@ const NotificationList: React.FC = () => {
     }
   });
   
-  // 공지사항 불러오기 
   useEffect(() => {
     const fetchArticles = async () => {
       const { articles } = await BoardService.getArticles(
@@ -60,7 +57,6 @@ const NotificationList: React.FC = () => {
     fetchArticles();
   }, [categoryId]);
 
-  // firestore 알림 불러오기
   useEffect(() => {
     if (userId) {
       const notifyRef = doc(firestore, `notifications`, userId?.toString());
@@ -69,9 +65,7 @@ const NotificationList: React.FC = () => {
         if (res.exists()){
           const alarmList = Object.values(res.data());
           
-          alarmList.sort((a, b) => {
-            return b.time.seconds - a.time.seconds;
-          });
+          alarmList.sort((a, b) => b.time.seconds - a.time.seconds);
           setAlarms(alarmList);
         }
       });

@@ -28,9 +28,6 @@ import {
   getDoc,
   updateDoc,
   doc,
-  onSnapshot,
-  setDoc,
-  addDoc,
 } from 'firebase/firestore';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
@@ -434,6 +431,7 @@ const MyPageMain: React.FC = () => {
   ) => {
     navigate('/admin');
   };
+
   const valueLabelFormat = (value: number) => {
     const index = marks.findIndex((mark) => mark.value === value);
     const selectedRange = marks[index].range;
@@ -446,11 +444,14 @@ const MyPageMain: React.FC = () => {
 
       if (familyId) {
         const docRef = doc(firestore, 'families', familyId);
-        getDoc(docRef).then((res) => {
-          if (userInfo !== null && res.get('range') !== selectedRange) {
-            updateDoc(docRef, {
-              range: selectedRange,
-            });
+        
+        getDoc(docRef).then(res => {
+          if (res.exists()) {
+            if (userInfo !== null && res.get('range') !== selectedRange) {
+              updateDoc(docRef, {
+                range: selectedRange,
+              });
+            }
           }
         });
       }
