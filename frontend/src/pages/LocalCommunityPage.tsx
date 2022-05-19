@@ -166,7 +166,7 @@ const Container = styled.div`
 `;
 
 const ServiceButtonWrapper = styled.div`
-  position: sticky;
+  /* position: sticky;
   bottom: 0px;
   display: flex;
   flex-direction: column;
@@ -175,7 +175,19 @@ const ServiceButtonWrapper = styled.div`
   transition: 2s;
   align-items: center;
   display: flex;
-  margin: 20px;
+  margin: 20px; */
+
+  width: 40px;
+  margin: 2px;
+  height: 40px;
+  background-color: rgb(255, 178, 169);
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 80px;
+  /* margin-right: 15px; */
+  right: calc((100% - 350px)/2);
 `;
 
 const TransparentBtn = styled.button`
