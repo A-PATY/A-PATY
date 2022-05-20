@@ -128,9 +128,9 @@ const App: React.FC = () => {
       FamilyService.getFamilyList()
       .then(data => {
         const family = data.familyList;
-        setFamilyList(family);
+        setFamilyList(data.familyList);
         
-        const docRef = doc(firestore, "families", family);
+        const docRef = doc(firestore, "families", data.familyId);
         getDoc(docRef).then(res => {
           findAptLocation(res.get('doroJuso'));
         });
@@ -194,7 +194,6 @@ const App: React.FC = () => {
     }
   };
   
-  // map으로 범위 확인
   const { kakao } = window as any;
 
   const mapLocation = (aptlat: number, aptlng: number) => {
@@ -255,7 +254,6 @@ const App: React.FC = () => {
     };
   };
 
-  // 아파트 좌표 등록하기 (처음에)
   const findAptLocation = (address: string) => {
     const geocoder = new kakao.maps.services.Geocoder();
 
