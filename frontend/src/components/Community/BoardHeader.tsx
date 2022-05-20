@@ -146,7 +146,7 @@ const TransparentBtn = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-
+  font-size: 20px;
   @media (max-width: 330px) {
     & .MuiSvgIcon-root {
       font-size: 20px;
@@ -160,7 +160,7 @@ const TransparentBtn = styled.button`
     background-color: #e4d2ee;
     width: auto;
     height: 35px;
-    font-size: 14px;
+    font-size: 12px;
     font-family: 'MinSans-Regular';
     color: #000;
 
