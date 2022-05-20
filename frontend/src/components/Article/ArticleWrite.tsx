@@ -238,7 +238,7 @@ const ArticleWrite: React.FC = () => {
           />
         </Box> */}
         <DivContainer>
-          <Input
+          <InputCustom
             type="text"
             placeholder="제목을 입력해주세요."
             // inputProps={ariaLabel}
@@ -286,7 +286,7 @@ const ArticleWrite: React.FC = () => {
         </Box> */}
 
         <DivContainer>
-          <div style={{ width: '100%' }}>
+          <TextFieldWrapper>
             <TextField
               id="outlined-multiline-static"
               label="글 내용"
@@ -296,16 +296,32 @@ const ArticleWrite: React.FC = () => {
               sx={{
                 'width': '100%',
                 'fontSize': 16,
-                '& .MuiOutlinedInput-root': {
-                  fontFamily: 'MinSans-Regular',
-                },
+
                 '& .MuiInputLabel-root': {
                   fontFamily: 'MinSans-Regular',
+                },
+                '& label.Mui-focused': {
+                  color: 'rgb(186, 230, 229)',
+                },
+                '& .MuiInput-underline:after': {
+                  borderBottomColor: ' rgb(186, 230, 229);',
+                },
+                '& .MuiOutlinedInput-root': {
+                  'fontFamily': 'MinSans-Regular',
+                  '& fieldset': {
+                    borderColor: '#000',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgb(186, 230, 229)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'rgb(186, 230, 229)',
+                  },
                 },
               }}
               onChange={changeContent}
             />
-          </div>
+          </TextFieldWrapper>
         </DivContainer>
 
         <Box
@@ -434,6 +450,13 @@ const ArticleWrite: React.FC = () => {
   );
 };
 
+const TextFieldWrapper = styled.div`
+  width: 100%;
+
+  & .MuiInputLabel-root.Mui-focused {
+    color: rgb(186, 230, 229);
+  }
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -506,9 +529,17 @@ const SubmitButtonCustom = styled(Button)`
   border-radius: 126px;
   font-family: 'MinSans-Regular';
   font-size: 16px;
+  height: 50px;
+
   &:hover {
     background-color: #ffb2a9;
     color: white;
+  }
+`;
+
+const InputCustom = styled(Input)`
+  &::after {
+    border-bottom: 2px solid rgb(186, 230, 229);
   }
 `;
 
@@ -516,5 +547,9 @@ const DivContainer = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px 20px;
+
+  & .MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    border-bottom: 2px solid rgb(186, 230, 229);
+  }
 `;
 export default ArticleWrite;

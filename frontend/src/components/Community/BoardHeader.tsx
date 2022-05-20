@@ -158,10 +158,12 @@ const TransparentBtn = styled.button`
   &.write {
     border-radius: 10px;
     background-color: #e4d2ee;
+    width: auto;
     height: 35px;
-    margin-left: 10px;
     font-size: 14px;
     font-family: 'MinSans-Regular';
+    color: #000;
+
     &:hover {
       background-color: #bd79e2;
       color: #fff;

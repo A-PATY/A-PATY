@@ -260,7 +260,7 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
           />
         </Box> */}
         <DivContainer>
-          <Input
+          <InputCustom
             type="text"
             placeholder="제목을 입력해주세요."
             // inputProps={ariaLabel}
@@ -317,11 +317,27 @@ const ArticleEdit: React.FC<Props> = ({ article }) => {
               sx={{
                 'width': '100%',
                 'fontSize': 16,
-                '& .MuiOutlinedInput-root': {
-                  fontFamily: 'MinSans-Regular',
-                },
+
                 '& .MuiInputLabel-root': {
                   fontFamily: 'MinSans-Regular',
+                },
+                '& label.Mui-focused': {
+                  color: 'rgb(186, 230, 229)',
+                },
+                '& .MuiInput-underline:after': {
+                  borderBottomColor: ' rgb(186, 230, 229);',
+                },
+                '& .MuiOutlinedInput-root': {
+                  'fontFamily': 'MinSans-Regular',
+                  '& fieldset': {
+                    borderColor: '#000',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgb(186, 230, 229)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'rgb(186, 230, 229)',
+                  },
                 },
               }}
               onChange={changeContent}
@@ -509,6 +525,12 @@ const ButtonCustom = styled(Button)`
   }
 `;
 
+const InputCustom = styled(Input)`
+  &::after {
+    border-bottom: 2px solid rgb(186, 230, 229);
+  }
+`;
+
 const ImgCustom = styled.img`
   width: 50px;
   height: 50px;
@@ -541,6 +563,7 @@ const SubmitButtonCustom = styled(Button)`
   border-radius: 126px;
   font-family: 'MinSans-Regular';
   font-size: 16px;
+  height: 50px;
   &:hover {
     background-color: #ffb2a9;
     color: white;

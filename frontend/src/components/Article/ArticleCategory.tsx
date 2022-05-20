@@ -31,37 +31,51 @@ const ArticleCategory: React.FC<Props> = ({ category, setCategory }) => {
 
   // const categories: category[] | null = useRecoilValue(categoryListState);
 
-  const [label, setLabel] = React.useState(category);
+  const [label, setLabel] = React.useState<string>(category);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (event: SelectChangeEvent<string>) => {
     setLabel(event.target.value);
     setCategory(event.target.value);
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <FormControl variant="standard" sx={{ width: '100%' }}>
-        <Select
-          value={label}
-          onChange={handleChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-          sx={{ fontSize: 16, fontFamily: 'MinSans-Regular' }}
-        >
-          <MenuItem value="">
-            <em>주제를 골라주세요.</em>
-          </MenuItem>
-          {categories?.map((category) => {
-            return (
-              <MenuItem key={category.categoryId} value={category.categoryName}>
-                {category.categoryName}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    </div>
+    <>
+      <div style={{ width: '100%' }}>
+        <FormControl variant="standard" sx={{ width: '100%' }}>
+          <Select
+            value={label}
+            onChange={handleChange}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+            sx={{
+              'fontSize': 16,
+              'fontFamily': 'MinSans-Regular',
+              ':after': { borderBottom: `2px solid rgb(186, 230, 229)` },
+            }}
+          >
+            <MenuItem value="">
+              <em>주제를 골라주세요.</em>
+            </MenuItem>
+            {categories?.map((category) => {
+              return (
+                <MenuItem
+                  key={category.categoryId}
+                  value={category.categoryName}
+                >
+                  {category.categoryName}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </div>
+    </>
   );
 };
 
+const SelectCustom = styled(Select)`
+  &::after {
+    border-bottom: 2px solid rgb(186, 230, 229);
+  }
+`;
 export default ArticleCategory;
