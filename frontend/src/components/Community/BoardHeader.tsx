@@ -158,7 +158,7 @@ const TransparentBtn = styled.button`
   &.write {
     border-radius: 10px;
     background-color: #e4d2ee;
-    width: auto;
+    width: 45px;
     height: 35px;
     font-size: 10px;
     font-family: 'MinSans-Regular';
