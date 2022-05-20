@@ -100,8 +100,8 @@ const BoardHeader: React.FC<Props> = ({
               <SearchRoundedIcon sx={{ color: '#8c8888' }} />
             </TransparentBtn>
             <TransparentBtn onClick={writeArticle} className="write">
-              글쓰기
-              {/* <CreateRoundedIconCustom /> */}
+              {/* 글쓰기 */}
+              <CreateRoundedIconCustom />
             </TransparentBtn>
           </GridCustom>
         </Grid>
@@ -158,7 +158,7 @@ const TransparentBtn = styled.button`
   &.write {
     border-radius: 10px;
     background-color: #e4d2ee;
-    width: 45px;
+    width: 55px;
     height: 35px;
     font-size: 10px;
     font-family: 'MinSans-Regular';
