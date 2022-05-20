@@ -1,5 +1,4 @@
 
-
 # A:PATY 
 
 ### SSAFY 6기 자율 프로젝트 - 지역/아파트 커뮤니티 
@@ -77,9 +76,14 @@
   
 #### Front-end
 
-- HTML5, CSS3, TypeScript
-- React, Redux, React Router, Axios
-- Emotion, MUI, MSW
+- HTML5, CSS3, Typescript (4.6.3)
+- Node.js (16.14.0)
+- React (18.0.0), React-Router (6.3.0), Recoil (0.7.2), React-Query (3.38.1)
+- Axios (0.27.2)
+- Firebase (9.6.11)
+- yarn (1.22.18)
+- Emotion (11.9.0), MUI (5.6.2)
+- MSW (0.39.2)
   
 #### Back-end
 
@@ -115,8 +119,8 @@
 
 | 이름   | 역할                | 개발 내용                                                    |
 | ------ | ------------------- | ------------------------------------------------------------ |
-| 이여진 | 팀장<br />Front-end |                                                              |
-| 김선민 | Front-end           |                                                              |
+| 이여진 | 팀장<br />Front-end | - 서비스 메인 홈 페이지 개발<br/>- 회원 관리 서비스 개발<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 카카오 소셜 로그인을 통한 회원 가입 <br/>&nbsp;&nbsp;&nbsp;&nbsp;- JWT Refresh Token을 사용한 로그인 서비스 <br/>&nbsp;&nbsp;&nbsp;&nbsp;- 회원 정보 수정, 로그아웃, 탈퇴 서비스 개발<br/>- 아파트 리스트 조회, 고지서 제출 서비스 개발<br/>- 관리자 고지서 리스트 조회, 승인, 반려 서비스 개발<br/>- 게시글 리스트 조회 시, Skeleton UI 구현<br/>- 'Recoil'을 이용한 상태 관리<br/>- 'Emotion'을 이용한 CSS-in-JS 방식으로 스타일링 구현<br/>- 'Mock Service Worker'를 이용해 목업 API 구현하여 API 테스트 진행 |
+| 김선민 | Front-end           | - 가족 위치 찾기 개발<br/>&nbsp;&nbsp;&nbsp;&nbsp;- kakao map API, geolocation API를 이용한 map, 위치 구현<br/>- 위치 정보 알림 및 조회 기능<br/>- 공지 조회, 좋아요 기능<br/>- firebase database, datastore 연동<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 유저 접속 여부<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 가족 위치/범위 정보 update<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 알림 정보 set, update, delete<br/>- 'Recoil'을 이용한 상태 관리<br/>- 'Emotion'을 이용한 CSS-in-JS 방식으로 스타일링 구현<br/>- 'Mock Service Worker'를 이용해 목업 API 구현하여 API 테스트 진행 |
 | 채예은 | Front-end           |                                                              |
 | 방의진 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 게시글 작성, 수정 및 삭제 (Aws S3 연동)<br/>- Firebase Datastore 연동<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 가족 정보 Create, Insert, Delete<br/>- Junit5, Mock 기반 단위 테스트코드 작성<br/>- Jenkins, Docker 기반 CI/CD 배포 |
 | 손영배 | Back-end            | - DB 설계<br/>- Spring Boot RESTful API 구현<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 소셜 로그인, 로그아웃<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 회원관리 (수정/탈퇴)<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 커뮤니티 가입, 고지서 인증<br/>&nbsp;&nbsp;&nbsp;&nbsp;- 관리자 기능<br/>- Jenkins, Docker 기반 CI/CD 배포 |
@@ -143,7 +147,6 @@
 ### 📅 개발 기간 및 일정
 
 ####   22.4.11 ~ 22.05.20 (6주)
-
 - 세부일정   [바로가기](https://www.notion.so/cbc32e6dd51d4db1aa65e1b4b4e5e110)
 
   
