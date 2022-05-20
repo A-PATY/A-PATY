@@ -160,7 +160,7 @@ const TransparentBtn = styled.button`
     background-color: #e4d2ee;
     width: auto;
     height: 35px;
-    font-size: 12px;
+    font-size: 10px;
     font-family: 'MinSans-Regular';
     color: #000;
 
