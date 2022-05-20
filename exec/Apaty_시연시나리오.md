@@ -11,7 +11,7 @@
 
 ## 👏 회원가입
 
-<img src="Apaty_시연시나리오.assets/KakaoTalk_20220520_083739312_02.png" alt="KakaoTalk_20220520_083739312_02" style="zoom: 33%;" />
+<img src="Apaty_시연시나리오.assets/KakaoTalk_20220520_083739312_02.png" alt="KakaoTalk_20220520_083739312_02" width="50" />
 
 - 카카오 로그인 버튼을 눌러 카카오 계정 정보를 입력하고 소셜 로그인을 진행합니다.
 
